@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+.link {
+  color: #4481c3;
+  font-weight: bold;
+}
+
+.button{
+  color: #4481c3;
+  font-weight: bold;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.sadFace {
+  width: 100px;
+  height: 100px;
+}

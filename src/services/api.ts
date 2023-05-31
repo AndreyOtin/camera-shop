@@ -1,8 +1,8 @@
-import axios, {AxiosError} from 'axios';
-import {Camera, Promo} from '../types/camera';
-import {NewReview, Review} from '../types/review';
-import {Coupon} from '../types/coupon';
-import {NewOrder} from '../types/order';
+import axios, { AxiosError } from 'axios';
+import { Camera, Promo } from '../types/camera';
+import { NewReview, Review } from '../types/review';
+import { Coupon } from '../types/coupon';
+import { NewOrder } from '../types/order';
 
 const BACKEND_URL = 'https://camera-shop.accelerator.pages.academy';
 const REQUEST_TIMEOUT = 5000;
