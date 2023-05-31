@@ -11,4 +11,5 @@ export enum SliceNameSpace {
 
 export enum AppRoute {
   Root = '/',
+  Catalog = '/catalog/:page'
 }

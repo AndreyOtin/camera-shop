@@ -14,9 +14,12 @@ import {
   getCameras,
   getPromo,
   selectCameras,
-  selectCamerasStatus, selectPromo,
+  selectCamerasStatus,
+  selectPromo,
   selectPromoStatus
 } from '../../store/catalog-slice/catalog-slice';
+import useCurrentPage from '../../hooks/use-current-page';
+import { MAX_CAMERAS_PER_PAGE } from '../../consts/app';
 
 function CatalogScreen() {
   const dispatch = useAppDispatch();
@@ -24,6 +27,7 @@ function CatalogScreen() {
   const promoStatus = useAppSelector(selectPromoStatus);
   const cameras = useAppSelector(selectCameras);
   const promo = useAppSelector(selectPromo);
+  const currentPage = useCurrentPage();
 
   useEffect(() => {
     if (camerasStatus === Status.Idle) {
@@ -46,10 +50,14 @@ function CatalogScreen() {
     return <ErrorScreen variant="error"/>;
   }
 
-  const promoDescription = cameras.find((item)=>item.id === promo.id)?.description;
+  const promoDescription = cameras.find((item) => item.id === promo.id)?.description;
+  const sliceStart = currentPage === 1 ? 0 : (currentPage - 1) * MAX_CAMERAS_PER_PAGE;
+  const sliceEnd = sliceStart + MAX_CAMERAS_PER_PAGE;
+  const slicedCameras = cameras.slice(sliceStart, sliceEnd);
 
   return (
     <main>
+
       <Helmet>
         <title>Каталог - Фотошоп</title>
       </Helmet>
@@ -64,9 +72,9 @@ function CatalogScreen() {
               <div className="catalog__content">
                 <CatalogSort/>
                 <div className="cards catalog__cards">
-                  {cameras.map((camera) => <ProductCard key={camera.id} camera={camera}/>)}
+                  {slicedCameras.map((camera) => <ProductCard key={camera.id} camera={camera}/>)}
                 </div>
-                <Pagination/>
+                <Pagination camerasCount={cameras.length}/>
               </div>
             </div>
           </div>

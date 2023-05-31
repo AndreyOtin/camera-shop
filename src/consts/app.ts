@@ -1,0 +1,3 @@
+const MAX_CAMERAS_PER_PAGE = 9;
+
+export { MAX_CAMERAS_PER_PAGE };
