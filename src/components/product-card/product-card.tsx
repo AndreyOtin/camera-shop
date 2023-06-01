@@ -4,9 +4,10 @@ import { formatPrice } from '../../utiils/formaters';
 
 type ProductCardProps = {
   camera: Camera;
+  onReviewButtonClick: (camera: Camera) => void;
 }
 
-function ProductCard({ camera }: ProductCardProps) {
+function ProductCard({ camera, onReviewButtonClick }: ProductCardProps) {
   return (
     <div className="product-card">
       <div className="product-card__img">
@@ -54,7 +55,11 @@ function ProductCard({ camera }: ProductCardProps) {
         </p>
       </div>
       <div className="product-card__buttons">
-        <button className="btn btn--purple product-card__btn" type="button">
+        <button
+          onClick={() => onReviewButtonClick(camera)}
+          className="btn btn--purple product-card__btn"
+          type="button"
+        >
           Купить
         </button>
         <a className="btn btn--transparent" href="#">
