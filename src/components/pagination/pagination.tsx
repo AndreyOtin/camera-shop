@@ -39,20 +39,11 @@ function Pagination({ camerasCount }: PaginationProps) {
           </li>
         ))}
 
-        {currentPage !== pages
-          ?
+        {currentPage !== pages &&
           <li className="pagination__item">
             <Link
               className="pagination__link pagination__link--text"
               to={generatePath(AppRoute.Catalog, { page: `page_${currentPage + 1}` })}
-            >Далее
-            </Link>
-          </li>
-          :
-          <li className="pagination__item" style={{ visibility: 'hidden' }}>
-            <Link
-              className="pagination__link pagination__link--text"
-              to='#'
             >
               Далее
             </Link>

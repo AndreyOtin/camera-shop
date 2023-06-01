@@ -10,6 +10,8 @@ import { useEffect } from 'react';
 import { Status } from '../../consts/enums';
 import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
+import useCurrentPage from '../../hooks/use-current-page';
+import { MAX_CAMERAS_PER_PAGE } from '../../consts/app';
 import {
   getCameras,
   getPromo,
@@ -18,8 +20,7 @@ import {
   selectPromo,
   selectPromoStatus
 } from '../../store/catalog-slice/catalog-slice';
-import useCurrentPage from '../../hooks/use-current-page';
-import { MAX_CAMERAS_PER_PAGE } from '../../consts/app';
+import ScrollToTop from '../../components/scroll-to-top/scroll-to-top';
 
 function CatalogScreen() {
   const dispatch = useAppDispatch();
@@ -50,14 +51,18 @@ function CatalogScreen() {
     return <ErrorScreen variant="error"/>;
   }
 
+  if (!currentPage || currentPage > Math.ceil(cameras.length / MAX_CAMERAS_PER_PAGE)) {
+    return <ErrorScreen variant="404"/>;
+  }
+
   const promoDescription = cameras.find((item) => item.id === promo.id)?.description;
-  const sliceStart = currentPage === 1 ? 0 : (currentPage - 1) * MAX_CAMERAS_PER_PAGE;
+  const sliceStart = (currentPage - 1) * MAX_CAMERAS_PER_PAGE;
   const sliceEnd = sliceStart + MAX_CAMERAS_PER_PAGE;
   const slicedCameras = cameras.slice(sliceStart, sliceEnd);
 
   return (
     <main>
-
+      <ScrollToTop/>
       <Helmet>
         <title>Каталог - Фотошоп</title>
       </Helmet>

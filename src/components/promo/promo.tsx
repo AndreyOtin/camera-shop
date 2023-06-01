@@ -2,16 +2,16 @@ import { Promo as PromoType } from '../../types/camera';
 
 type PromoProps = {
   promo: PromoType;
-  description:string | undefined;
+  description: string | undefined;
 }
 
-function Promo({promo, description}:PromoProps) {
+function Promo({ promo, description }: PromoProps) {
   return (
     <div className="banner">
       <picture>
         <source
           type="image/webp"
-          srcSet={`${promo.previewImgWebp}, ${promo.previewImgWebp2x}2x`}
+          srcSet={`${promo.previewImgWebp}, ${promo.previewImgWebp2x} 2x`}
         />
         <img
           src={promo.previewImg}
