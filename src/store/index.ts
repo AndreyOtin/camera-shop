@@ -3,10 +3,12 @@ import client from '../services/api';
 import { SliceNameSpace } from '../consts/enums';
 import catalogSlice from './catalog-slice/catalog-slice';
 import productSlice from './product-slice/product-slice';
+import commentsSlice from './comments-slice/comments-slice';
 
 const rootReducer = combineReducers({
   [SliceNameSpace.Catalog]: catalogSlice,
-  [SliceNameSpace.Product]: productSlice
+  [SliceNameSpace.Product]: productSlice,
+  [SliceNameSpace.Comments]: commentsSlice
 });
 
 const store = configureStore({

@@ -74,7 +74,6 @@ function CatalogScreen() {
   const sliceEnd = sliceStart + MAX_CAMERAS_PER_PAGE;
   const slicedCameras = cameras.slice(sliceStart, sliceEnd);
 
-
   return (
     <main>
       <Helmet>
@@ -86,7 +85,7 @@ function CatalogScreen() {
         description={promoDescription}
       />
       <div className="page-content">
-        <Breadcrumbs />
+        <Breadcrumbs/>
         <section className="catalog">
           <div className="container">
             <h1 className="title title--h2">Каталог фото- и видеотехники</h1>

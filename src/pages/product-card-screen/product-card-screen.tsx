@@ -3,18 +3,35 @@ import { fetchProduct, selectProduct, selectProductStatus } from '../../store/pr
 import Spinner from '../../components/spinner/spinner';
 import { Status, StatusCode } from '../../consts/enums';
 import ErrorScreen from '../error-screen/error-screen';
-import { useEffect } from 'react';
+import { MouseEvent, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumbs from '../../components/breadcrumps/breadcrumbs';
 import { formatPrice } from '../../utiils/formaters';
 import ProductTabs from '../../components/product-tabs/product-tabs';
 import ScrollToTop from '../../components/scroll-to-top/scroll-to-top';
+import { fetchComments } from '../../store/comments-slice/comments-slice';
+import Reviews from '../../components/reviews/reviews';
 
 function ProductCardScreen() {
   const dispatch = useAppDispatch();
-  const { status, code } = useAppSelector(selectProductStatus);
+  const { status: productStatus, code: productStatusCode } = useAppSelector(selectProductStatus);
+  const { status: commentsStatus, code: commentsStatusCode } = useAppSelector(selectProductStatus);
   const product = useAppSelector(selectProduct);
   const id = useParams().id;
+
+  const isSpinnerActive =
+    productStatus === Status.Idle ||
+    productStatus === Status.Loading ||
+    commentsStatus === Status.Idle ||
+    commentsStatus === Status.Loading;
+
+  const handleUpButtonClick = (evt: MouseEvent<HTMLAnchorElement>) => {
+    evt.preventDefault();
+    window.scroll({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
 
   useEffect(() => {
     if (!id) {
@@ -22,17 +39,18 @@ function ProductCardScreen() {
     }
 
     dispatch(fetchProduct(+id));
+    dispatch(fetchComments(+id));
   }, [dispatch, id]);
 
-  if (status === Status.Loading || status === Status.Idle) {
+  if (isSpinnerActive) {
     return <Spinner isActive/>;
   }
 
-  if (code === StatusCode.NotFound) {
+  if (productStatusCode === StatusCode.NotFound || commentsStatusCode === StatusCode.NotFound) {
     return <ErrorScreen variant="404"/>;
   }
 
-  if (status === Status.Error || !product) {
+  if (commentsStatus === Status.Error || !product) {
     return <ErrorScreen variant="error"/>;
   }
 
@@ -392,141 +410,15 @@ function ProductCardScreen() {
             </section>
           </div>
           <div className="page-content__section">
-            <section className="review-block">
-              <div className="container">
-                <div className="page-content__headed">
-                  <h2 className="title title--h3">Отзывы</h2>
-                  <button className="btn" type="button">Оставить свой отзыв</button>
-                </div>
-                <ul className="review-block__list">
-                  <li className="review-card">
-                    <div className="review-card__head">
-                      <p className="title title--h4">Сергей Горский</p>
-                      <time className="review-card__data" dateTime="2022-04-13">13 апреля</time>
-                    </div>
-                    <div className="rate review-card__rate">
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-full-star"></use>
-                      </svg>
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-full-star"></use>
-                      </svg>
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-full-star"></use>
-                      </svg>
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-full-star"></use>
-                      </svg>
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-full-star"></use>
-                      </svg>
-                      <p className="visually-hidden">Оценка: 5</p>
-                    </div>
-                    <ul className="review-card__list">
-                      <li className="item-list"><span className="item-list__title">Достоинства:</span>
-                        <p className="item-list__text">Надёжная, хорошо лежит в руке, необычно выглядит</p>
-                      </li>
-                      <li className="item-list"><span className="item-list__title">Недостатки:</span>
-                        <p className="item-list__text">Тяжеловата, сложно найти плёнку</p>
-                      </li>
-                      <li className="item-list"><span className="item-list__title">Комментарий:</span>
-                        <p className="item-list__text">Раз в полгода достаю из-под стекла, стираю пыль,
-                          заряжаю — работает как часы. Ни у кого из знакомых такой нет, все завидуют)
-                          Теперь это жемчужина моей коллекции, однозначно стоит своих денег!
-                        </p>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="review-card">
-                    <div className="review-card__head">
-                      <p className="title title--h4">Пётр Матросов</p>
-                      <time className="review-card__data" dateTime="2022-03-02">2 марта</time>
-                    </div>
-                    <div className="rate review-card__rate">
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-full-star"></use>
-                      </svg>
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-star"></use>
-                      </svg>
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-star"></use>
-                      </svg>
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-star"></use>
-                      </svg>
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-star"></use>
-                      </svg>
-                      <p className="visually-hidden">Оценка: 1</p>
-                    </div>
-                    <ul className="review-card__list">
-                      <li className="item-list"><span className="item-list__title">Достоинства:</span>
-                        <p className="item-list__text">Хорошее пресс-папье</p>
-                      </li>
-                      <li className="item-list"><span className="item-list__title">Недостатки:</span>
-                        <p className="item-list__text">Через 3 дня развалилась на куски</p>
-                      </li>
-                      <li className="item-list"><span className="item-list__title">Комментарий:</span>
-                        <p className="item-list__text">При попытке вставить плёнку сломался механизм
-                          открытия отсека, пришлось заклеить его изолентой. Начал настраивать фокус&nbsp;—
-                          линза провалилась внутрь корпуса. Пока доставал — отломилось несколько
-                          лепестков диафрагмы. От злости стукнул камеру об стол, и рукоятка треснула
-                          пополам. Склеил всё суперклеем, теперь прижимаю ей бумагу. НЕ
-                          РЕКОМЕНДУЮ!!!
-                        </p>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="review-card">
-                    <div className="review-card__head">
-                      <p className="title title--h4">Татьяна Кузнецова </p>
-                      <time className="review-card__data" dateTime="2021-12-30">30 декабря</time>
-                    </div>
-                    <div className="rate review-card__rate">
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-full-star"></use>
-                      </svg>
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-full-star"></use>
-                      </svg>
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-full-star"></use>
-                      </svg>
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-full-star"></use>
-                      </svg>
-                      <svg width="17" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-star"></use>
-                      </svg>
-                      <p className="visually-hidden">Оценка: 4</p>
-                    </div>
-                    <ul className="review-card__list">
-                      <li className="item-list"><span className="item-list__title">Достоинства:</span>
-                        <p className="item-list__text">Редкая</p>
-                      </li>
-                      <li className="item-list"><span className="item-list__title">Недостатки:</span>
-                        <p className="item-list__text">Высокая цена</p>
-                      </li>
-                      <li className="item-list"><span className="item-list__title">Комментарий:</span>
-                        <p className="item-list__text">Дорого для портативной видеокамеры, но в моей
-                          коллекции как раз не хватало такого экземпляра. Следов использования нет,
-                          доставили в заводской упаковке, выглядит шикарно!
-                        </p>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-                <div className="review-block__buttons">
-                  <button className="btn btn--purple" type="button">Показать больше отзывов
-                  </button>
-                </div>
-              </div>
-            </section>
+            <Reviews/>
           </div>
         </div>
       </main>
-      <a className="up-btn" href="#header">
+      <a
+        onClick={(evt) => handleUpButtonClick(evt)}
+        className="up-btn"
+        href="#header"
+      >
         <svg width="12" height="18" aria-hidden="true">
           <use xlinkHref="#icon-arrow2"></use>
         </svg>

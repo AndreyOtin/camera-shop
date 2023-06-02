@@ -7,7 +7,7 @@ type InitialState = {
   product: Camera | null;
   productStatus: {
     status: Status;
-    code: number;
+    code: string;
   };
 }
 
@@ -15,7 +15,7 @@ const initialState: InitialState = {
   product: null,
   productStatus: {
     status: Status.Idle,
-    code: 0
+    code: ''
   }
 };
 
@@ -41,7 +41,7 @@ const productSlice = createSlice({
         state.productStatus.status = Status.Error;
 
         if (action.error.message) {
-          state.productStatus.code = +action.error.message;
+          state.productStatus.code = action.error.message;
         }
       })
       .addCase(fetchProduct.fulfilled, (state, action) => {
