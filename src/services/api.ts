@@ -12,8 +12,8 @@ const api = axios.create({
   timeout: REQUEST_TIMEOUT
 });
 
-api.interceptors.response.use((response) => response, (error: AxiosError<{ message: string }>) => {
-  throw error.response?.data.message;
+api.interceptors.response.use((response) => response, (error: AxiosError) => {
+  throw error.response?.status;
 });
 
 const client = {

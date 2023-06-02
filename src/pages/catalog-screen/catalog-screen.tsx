@@ -47,6 +47,10 @@ function CatalogScreen() {
     }
   }, [camerasStatus, dispatch]);
 
+  useEffect(() => {
+    window.history.scrollRestoration = 'manual';
+  }, []);
+
   const isSpinnerActive =
     camerasStatus === Status.Idle ||
     camerasStatus === Status.Loading ||
@@ -69,6 +73,7 @@ function CatalogScreen() {
   const sliceStart = (currentPage - 1) * MAX_CAMERAS_PER_PAGE;
   const sliceEnd = sliceStart + MAX_CAMERAS_PER_PAGE;
   const slicedCameras = cameras.slice(sliceStart, sliceEnd);
+
 
   return (
     <main>

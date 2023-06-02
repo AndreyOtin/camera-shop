@@ -7,9 +7,15 @@ export enum Status {
 
 export enum SliceNameSpace {
   Catalog = 'catalog',
+  Product = 'product'
 }
 
 export enum AppRoute {
   Root = '/',
-  Catalog = '/catalog/:page'
+  Catalog = '/catalog/:page',
+  Product = '/product/:id'
+}
+
+export enum StatusCode {
+  NotFound = 404
 }
