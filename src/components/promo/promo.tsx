@@ -1,13 +1,26 @@
 import { Promo as PromoType } from '../../types/camera';
+import { useEffect, useRef } from 'react';
 
 type PromoProps = {
   promo: PromoType;
   description: string | undefined;
+  setBannerPosition: (pos:number)=>void;
 }
 
-function Promo({ promo, description }: PromoProps) {
+function Promo({ promo, description, setBannerPosition }: PromoProps) {
+  const promoRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (promoRef.current) {
+      const { bottom } = promoRef.current.getBoundingClientRect();
+
+      setBannerPosition(bottom);
+    }
+  }, [setBannerPosition]);
+
+
   return (
-    <div className="banner">
+    <div ref={promoRef} className="banner">
       <picture>
         <source
           type="image/webp"

@@ -3,7 +3,7 @@ import Header from '../header/header';
 import Footer from '../footer/footer';
 
 const Layout = () => (
-  <div className='wrapper scroll-lock'>
+  <div className='wrapper'>
     <Header/>
     <Outlet/>
     <Footer/>

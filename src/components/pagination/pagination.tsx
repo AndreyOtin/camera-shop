@@ -6,9 +6,10 @@ import { MAX_CAMERAS_PER_PAGE } from '../../consts/app';
 
 type PaginationProps = {
   camerasCount: number;
+  bannerPosition: number;
 }
 
-function Pagination({ camerasCount }: PaginationProps) {
+function Pagination({ camerasCount, bannerPosition }: PaginationProps) {
   const pages = Math.ceil(camerasCount / MAX_CAMERAS_PER_PAGE);
   const currentPage = useCurrentPage();
 
@@ -18,6 +19,7 @@ function Pagination({ camerasCount }: PaginationProps) {
         {currentPage !== 1 &&
           <li className="pagination__item">
             <Link
+              onClick={() => window.scrollTo(0, bannerPosition)}
               className="pagination__link pagination__link--text"
               to={generatePath(AppRoute.Catalog, { page: `page_${currentPage - 1}` })}
             >
@@ -31,6 +33,7 @@ function Pagination({ camerasCount }: PaginationProps) {
             className="pagination__item"
           >
             <NavLink
+              onClick={() => window.scrollTo(0, bannerPosition)}
               className={({ isActive }) => clsx('pagination__link', isActive && 'pagination__link--active')}
               to={generatePath(AppRoute.Catalog, { page: `page_${index + 1}` })}
             >
@@ -42,6 +45,7 @@ function Pagination({ camerasCount }: PaginationProps) {
         {currentPage !== pages &&
           <li className="pagination__item">
             <Link
+              onClick={() => window.scrollTo(0, bannerPosition)}
               className="pagination__link pagination__link--text"
               to={generatePath(AppRoute.Catalog, { page: `page_${currentPage + 1}` })}
             >

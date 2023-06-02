@@ -12,6 +12,8 @@ import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
 import useCurrentPage from '../../hooks/use-current-page';
 import { MAX_CAMERAS_PER_PAGE } from '../../consts/app';
+import PreviewModal from '../../components/preview-modal/preview-modal';
+import { Camera } from '../../types/camera';
 import {
   getCameras,
   getPromo,
@@ -20,9 +22,6 @@ import {
   selectPromo,
   selectPromoStatus
 } from '../../store/catalog-slice/catalog-slice';
-import ScrollToTop from '../../components/scroll-to-top/scroll-to-top';
-import PreviewModal from '../../components/preview-modal/preview-modal';
-import { Camera } from '../../types/camera';
 
 function CatalogScreen() {
   const dispatch = useAppDispatch();
@@ -32,13 +31,12 @@ function CatalogScreen() {
   const promo = useAppSelector(selectPromo);
   const currentPage = useCurrentPage();
 
-  const [isModalOpened, setModal] = useState(false);
   const [preview, setPreview] = useState<Camera | null>(null);
+  const [bannerPosition, setBannerPosition] = useState(0);
 
   const handlePreviewModalShow = (camera: Camera | null) => {
-    document.body.style.overflow = isModalOpened ? '' : 'hidden';
+    document.body.style.overflow = preview ? '' : 'hidden';
 
-    setModal(!isModalOpened);
     setPreview(camera);
   };
 
@@ -74,11 +72,14 @@ function CatalogScreen() {
 
   return (
     <main>
-      <ScrollToTop/>
       <Helmet>
         <title>Каталог - Фотошоп</title>
       </Helmet>
-      <Promo promo={promo} description={promoDescription}/>
+      <Promo
+        setBannerPosition={setBannerPosition}
+        promo={promo}
+        description={promoDescription}
+      />
       <div className="page-content">
         <Breadcrumbs/>
         <section className="catalog">
@@ -98,7 +99,7 @@ function CatalogScreen() {
                           onReviewButtonClick={handlePreviewModalShow}
                         />))}
                 </div>
-                <Pagination camerasCount={cameras.length}/>
+                <Pagination bannerPosition={bannerPosition} camerasCount={cameras.length}/>
               </div>
             </div>
           </div>
@@ -106,7 +107,6 @@ function CatalogScreen() {
       </div>
       <PreviewModal
         preview={preview}
-        isOpened={isModalOpened}
         onCloseButtonClick={handlePreviewModalShow}
       />
     </main>

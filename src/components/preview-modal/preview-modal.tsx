@@ -1,20 +1,18 @@
-import clsx from 'clsx';
 import { Camera } from '../../types/camera';
 import { formatPrice } from '../../utiils/formaters';
 
 type PreviewModalProps = {
-  isOpened: boolean;
   preview: Camera | null;
-  onCloseButtonClick: (camera:null) => void;
+  onCloseButtonClick: (camera: null) => void;
 }
 
-function PreviewModal({ isOpened, preview, onCloseButtonClick }: PreviewModalProps) {
+function PreviewModal({ preview, onCloseButtonClick }: PreviewModalProps) {
   if (!preview) {
     return null;
   }
 
   return (
-    <div className={clsx('modal', isOpened && 'is-active')}>
+    <div className="modal is-active">
       <div className="modal__wrapper">
         <div className="modal__overlay"></div>
         <div className="modal__content">
@@ -62,7 +60,7 @@ function PreviewModal({ isOpened, preview, onCloseButtonClick }: PreviewModalPro
             </button>
           </div>
           <button
-            onClick={()=>onCloseButtonClick(null)}
+            onClick={() => onCloseButtonClick(null)}
             className="cross-btn"
             type="button"
             aria-label="Закрыть попап"
