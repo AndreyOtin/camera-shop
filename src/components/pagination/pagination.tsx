@@ -19,7 +19,10 @@ function Pagination({ camerasCount, bannerPosition }: PaginationProps) {
         {currentPage !== 1 &&
           <li className="pagination__item">
             <Link
-              onClick={() => window.scrollTo(0, bannerPosition)}
+              onClick={() => window.scroll({
+                top: bannerPosition,
+                behavior: 'smooth'
+              })}
               className="pagination__link pagination__link--text"
               to={generatePath(AppRoute.Catalog, { page: `page_${currentPage - 1}` })}
             >
@@ -33,7 +36,10 @@ function Pagination({ camerasCount, bannerPosition }: PaginationProps) {
             className="pagination__item"
           >
             <NavLink
-              onClick={() => window.scrollTo(0, bannerPosition)}
+              onClick={() => window.scroll({
+                top: bannerPosition,
+                behavior: 'smooth'
+              })}
               className={({ isActive }) => clsx('pagination__link', isActive && 'pagination__link--active')}
               to={generatePath(AppRoute.Catalog, { page: `page_${index + 1}` })}
             >
@@ -45,7 +51,10 @@ function Pagination({ camerasCount, bannerPosition }: PaginationProps) {
         {currentPage !== pages &&
           <li className="pagination__item">
             <Link
-              onClick={() => window.scrollTo(0, bannerPosition)}
+              onClick={() => window.scroll({
+                top: bannerPosition,
+                behavior: 'smooth'
+              })}
               className="pagination__link pagination__link--text"
               to={generatePath(AppRoute.Catalog, { page: `page_${currentPage + 1}` })}
             >

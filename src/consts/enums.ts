@@ -13,7 +13,7 @@ export enum SliceNameSpace {
 export enum AppRoute {
   Root = '/',
   Catalog = '/catalog/:page',
-  Product = '/product/:id'
+  Product = '/catalog/product/:id'
 }
 
 export enum StatusCode {

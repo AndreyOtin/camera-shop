@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import Breadcrumbs from '../../components/breadcrumps/breadcrumbs';
 import { formatPrice } from '../../utiils/formaters';
 import ProductTabs from '../../components/product-tabs/product-tabs';
+import ScrollToTop from '../../components/scroll-to-top/scroll-to-top';
 
 function ProductCardScreen() {
   const dispatch = useAppDispatch();
@@ -38,12 +39,9 @@ function ProductCardScreen() {
   return (
     <>
       <main>
+        <ScrollToTop/>
         <div className="page-content">
-          <div className="breadcrumbs">
-            <div className="container">
-              <Breadcrumbs/>
-            </div>
-          </div>
+          <Breadcrumbs productName={product.name} productId={product.id}/>
           <div className="page-content__section">
             <section className="product">
               <div className="container">
@@ -63,7 +61,7 @@ function ProductCardScreen() {
                   </picture>
                 </div>
                 <div className="product__content">
-                  <h1 className="title title--h3">Ретрокамера Das Auge IV</h1>
+                  <h1 className="title title--h3">{product.name}</h1>
                   <div className="rate product__rate">
                     <svg width="17" height="16" aria-hidden="true">
                       <use xlinkHref="#icon-full-star"></use>
@@ -96,7 +94,7 @@ function ProductCardScreen() {
                     </svg>
                     Добавить в корзину
                   </button>
-                  <ProductTabs />
+                  <ProductTabs/>
                 </div>
               </div>
             </section>

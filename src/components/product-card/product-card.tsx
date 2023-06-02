@@ -1,6 +1,8 @@
 import React from 'react';
 import { Camera } from '../../types/camera';
 import { formatPrice } from '../../utiils/formaters';
+import { generatePath, Link } from 'react-router-dom';
+import { AppRoute } from '../../consts/enums';
 
 type ProductCardProps = {
   camera: Camera;
@@ -62,9 +64,12 @@ function ProductCard({ camera, onReviewButtonClick }: ProductCardProps) {
         >
           Купить
         </button>
-        <a className="btn btn--transparent" href="#">
+        <Link
+          className="btn btn--transparent"
+          to={generatePath(AppRoute.Product, { id: camera.id.toString() })}
+        >
           Подробнее
-        </a>
+        </Link>
       </div>
     </div>
   );

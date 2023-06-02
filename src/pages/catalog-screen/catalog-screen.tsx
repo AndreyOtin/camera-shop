@@ -41,11 +41,11 @@ function CatalogScreen() {
   };
 
   useEffect(() => {
-    if (camerasStatus === Status.Idle) {
+    if (camerasStatus === Status.Idle || promoStatus === Status.Idle) {
       dispatch(getCameras());
       dispatch(getPromo());
     }
-  }, [camerasStatus, dispatch]);
+  }, [camerasStatus, dispatch, promoStatus]);
 
   useEffect(() => {
     window.history.scrollRestoration = 'manual';
@@ -86,7 +86,7 @@ function CatalogScreen() {
         description={promoDescription}
       />
       <div className="page-content">
-        <Breadcrumbs/>
+        <Breadcrumbs />
         <section className="catalog">
           <div className="container">
             <h1 className="title title--h2">Каталог фото- и видеотехники</h1>
