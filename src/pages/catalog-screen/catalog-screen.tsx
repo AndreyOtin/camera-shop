@@ -22,6 +22,7 @@ import {
   selectPromo,
   selectPromoStatus
 } from '../../store/catalog-slice/catalog-slice';
+import useStatus from '../../hooks/use-status';
 
 function CatalogScreen() {
   const dispatch = useAppDispatch();
@@ -29,16 +30,12 @@ function CatalogScreen() {
   const promoStatus = useAppSelector(selectPromoStatus);
   const cameras = useAppSelector(selectCameras);
   const promo = useAppSelector(selectPromo);
+
   const currentPage = useCurrentPage();
+  const { isLoading, isError } = useStatus({ status: { camerasStatus, promoStatus } });
 
   const [preview, setPreview] = useState<Camera | null>(null);
   const [bannerPosition, setBannerPosition] = useState(0);
-
-  const handlePreviewModalShow = (camera: Camera | null) => {
-    document.body.style.overflow = preview ? '' : 'hidden';
-
-    setPreview(camera);
-  };
 
   useEffect(() => {
     if (camerasStatus === Status.Idle || promoStatus === Status.Idle) {
@@ -51,17 +48,18 @@ function CatalogScreen() {
     window.history.scrollRestoration = 'manual';
   }, []);
 
-  const isSpinnerActive =
-    camerasStatus === Status.Idle ||
-    camerasStatus === Status.Loading ||
-    promoStatus === Status.Idle ||
-    promoStatus === Status.Loading;
+  const handlePreviewModalShow = (camera: Camera | null) => {
+    document.body.style.overflow = preview ? '' : 'hidden';
+    document.documentElement.style.paddingRight = 'calc(17px - (100vw - 100%)';
 
-  if (isSpinnerActive) {
+    setPreview(camera);
+  };
+
+  if (isLoading) {
     return <Spinner isActive/>;
   }
 
-  if (camerasStatus === Status.Error || promoStatus === Status.Error || !promo) {
+  if (isError || !promo) {
     return <ErrorScreen variant="error"/>;
   }
 

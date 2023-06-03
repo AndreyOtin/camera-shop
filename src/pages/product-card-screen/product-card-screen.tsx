@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
 import { fetchProduct, selectProduct, selectProductStatus } from '../../store/product-slice/product-slice';
 import Spinner from '../../components/spinner/spinner';
-import { Status, StatusCode } from '../../consts/enums';
 import ErrorScreen from '../error-screen/error-screen';
 import { MouseEvent, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
@@ -9,29 +8,21 @@ import Breadcrumbs from '../../components/breadcrumps/breadcrumbs';
 import { formatPrice } from '../../utiils/formaters';
 import ProductTabs from '../../components/product-tabs/product-tabs';
 import ScrollToTop from '../../components/scroll-to-top/scroll-to-top';
-import { fetchComments } from '../../store/comments-slice/comments-slice';
+import { fetchComments, selectCommentsStatus } from '../../store/comments-slice/comments-slice';
 import Reviews from '../../components/reviews/reviews';
+import useStatus from '../../hooks/use-status';
 
 function ProductCardScreen() {
   const dispatch = useAppDispatch();
-  const { status: productStatus, code: productStatusCode } = useAppSelector(selectProductStatus);
-  const { status: commentsStatus, code: commentsStatusCode } = useAppSelector(selectProductStatus);
   const product = useAppSelector(selectProduct);
+  const { status: productStatus, code: productStatusCode } = useAppSelector(selectProductStatus);
+  const { status: commentsStatus, code: commentsStatusCode } = useAppSelector(selectCommentsStatus);
+
   const id = useParams().id;
-
-  const isSpinnerActive =
-    productStatus === Status.Idle ||
-    productStatus === Status.Loading ||
-    commentsStatus === Status.Idle ||
-    commentsStatus === Status.Loading;
-
-  const handleUpButtonClick = (evt: MouseEvent<HTMLAnchorElement>) => {
-    evt.preventDefault();
-    window.scroll({
-      top: 0,
-      behavior: 'smooth'
-    });
-  };
+  const { isLoading, isNotFound, isError } = useStatus({
+    status: { productStatus, commentsStatus },
+    code: { productStatusCode, commentsStatusCode }
+  });
 
   useEffect(() => {
     if (!id) {
@@ -42,15 +33,23 @@ function ProductCardScreen() {
     dispatch(fetchComments(+id));
   }, [dispatch, id]);
 
-  if (isSpinnerActive) {
+  const handleUpButtonClick = (evt: MouseEvent<HTMLAnchorElement>) => {
+    evt.preventDefault();
+    window.scroll({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  if (isLoading) {
     return <Spinner isActive/>;
   }
 
-  if (productStatusCode === StatusCode.NotFound || commentsStatusCode === StatusCode.NotFound) {
+  if (isNotFound) {
     return <ErrorScreen variant="404"/>;
   }
 
-  if (commentsStatus === Status.Error || !product) {
+  if (isError || !product) {
     return <ErrorScreen variant="error"/>;
   }
 
