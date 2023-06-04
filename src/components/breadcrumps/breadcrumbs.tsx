@@ -1,14 +1,11 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../consts/enums';
 import clsx from 'clsx';
+import { menuNameToRuName } from "../../consts/app";
 
 type BreadCrumbsProps = {
   productName?: string;
 }
-
-const pathToMenuName: Record<string, string> = {
-  catalog: 'Kаталог'
-};
 
 function Breadcrumbs({ productName }: BreadCrumbsProps) {
   const location = useLocation();
@@ -26,7 +23,7 @@ function Breadcrumbs({ productName }: BreadCrumbsProps) {
           end
         >
           <>
-            {pathToMenuName[name] || productName}
+            {menuNameToRuName[name] || productName}
             {elements.length !== index + 1 &&
               <svg width="5" height="8" aria-hidden="true">
                 <use xlinkHref="#icon-arrow-mini"></use>

@@ -1,22 +1,29 @@
+import { AppRoute, MainMenu } from '../../consts/enums';
+import { Link, NavLink } from 'react-router-dom';
+import { menuNameToRuName } from '../../consts/app';
+import clsx from 'clsx';
+
 function Header() {
   return (
     <header className="header" id="header">
       <div className="container">
-        <a className="header__logo" href="index.html" aria-label="Переход на главную">
+        <Link className="header__logo" to={AppRoute.Root} aria-label="Переход на главную">
           <svg width="100" height="36" aria-hidden="true">
             <use xlinkHref="#icon-logo"></use>
           </svg>
-        </a>
+        </Link>
         <nav className="main-nav header__main-nav">
           <ul className="main-nav__list">
-            <li className="main-nav__item"><a className="main-nav__link" href="catalog.html">Каталог</a>
-            </li>
-            <li className="main-nav__item"><a className="main-nav__link" href="#">Гарантии</a>
-            </li>
-            <li className="main-nav__item"><a className="main-nav__link" href="#">Доставка</a>
-            </li>
-            <li className="main-nav__item"><a className="main-nav__link" href="#">О компании</a>
-            </li>
+            {Object.values(MainMenu).map((menu) => (
+              <li key={menu} className="main-nav__item">
+                <NavLink
+                  className={({ isActive }) => clsx('main-nav__link', isActive && 'main-nav__link--active')}
+                  to={`/${menu}`}
+                >
+                  {menuNameToRuName[menu]}
+                </NavLink>
+              </li>
+            ))}
           </ul>
         </nav>
         <div className="form-search">

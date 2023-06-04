@@ -1,5 +1,7 @@
 import { Promo as PromoType } from '../../types/camera';
 import { useEffect, useRef } from 'react';
+import { generatePath, Link } from 'react-router-dom';
+import { AppRoute } from '../../consts/enums';
 
 type PromoProps = {
   promo: PromoType;
@@ -37,16 +39,16 @@ function Promo({ promo, description, setBannerPosition }: PromoProps) {
       <p className="banner__info">
         <span className="banner__message">Новинка!</span>
         <span className="title title--h1">
-            Cannonball&nbsp;Pro&nbsp;MX&nbsp;8i
+          {promo.name}
         </span>
         <span
           className="banner__text"
         >
           {description}
         </span>
-        <a className="btn" href="#">
+        <Link className="btn" to={generatePath(AppRoute.Product, {product: promo.id.toString()})}>
           Подробнее
-        </a>
+        </Link>
       </p>
     </div>
   );

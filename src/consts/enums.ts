@@ -17,10 +17,23 @@ export enum AppRoute {
   Product = '/catalog/:product'
 }
 
+export enum MainMenu {
+  Catalog = 'catalog',
+  Delivery = 'delivey',
+  Warranties = 'warranties',
+  About = 'about'
+}
+
 export enum StatusCode {
-  NotFound = '404'
+  NotFound = '404',
+  BadRequest = '400'
 }
 
 export enum SearchParam {
   Page = 'page'
+}
+
+export enum MaxElementCount {
+  Reviews = 3,
+  ProductCard = 9
 }

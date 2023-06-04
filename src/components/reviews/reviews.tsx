@@ -3,12 +3,11 @@ import { selectComments } from '../../store/comments-slice/comments-slice';
 import ReviewCard from './review-card/review-card';
 import dayjs from 'dayjs';
 import { useState } from 'react';
-
-const MAX_COMMENTS = 3;
+import { MaxElementCount } from '../../consts/enums';
 
 function Reviews() {
   const comments = useAppSelector(selectComments);
-  const [currentCommentsCount, setCommentsCount] = useState(MAX_COMMENTS);
+  const [currentCommentsCount, setCommentsCount] = useState(MaxElementCount.Reviews);
   const sortedComments = [...comments].sort((a, b) => dayjs(b.createAt).diff(a.createAt));
 
   return (
@@ -26,7 +25,7 @@ function Reviews() {
         <div className="review-block__buttons">
           {sortedComments.length > currentCommentsCount &&
             <button
-              onClick={() => setCommentsCount((count) => count + MAX_COMMENTS)}
+              onClick={() => setCommentsCount((count) => count + MaxElementCount.Reviews)}
               className="btn btn--purple"
               type="button"
             >

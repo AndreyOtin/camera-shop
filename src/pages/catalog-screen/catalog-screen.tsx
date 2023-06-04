@@ -7,10 +7,9 @@ import Pagination from '../../components/pagination/pagination';
 import ProductCard from '../../components/product-card/product-card';
 import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
 import { useEffect, useState } from 'react';
-import { SearchParam, Status } from '../../consts/enums';
+import { MaxElementCount, SearchParam, Status } from '../../consts/enums';
 import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
-import { MAX_CAMERAS_PER_PAGE } from '../../consts/app';
 import PreviewModal from '../../components/preview-modal/preview-modal';
 import { Camera } from '../../types/camera';
 import {
@@ -57,8 +56,8 @@ function CatalogScreen() {
 
   const currentPage = searchParams.get(SearchParam.Page) ? Number(searchParams.get(SearchParam.Page)) : 1;
   const promoDescription = cameras.find((item) => item.id === promo.id)?.description;
-  const sliceStart = (currentPage - 1) * MAX_CAMERAS_PER_PAGE;
-  const sliceEnd = sliceStart + MAX_CAMERAS_PER_PAGE;
+  const sliceStart = (currentPage - 1) * MaxElementCount.ProductCard;
+  const sliceEnd = sliceStart + MaxElementCount.ProductCard;
   const slicedCameras = cameras.slice(sliceStart, sliceEnd);
 
   const handlePreviewModalShow = (camera: Camera | null) => {

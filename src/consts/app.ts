@@ -1,3 +1,10 @@
-const MAX_CAMERAS_PER_PAGE = 9;
+import { MainMenu } from './enums';
 
-export { MAX_CAMERAS_PER_PAGE };
+const menuNameToRuName: Record<string, string> = {
+  [MainMenu.Catalog]: 'Kаталог',
+  [MainMenu.Warranties]: 'Гарантии',
+  [MainMenu.About] : 'О компании',
+  [MainMenu.Delivery]: 'Доставка'
+};
+
+export { menuNameToRuName };
