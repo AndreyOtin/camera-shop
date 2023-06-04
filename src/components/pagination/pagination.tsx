@@ -1,17 +1,16 @@
-import { generatePath, Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AppRoute } from '../../consts/enums';
 import clsx from 'clsx';
-import useCurrentPage from '../../hooks/use-current-page';
 import { MAX_CAMERAS_PER_PAGE } from '../../consts/app';
 
 type PaginationProps = {
   camerasCount: number;
   bannerPosition: number;
+  currentPage: number;
 }
 
-function Pagination({ camerasCount, bannerPosition }: PaginationProps) {
+function Pagination({ camerasCount, bannerPosition, currentPage }: PaginationProps) {
   const pages = Math.ceil(camerasCount / MAX_CAMERAS_PER_PAGE);
-  const currentPage = useCurrentPage();
 
   return (
     <div className="pagination">
@@ -24,7 +23,7 @@ function Pagination({ camerasCount, bannerPosition }: PaginationProps) {
                 behavior: 'smooth'
               })}
               className="pagination__link pagination__link--text"
-              to={generatePath(AppRoute.Catalog, { page: `page_${currentPage - 1}` })}
+              to={`${AppRoute.Catalog}?page=${currentPage - 1}`}
             >
               Назад
             </Link>
@@ -35,16 +34,16 @@ function Pagination({ camerasCount, bannerPosition }: PaginationProps) {
             key={`id-${index.toString()}`}
             className="pagination__item"
           >
-            <NavLink
+            <Link
               onClick={() => window.scroll({
                 top: bannerPosition,
                 behavior: 'smooth'
               })}
-              className={({ isActive }) => clsx('pagination__link', isActive && 'pagination__link--active')}
-              to={generatePath(AppRoute.Catalog, { page: `page_${index + 1}` })}
+              className={clsx('pagination__link', currentPage === index + 1 && 'pagination__link--active')}
+              to={`${AppRoute.Catalog}?page=${index + 1}`}
             >
               {index + 1}
-            </NavLink>
+            </Link>
           </li>
         ))}
 
@@ -56,7 +55,7 @@ function Pagination({ camerasCount, bannerPosition }: PaginationProps) {
                 behavior: 'smooth'
               })}
               className="pagination__link pagination__link--text"
-              to={generatePath(AppRoute.Catalog, { page: `page_${currentPage + 1}` })}
+              to={`${AppRoute.Catalog}?page=${currentPage + 1}`}
             >
               Далее
             </Link>

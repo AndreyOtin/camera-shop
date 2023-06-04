@@ -7,10 +7,9 @@ import Pagination from '../../components/pagination/pagination';
 import ProductCard from '../../components/product-card/product-card';
 import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
 import { useEffect, useState } from 'react';
-import { Status } from '../../consts/enums';
+import { SearchParam, Status } from '../../consts/enums';
 import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
-import useCurrentPage from '../../hooks/use-current-page';
 import { MAX_CAMERAS_PER_PAGE } from '../../consts/app';
 import PreviewModal from '../../components/preview-modal/preview-modal';
 import { Camera } from '../../types/camera';
@@ -23,6 +22,7 @@ import {
   selectPromoStatus
 } from '../../store/catalog-slice/catalog-slice';
 import useStatus from '../../hooks/use-status';
+import { useSearchParams } from 'react-router-dom';
 
 function CatalogScreen() {
   const dispatch = useAppDispatch();
@@ -31,9 +31,8 @@ function CatalogScreen() {
   const cameras = useAppSelector(selectCameras);
   const promo = useAppSelector(selectPromo);
 
-  const currentPage = useCurrentPage();
+  const [searchParams] = useSearchParams();
   const { isLoading, isError } = useStatus({ status: { camerasStatus, promoStatus } });
-
   const [preview, setPreview] = useState<Camera | null>(null);
   const [bannerPosition, setBannerPosition] = useState(0);
 
@@ -48,13 +47,6 @@ function CatalogScreen() {
     window.history.scrollRestoration = 'manual';
   }, []);
 
-  const handlePreviewModalShow = (camera: Camera | null) => {
-    document.body.style.overflow = preview ? '' : 'hidden';
-    document.documentElement.style.paddingRight = 'calc(17px - (100vw - 100%)';
-
-    setPreview(camera);
-  };
-
   if (isLoading) {
     return <Spinner isActive/>;
   }
@@ -63,14 +55,18 @@ function CatalogScreen() {
     return <ErrorScreen variant="error"/>;
   }
 
-  if (!currentPage || currentPage > Math.ceil(cameras.length / MAX_CAMERAS_PER_PAGE)) {
-    return <ErrorScreen variant="404"/>;
-  }
-
+  const currentPage = searchParams.get(SearchParam.Page) ? Number(searchParams.get(SearchParam.Page)) : 1;
   const promoDescription = cameras.find((item) => item.id === promo.id)?.description;
   const sliceStart = (currentPage - 1) * MAX_CAMERAS_PER_PAGE;
   const sliceEnd = sliceStart + MAX_CAMERAS_PER_PAGE;
   const slicedCameras = cameras.slice(sliceStart, sliceEnd);
+
+  const handlePreviewModalShow = (camera: Camera | null) => {
+    document.body.style.overflow = preview ? '' : 'hidden';
+    document.documentElement.style.paddingRight = 'calc(17px - (100vw - 100%)';
+
+    setPreview(camera);
+  };
 
   return (
     <main>
@@ -101,7 +97,11 @@ function CatalogScreen() {
                           onReviewButtonClick={handlePreviewModalShow}
                         />))}
                 </div>
-                <Pagination bannerPosition={bannerPosition} camerasCount={cameras.length}/>
+                <Pagination
+                  currentPage={currentPage}
+                  bannerPosition={bannerPosition}
+                  camerasCount={cameras.length}
+                />
               </div>
             </div>
           </div>

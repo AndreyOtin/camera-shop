@@ -66,7 +66,7 @@ function ProductCard({ camera, onReviewButtonClick }: ProductCardProps) {
         </button>
         <Link
           className="btn btn--transparent"
-          to={generatePath(AppRoute.Product, { id: camera.id.toString() })}
+          to={generatePath(AppRoute.Product, { product: camera.id.toString() })}
         >
           Подробнее
         </Link>

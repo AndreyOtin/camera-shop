@@ -13,10 +13,14 @@ export enum SliceNameSpace {
 
 export enum AppRoute {
   Root = '/',
-  Catalog = '/catalog/:page',
-  Product = '/catalog/product/:id'
+  Catalog = '/catalog',
+  Product = '/catalog/:product'
 }
 
 export enum StatusCode {
   NotFound = '404'
+}
+
+export enum SearchParam {
+  Page = 'page'
 }

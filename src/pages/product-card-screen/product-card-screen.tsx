@@ -18,7 +18,7 @@ function ProductCardScreen() {
   const { status: productStatus, code: productStatusCode } = useAppSelector(selectProductStatus);
   const { status: commentsStatus, code: commentsStatusCode } = useAppSelector(selectCommentsStatus);
 
-  const id = useParams().id;
+  const id = useParams().product;
   const { isLoading, isNotFound, isError } = useStatus({
     status: { productStatus, commentsStatus },
     code: { productStatusCode, commentsStatusCode }
@@ -58,7 +58,7 @@ function ProductCardScreen() {
       <main>
         <ScrollToTop/>
         <div className="page-content">
-          <Breadcrumbs productName={product.name} productId={product.id}/>
+          <Breadcrumbs productName={product.name} />
           <div className="page-content__section">
             <section className="product">
               <div className="container">

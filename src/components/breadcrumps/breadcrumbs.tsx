@@ -1,19 +1,41 @@
-import { generatePath, NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../consts/enums';
 import clsx from 'clsx';
 
 type BreadCrumbsProps = {
   productName?: string;
-  productId?: number;
 }
 
 const pathToMenuName: Record<string, string> = {
   catalog: 'Kаталог'
 };
 
-function Breadcrumbs({ productName, productId }: BreadCrumbsProps) {
+function Breadcrumbs({ productName }: BreadCrumbsProps) {
   const location = useLocation();
-  const [pathRoot] = location.pathname.split('/').filter(Boolean);
+
+  let currentPath = '';
+  const pathNames = location.pathname.split('/').filter(Boolean);
+  const links = pathNames.map((name, index, elements) => {
+    currentPath += `/${name}`;
+
+    return (
+      <li key={name} className="breadcrumbs__item">
+        <NavLink
+          className={({ isActive }) => clsx('breadcrumbs__link', isActive && 'breadcrumbs__link--active')}
+          to={currentPath}
+          end
+        >
+          <>
+            {pathToMenuName[name] || productName}
+            {elements.length !== index + 1 &&
+              <svg width="5" height="8" aria-hidden="true">
+                <use xlinkHref="#icon-arrow-mini"></use>
+              </svg>}
+          </>
+        </NavLink>
+      </li>
+    );
+  });
 
   return (
     <div className="breadcrumbs">
@@ -31,30 +53,7 @@ function Breadcrumbs({ productName, productId }: BreadCrumbsProps) {
               </svg>
             </NavLink>
           </li>
-          <li className="breadcrumbs__item">
-            <NavLink
-              className={({ isActive }) => clsx('breadcrumbs__link', isActive && 'breadcrumbs__link--active')}
-              to={AppRoute.Root}
-              end={!!productName}
-            >
-              <>
-                {pathToMenuName[pathRoot]}
-                {productName &&
-                  <svg width="5" height="8" aria-hidden="true">
-                    <use xlinkHref="#icon-arrow-mini"></use>
-                  </svg>}
-              </>
-            </NavLink>
-          </li>
-          {productName && productId &&
-            <li className="breadcrumbs__item">
-              <NavLink
-                className={({ isActive }) => clsx('breadcrumbs__link', isActive && 'breadcrumbs__link--active')}
-                to={generatePath(AppRoute.Product, {id: productId.toString()})}
-              >
-                {productName}
-              </NavLink>
-            </li>}
+          {links}
         </ul>
       </div>
     </div>
