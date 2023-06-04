@@ -19,13 +19,13 @@ api.interceptors.response.use((response) => response, (error: AxiosError) => {
 const client = {
   fetchCameras: () =>
     api.get<Camera[]>('/cameras'),
-  fetchCamera: (cameraId: number) =>
+  fetchCamera: (cameraId: string) =>
     api.get<Camera>(`/cameras/${cameraId}`),
-  fetchSimiliarCameras: (cameraId: number) =>
+  fetchSimiliarCameras: (cameraId: string) =>
     api.get<Camera[]>(`/cameras/${cameraId}/similar`),
   getPromo: () =>
     api.get<Promo>('/promo'),
-  getReviews: (cameraId: number) =>
+  getReviews: (cameraId: string) =>
     api.get<Review[]>(`/cameras/${cameraId}/reviews`),
   postReview: (body: NewReview) =>
     api.post<Review>('/reviews', body),

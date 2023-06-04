@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../consts/enums';
 import clsx from 'clsx';
-import { menuNameToRuName } from "../../consts/app";
+import { menuNameToRuName } from '../../consts/app';
 
 type BreadCrumbsProps = {
   productName?: string;

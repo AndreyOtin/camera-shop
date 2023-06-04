@@ -5,7 +5,12 @@ import { RootState, ThunkConfig } from '../../types/store';
 
 type InitialState = {
   product: Camera | null;
+  similarProducts: Camera [];
   productStatus: {
+    status: Status;
+    code: string;
+  };
+  similarProductStatus: {
     status: Status;
     code: string;
   };
@@ -13,16 +18,30 @@ type InitialState = {
 
 const initialState: InitialState = {
   product: null,
+  similarProducts: [],
   productStatus: {
+    status: Status.Idle,
+    code: ''
+  },
+  similarProductStatus: {
     status: Status.Idle,
     code: ''
   }
 };
 
-const fetchProduct = createAsyncThunk<Camera, number, ThunkConfig>(
+const fetchProduct = createAsyncThunk<Camera, string, ThunkConfig>(
   `${SliceNameSpace.Product}/fetchProduct`,
   async (id, { extra: api }) => {
     const { data } = await api.fetchCamera(id);
+
+    return data;
+  }
+);
+
+const fetchSimilarProducts = createAsyncThunk<Camera[], string, ThunkConfig>(
+  `${SliceNameSpace.Product}/fetchSimilarProducts`,
+  async (id, { extra: api }) => {
+    const { data } = await api.fetchSimiliarCameras(id);
 
     return data;
   }
@@ -47,12 +66,35 @@ const productSlice = createSlice({
       .addCase(fetchProduct.fulfilled, (state, action) => {
         state.productStatus.status = Status.Success;
         state.product = action.payload;
+      })
+      .addCase(fetchSimilarProducts.pending, (state) => {
+        state.similarProductStatus.status = Status.Loading;
+      })
+      .addCase(fetchSimilarProducts.rejected, (state, action) => {
+        state.similarProductStatus.status = Status.Error;
+
+        if (action.error.message) {
+          state.similarProductStatus.code = action.error.message;
+        }
+      })
+      .addCase(fetchSimilarProducts.fulfilled, (state, action) => {
+        state.similarProductStatus.status = Status.Success;
+        state.similarProducts = action.payload;
       });
   }
 });
 
 const selectProduct = (state: RootState) => state[SliceNameSpace.Product].product;
 const selectProductStatus = (state: RootState) => state[SliceNameSpace.Product].productStatus;
+const selectSimilarProducts = (state: RootState) => state[SliceNameSpace.Product].similarProducts;
+const selectSimilarProductStatus = (state: RootState) => state[SliceNameSpace.Product].similarProductStatus;
 
 export default productSlice.reducer;
-export { selectProduct, selectProductStatus, fetchProduct };
+export {
+  selectProduct,
+  selectProductStatus,
+  fetchProduct,
+  fetchSimilarProducts,
+  selectSimilarProducts,
+  selectSimilarProductStatus
+};

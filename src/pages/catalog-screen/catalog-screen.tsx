@@ -11,7 +11,8 @@ import { MaxElementCount, SearchParam, Status } from '../../consts/enums';
 import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
 import PreviewModal from '../../components/preview-modal/preview-modal';
-import { Camera } from '../../types/camera';
+import useStatus from '../../hooks/use-status';
+import { useSearchParams } from 'react-router-dom';
 import {
   getCameras,
   getPromo,
@@ -20,8 +21,6 @@ import {
   selectPromo,
   selectPromoStatus
 } from '../../store/catalog-slice/catalog-slice';
-import useStatus from '../../hooks/use-status';
-import { useSearchParams } from 'react-router-dom';
 
 function CatalogScreen() {
   const dispatch = useAppDispatch();
@@ -32,7 +31,6 @@ function CatalogScreen() {
 
   const [searchParams] = useSearchParams();
   const { isLoading, isError } = useStatus({ status: { camerasStatus, promoStatus } });
-  const [preview, setPreview] = useState<Camera | null>(null);
   const [bannerPosition, setBannerPosition] = useState(0);
 
   useEffect(() => {
@@ -60,13 +58,6 @@ function CatalogScreen() {
   const sliceEnd = sliceStart + MaxElementCount.ProductCard;
   const slicedCameras = cameras.slice(sliceStart, sliceEnd);
 
-  const handlePreviewModalShow = (camera: Camera | null) => {
-    document.body.style.overflow = preview ? '' : 'hidden';
-    document.documentElement.style.paddingRight = 'calc(17px - (100vw - 100%)';
-
-    setPreview(camera);
-  };
-
   return (
     <main>
       <Helmet>
@@ -93,7 +84,6 @@ function CatalogScreen() {
                         <ProductCard
                           key={camera.id}
                           camera={camera}
-                          onReviewButtonClick={handlePreviewModalShow}
                         />))}
                 </div>
                 <Pagination
@@ -106,10 +96,7 @@ function CatalogScreen() {
           </div>
         </section>
       </div>
-      <PreviewModal
-        preview={preview}
-        onCloseButtonClick={handlePreviewModalShow}
-      />
+      <PreviewModal/>
     </main>
   );
 }

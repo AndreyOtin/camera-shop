@@ -1,12 +1,11 @@
-import { Camera } from '../../types/camera';
 import { formatPrice } from '../../utiils/formaters';
+import { useOutletContext } from 'react-router-dom';
+import { OutletContext } from '../../types/app';
 
-type PreviewModalProps = {
-  preview: Camera | null;
-  onCloseButtonClick: (camera: null) => void;
-}
 
-function PreviewModal({ preview, onCloseButtonClick }: PreviewModalProps) {
+function PreviewModal() {
+  const { preview, handlePreviewModalShow } = useOutletContext<OutletContext>();
+
   if (!preview) {
     return null;
   }
@@ -60,7 +59,7 @@ function PreviewModal({ preview, onCloseButtonClick }: PreviewModalProps) {
             </button>
           </div>
           <button
-            onClick={() => onCloseButtonClick(null)}
+            onClick={() => handlePreviewModalShow(null)}
             className="cross-btn"
             type="button"
             aria-label="Закрыть попап"

@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { Camera } from '../../types/camera';
 import { formatPrice } from '../../utiils/formaters';
-import { generatePath, Link } from 'react-router-dom';
+import { generatePath, Link, useOutletContext } from 'react-router-dom';
 import { AppRoute } from '../../consts/enums';
+import { OutletContext } from '../../types/app';
 
 type ProductCardProps = {
   camera: Camera;
-  onReviewButtonClick: (camera: Camera) => void;
+  style?: CSSProperties;
 }
 
-function ProductCard({ camera, onReviewButtonClick }: ProductCardProps) {
+function ProductCard({ camera, style }: ProductCardProps) {
+  const { handlePreviewModalShow } = useOutletContext<OutletContext>();
+
   return (
-    <div className="product-card">
+    <div
+      style={style}
+      className="product-card"
+    >
       <div className="product-card__img">
-        <picture>
+        <picture
+          style={{
+            userSelect: 'none'
+          }}
+        >
           <source
             type="image/webp"
             srcSet={`${camera.previewImgWebp}, ${camera.previewImgWebp2x} 2x`}
@@ -58,7 +68,7 @@ function ProductCard({ camera, onReviewButtonClick }: ProductCardProps) {
       </div>
       <div className="product-card__buttons">
         <button
-          onClick={() => onReviewButtonClick(camera)}
+          onClick={() => handlePreviewModalShow(camera)}
           className="btn btn--purple product-card__btn"
           type="button"
         >

@@ -19,7 +19,7 @@ const initialState: InitialState = {
   }
 };
 
-const fetchComments = createAsyncThunk<Review[], number, ThunkConfig>(
+const fetchComments = createAsyncThunk<Review[], string, ThunkConfig>(
   `${SliceNameSpace.Comments}/fetchComments`,
   async (cameraId, { extra: api }) => {
     const { data } = await api.getReviews(cameraId);
