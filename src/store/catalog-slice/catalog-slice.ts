@@ -12,7 +12,7 @@ type InitialState = {
 
 const initialState: InitialState = {
   camerasStatus: Status.Idle,
-  promoStatus:Status.Idle,
+  promoStatus: Status.Idle,
   cameras: [],
   promo: null
 };
@@ -65,9 +65,9 @@ const catalogSlice = createSlice({
 });
 
 const selectCameras = (state: RootState) => state[SliceNameSpace.Catalog].cameras;
-const selectCamerasStatus = (state:RootState) => state[SliceNameSpace.Catalog].camerasStatus;
+const selectCamerasStatus = (state: RootState) => state[SliceNameSpace.Catalog].camerasStatus;
 const selectPromo = (state: RootState) => state[SliceNameSpace.Catalog].promo;
-const selectPromoStatus = (state:RootState) => state[SliceNameSpace.Catalog].camerasStatus;
+const selectPromoStatus = (state: RootState) => state[SliceNameSpace.Catalog].promoStatus;
 
 export default catalogSlice.reducer;
 export { getCameras, getPromo, selectCameras, selectCamerasStatus, selectPromo, selectPromoStatus };

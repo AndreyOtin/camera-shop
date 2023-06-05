@@ -52,7 +52,7 @@ function CatalogScreen() {
     return <ErrorScreen variant="error"/>;
   }
 
-  const currentPage = searchParams.get(SearchParam.Page) ? Number(searchParams.get(SearchParam.Page)) : 1;
+  const currentPage = Number(searchParams.get(SearchParam.Page)) || 1;
   const promoDescription = cameras.find((item) => item.id === promo.id)?.description;
   const sliceStart = (currentPage - 1) * MaxElementCount.ProductCard;
   const sliceEnd = sliceStart + MaxElementCount.ProductCard;
@@ -79,12 +79,11 @@ function CatalogScreen() {
                 <CatalogSort/>
                 <div className="cards catalog__cards">
                   {slicedCameras
-                    .map((camera) =>
-                      (
-                        <ProductCard
-                          key={camera.id}
-                          camera={camera}
-                        />))}
+                    .map((camera) => (
+                      <ProductCard
+                        key={camera.id}
+                        camera={camera}
+                      />))}
                 </div>
                 <Pagination
                   currentPage={currentPage}

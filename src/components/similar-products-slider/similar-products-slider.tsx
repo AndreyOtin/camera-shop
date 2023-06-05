@@ -27,6 +27,7 @@ function SimilarProductsSlider({ products }: SimilarProductsSliderProps) {
         }}
         className="product-similar__slider-list"
         slidesPerView={3}
+        slidesPerGroup={3}
         spaceBetween={30}
         allowTouchMove={false}
       >
