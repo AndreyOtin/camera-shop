@@ -36,7 +36,8 @@ function SimilarProductsSlider({ products }: SimilarProductsSliderProps) {
             <ProductCard
               style={{
                 display: 'block',
-                width: '100%'
+                width: '100%',
+                margin: '0'
               }}
               camera={product}
             />

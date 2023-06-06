@@ -1,4 +1,4 @@
-import { Review } from '../../types/review';
+import { NewReview, Review } from '../../types/review';
 import { SliceNameSpace, Status } from '../../consts/enums';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState, ThunkConfig } from '../../types/store';
@@ -9,6 +9,7 @@ type InitialState = {
     status: Status;
     code: string;
   };
+  postStatus: Status;
 }
 
 const initialState: InitialState = {
@@ -16,7 +17,8 @@ const initialState: InitialState = {
   commentsStatus: {
     status: Status.Idle,
     code: ''
-  }
+  },
+  postStatus: Status.Idle
 };
 
 const fetchComments = createAsyncThunk<Review[], string, ThunkConfig>(
@@ -28,10 +30,23 @@ const fetchComments = createAsyncThunk<Review[], string, ThunkConfig>(
   }
 );
 
+const postComment = createAsyncThunk<Review, NewReview, ThunkConfig>(
+  `${SliceNameSpace.Comments}/postComment`,
+  async (newComment, { extra: api }) => {
+    const { data } = await api.postReview(newComment);
+
+    return data;
+  }
+);
+
 const commentsSlice = createSlice({
   initialState,
   name: SliceNameSpace.Comments,
-  reducers: {},
+  reducers: {
+    changePostStatus(state) {
+      state.postStatus = Status.Idle;
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchComments.pending, (state) => {
@@ -48,12 +63,18 @@ const commentsSlice = createSlice({
       .addCase(fetchComments.fulfilled, (state, action) => {
         state.commentsStatus.status = Status.Success;
         state.comments = action.payload;
+      })
+      .addCase(postComment.fulfilled, (state, action) => {
+        state.comments.push(action.payload);
+        state.postStatus = Status.Success;
       });
   }
 });
 
 const selectComments = (state: RootState) => state[SliceNameSpace.Comments].comments;
 const selectCommentsStatus = (state: RootState) => state[SliceNameSpace.Comments].commentsStatus;
+const selectPostStatus = (state: RootState) => state[SliceNameSpace.Comments].postStatus;
 
 export default commentsSlice.reducer;
-export { selectComments, selectCommentsStatus, fetchComments };
+export { selectComments, selectCommentsStatus, fetchComments, postComment, selectPostStatus };
+export const { changePostStatus } = commentsSlice.actions;

@@ -5,7 +5,11 @@ import dayjs from 'dayjs';
 import { useState } from 'react';
 import { MaxElementCount } from '../../consts/enums';
 
-function Reviews() {
+type ReviewsProps = {
+  onReviewButtonClick: () => void;
+}
+
+function Reviews({ onReviewButtonClick }: ReviewsProps) {
   const comments = useAppSelector(selectComments);
   const [currentCommentsCount, setCommentsCount] = useState(MaxElementCount.Reviews);
   const sortedComments = [...comments].sort((a, b) => dayjs(b.createAt).diff(a.createAt));
@@ -15,7 +19,13 @@ function Reviews() {
       <div className="container">
         <div className="page-content__headed">
           <h2 className="title title--h3">Отзывы</h2>
-          <button className="btn" type="button">Оставить свой отзыв</button>
+          <button
+            onClick={onReviewButtonClick}
+            className="btn"
+            type="button"
+          >
+            Оставить свой отзыв
+          </button>
         </div>
         <ul className="review-block__list">
           {sortedComments

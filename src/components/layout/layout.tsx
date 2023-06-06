@@ -9,9 +9,6 @@ const Layout = () => {
   const [preview, setPreview] = useState<OutletContext['preview']>(null);
 
   const handlePreviewModalShow = (camera: Camera | null) => {
-    document.body.style.overflow = preview ? '' : 'hidden';
-    document.documentElement.style.paddingRight = 'calc(17px - (100vw - 100%)';
-
     setPreview(camera);
   };
 

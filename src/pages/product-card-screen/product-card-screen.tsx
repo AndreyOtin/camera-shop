@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
 import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
-import { MouseEvent, useEffect } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumbs from '../../components/breadcrumps/breadcrumbs';
 import { formatPrice } from '../../utiils/formaters';
@@ -20,6 +20,8 @@ import {
   selectSimilarProducts,
   selectSimilarProductStatus
 } from '../../store/product-slice/product-slice';
+import ReviewModal from '../../components/review-modal/review-modal';
+import ReviewSuccessModal from '../../components/review-success-modal/review-success-modal';
 
 
 function ProductCardScreen() {
@@ -35,6 +37,7 @@ function ProductCardScreen() {
     status: { productStatus, commentsStatus, similarProductStatus },
     code: { productStatusCode, commentsStatusCode, similarProductStatusCode }
   });
+  const [isReviewOpened, setReviewDisplay] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -64,6 +67,10 @@ function ProductCardScreen() {
       top: 0,
       behavior: 'smooth'
     });
+  };
+
+  const handleNewReviewShow = () => {
+    setReviewDisplay(!isReviewOpened);
   };
 
   return (
@@ -139,10 +146,19 @@ function ProductCardScreen() {
               </section>
             </div>}
           <div className="page-content__section">
-            <Reviews/>
+            <Reviews
+              onReviewButtonClick={handleNewReviewShow}
+            />
           </div>
         </div>
+        {isReviewOpened &&
+          <ReviewModal
+            cameraId={product.id}
+            isOpened={isReviewOpened}
+            onClose={handleNewReviewShow}
+          />}
         <PreviewModal/>
+        <ReviewSuccessModal/>
       </main>
       <a
         onClick={(evt) => handleUpButtonClick(evt)}
