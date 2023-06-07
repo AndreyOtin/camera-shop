@@ -1,7 +1,12 @@
 import { useAppSelector } from '../../../hooks/store-hooks';
 import { selectProduct } from '../../../store/product-slice/product-slice';
+import clsx from 'clsx';
 
-function DescriptionTab() {
+type DescriptionTabProps = {
+  isActive: boolean;
+}
+
+function DescriptionTab({ isActive }: DescriptionTabProps) {
   const product = useAppSelector(selectProduct);
 
   if (!product) {
@@ -9,7 +14,7 @@ function DescriptionTab() {
   }
 
   return (
-    <div className="tabs__element is-active">
+    <div className={clsx('tabs__element', isActive && 'is-active')}>
       <div className="product__tabs-text">
         <p>
           {product.description}

@@ -1,10 +1,13 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { FormEvent, Fragment } from 'react';
+import { FormEvent, Fragment, useEffect } from 'react';
 import { NewReview } from '../../types/review';
 import { useAppDispatch } from '../../hooks/store-hooks';
 import clsx from 'clsx';
-import { postComment } from '../../store/comments-slice/comments-slice';
+import { changePostStatus, postComment } from '../../store/comments-slice/comments-slice';
 import Modal from '../modal/modal';
+import { useOutletContext } from 'react-router-dom';
+import { OutletContext } from '../../types/app';
+import { Status } from '../../consts/enums';
 
 enum Field {
   Rate = 'rate',
@@ -49,14 +52,26 @@ type FormFields = {
 }
 
 type ReviewModalProps = {
-  isOpened: boolean;
-  onClose: () => void;
   cameraId: number;
 }
 
-function ReviewModal({ onClose, cameraId }: ReviewModalProps) {
+function ReviewModal({ cameraId }: ReviewModalProps) {
   const dispatch = useAppDispatch();
-  const { register, handleSubmit, formState: { errors, isSubmitted } } = useForm<FormFields>();
+  const { isReviewOpened, setReviewDisplay } = useOutletContext<OutletContext>();
+  const {
+    watch,
+    getValues,
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitted, isSubmitSuccessful }
+  } = useForm<FormFields>();
+
+  watch();
+
+  useEffect(() => {
+    reset();
+  }, [isSubmitSuccessful, reset]);
 
   const createValidationClass = (field: Field) =>
     clsx({
@@ -76,7 +91,8 @@ function ReviewModal({ onClose, cameraId }: ReviewModalProps) {
 
     await dispatch(postComment(formData));
 
-    onClose();
+    setReviewDisplay(false);
+    setTimeout(() => dispatch(changePostStatus(Status.Success)), 0);
   };
 
   const onSubmit = (evt: FormEvent<HTMLFormElement>) => {
@@ -86,7 +102,7 @@ function ReviewModal({ onClose, cameraId }: ReviewModalProps) {
   };
 
   return (
-    <Modal onClickOutside={onClose}>
+    <Modal isOpened={isReviewOpened} onClickOutside={() => setReviewDisplay(false)}>
       <p className="title title--h4">Оставить отзыв</p>
       <div className="form-review">
         <form
@@ -125,7 +141,7 @@ function ReviewModal({ onClose, cameraId }: ReviewModalProps) {
                   )).reverse()}
                 </div>
                 <div className="rate__progress">
-                  <span className="rate__stars">0</span>
+                  <span className="rate__stars">{getValues(Field.Rate) || 0}</span>
                   <span>/</span>
                   <span className="rate__all-stars">5</span>
                 </div>
@@ -186,7 +202,7 @@ function ReviewModal({ onClose, cameraId }: ReviewModalProps) {
         </form>
       </div>
       <button
-        onClick={onClose}
+        onClick={() => setReviewDisplay(false)}
         className="cross-btn"
         type="button"
         aria-label="Закрыть попап"

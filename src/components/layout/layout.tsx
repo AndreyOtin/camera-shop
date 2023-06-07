@@ -1,21 +1,24 @@
 import { Outlet } from 'react-router-dom';
 import Header from '../header/header';
 import Footer from '../footer/footer';
-import { Camera } from '../../types/camera';
 import { useState } from 'react';
-import { OutletContext } from '../../types/app';
+import { PreviewModal } from '../../types/app';
 
 const Layout = () => {
-  const [preview, setPreview] = useState<OutletContext['preview']>(null);
+  const [preview, setPreviewDisplay] = useState<PreviewModal>({ isModalOpened: false });
+  const [isReviewOpened, setReviewDisplay] = useState(false);
 
-  const handlePreviewModalShow = (camera: Camera | null) => {
-    setPreview(camera);
+  const context = {
+    preview,
+    setPreviewDisplay,
+    isReviewOpened,
+    setReviewDisplay
   };
 
   return (
     <div className='wrapper'>
       <Header/>
-      <Outlet context={{ preview, handlePreviewModalShow }}/>
+      <Outlet context={context}/>
       <Footer/>
     </div>
   );

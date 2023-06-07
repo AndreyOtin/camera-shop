@@ -1,6 +1,6 @@
 import { NewReview, Review } from '../../types/review';
 import { SliceNameSpace, Status } from '../../consts/enums';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, ThunkConfig } from '../../types/store';
 
 type InitialState = {
@@ -43,8 +43,8 @@ const commentsSlice = createSlice({
   initialState,
   name: SliceNameSpace.Comments,
   reducers: {
-    changePostStatus(state) {
-      state.postStatus = Status.Idle;
+    changePostStatus(state, action: PayloadAction<Status>) {
+      state.postStatus = action.payload;
     }
   },
   extraReducers(builder) {
@@ -66,7 +66,6 @@ const commentsSlice = createSlice({
       })
       .addCase(postComment.fulfilled, (state, action) => {
         state.comments.push(action.payload);
-        state.postStatus = Status.Success;
       });
   }
 });

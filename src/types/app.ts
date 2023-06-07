@@ -1,6 +1,15 @@
 import { Camera } from './camera';
+import { Dispatch, SetStateAction } from 'react';
+
+export type PreviewModal = {
+  camera?: Camera;
+  isModalOpened: boolean;
+}
 
 export type OutletContext = {
-  preview: Camera | null;
-  handlePreviewModalShow: (camera: Camera | null) => void;
+  preview: PreviewModal;
+  setPreviewDisplay: Dispatch<SetStateAction<PreviewModal>>;
+  isReviewOpened: boolean;
+  setReviewDisplay: Dispatch<SetStateAction<boolean>>;
+
 }

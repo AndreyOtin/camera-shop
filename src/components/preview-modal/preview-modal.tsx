@@ -3,48 +3,46 @@ import { useOutletContext } from 'react-router-dom';
 import { OutletContext } from '../../types/app';
 import Modal from '../modal/modal';
 
-
 function PreviewModal() {
-  const { preview, handlePreviewModalShow } = useOutletContext<OutletContext>();
-
-  if (!preview) {
-    return null;
-  }
+  const { preview, setPreviewDisplay } = useOutletContext<OutletContext>();
 
   return (
-    <Modal onClickOutside={() => handlePreviewModalShow(null)}>
+    <Modal
+      isOpened={preview.isModalOpened}
+      onClickOutside={() => setPreviewDisplay({ isModalOpened: false, camera: preview.camera })}
+    >
       <p className="title title--h4">Добавить товар в корзину</p>
       <div className="basket-item basket-item--short">
         <div className="basket-item__img">
           <picture>
             <source
               type="image/webp"
-              srcSet={`${preview.previewImgWebp}, ${preview.previewImgWebp2x} 2x`}
+              srcSet={`${preview?.camera?.previewImgWebp || ''}, ${preview?.camera?.previewImgWebp2x || ''} 2x`}
             />
             <img
-              src={preview.previewImg}
-              srcSet={`${preview.previewImg2x} 2x`}
+              src={preview?.camera?.previewImg || ''}
+              srcSet={`${preview?.camera?.previewImg2x || ''} 2x`}
               width="140"
               height="120"
-              alt={preview.name}
+              alt={preview?.camera?.name}
             />
           </picture>
         </div>
         <div className="basket-item__description">
-          <p className="basket-item__title">{preview.name}</p>
+          <p className="basket-item__title">{preview?.camera?.name}</p>
           <ul className="basket-item__list">
             <li className="basket-item__list-item">
               <span className="basket-item__article">Артикул: </span>
               <span className="basket-item__number">
-                {preview.vendorCode}
+                {preview?.camera?.vendorCode}
               </span>
             </li>
-            <li className="basket-item__list-item">{preview.type} фотокамера</li>
-            <li className="basket-item__list-item">{preview.level} уровень</li>
+            <li className="basket-item__list-item">{preview?.camera?.type} фотокамера</li>
+            <li className="basket-item__list-item">{preview?.camera?.level} уровень</li>
           </ul>
           <p className="basket-item__price">
             <span className="visually-hidden">Цена:</span>
-            {formatPrice(preview.price)} ₽
+            {formatPrice(preview?.camera?.price || 0)} ₽
           </p>
         </div>
       </div>
@@ -57,7 +55,7 @@ function PreviewModal() {
         </button>
       </div>
       <button
-        onClick={() => handlePreviewModalShow(null)}
+        onClick={() => setPreviewDisplay({ isModalOpened: false, camera: preview.camera })}
         className="cross-btn"
         type="button"
         aria-label="Закрыть попап"

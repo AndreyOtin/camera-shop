@@ -11,7 +11,7 @@ type ProductCardProps = {
 }
 
 function ProductCard({ camera, style }: ProductCardProps) {
-  const { handlePreviewModalShow } = useOutletContext<OutletContext>();
+  const { setPreviewDisplay } = useOutletContext<OutletContext>();
 
   return (
     <div
@@ -68,7 +68,7 @@ function ProductCard({ camera, style }: ProductCardProps) {
       </div>
       <div className="product-card__buttons">
         <button
-          onClick={() => handlePreviewModalShow(camera)}
+          onClick={() => setPreviewDisplay({ isModalOpened: true, camera })}
           className="btn btn--purple product-card__btn"
           type="button"
         >

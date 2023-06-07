@@ -1,12 +1,14 @@
 import { ReactNode, useEffect, useRef } from 'react';
 import { disableInteractiveElements } from '../../utiils/dom';
+import clsx from 'clsx';
 
 type ModalProps = {
   children: ReactNode;
   onClickOutside: () => void;
+  isOpened?: boolean;
 }
 
-function Modal({ children, onClickOutside }: ModalProps) {
+function Modal({ children, onClickOutside, isOpened }: ModalProps) {
   const ref = useRef(null);
 
   const onEcsKeyDown = (evt: KeyboardEvent) => {
@@ -15,8 +17,9 @@ function Modal({ children, onClickOutside }: ModalProps) {
     }
   };
 
+
   useEffect(() => {
-    if (!ref.current) {
+    if (!ref.current || !isOpened) {
       return;
     }
 
@@ -39,7 +42,7 @@ function Modal({ children, onClickOutside }: ModalProps) {
   return (
     <div
       ref={ref}
-      className="modal is-active"
+      className={clsx('modal', isOpened && 'is-active')}
     >
       <div
         onClick={onClickOutside}

@@ -4,14 +4,13 @@ import ReviewCard from './review-card/review-card';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { MaxElementCount } from '../../consts/enums';
+import { useOutletContext } from 'react-router-dom';
+import { OutletContext } from '../../types/app';
 
-type ReviewsProps = {
-  onReviewButtonClick: () => void;
-}
-
-function Reviews({ onReviewButtonClick }: ReviewsProps) {
+function Reviews() {
   const comments = useAppSelector(selectComments);
   const [currentCommentsCount, setCommentsCount] = useState(MaxElementCount.Reviews);
+  const { setReviewDisplay } = useOutletContext<OutletContext>();
   const sortedComments = [...comments].sort((a, b) => dayjs(b.createAt).diff(a.createAt));
 
   return (
@@ -20,7 +19,7 @@ function Reviews({ onReviewButtonClick }: ReviewsProps) {
         <div className="page-content__headed">
           <h2 className="title title--h3">Отзывы</h2>
           <button
-            onClick={onReviewButtonClick}
+            onClick={() => setReviewDisplay(true)}
             className="btn"
             type="button"
           >

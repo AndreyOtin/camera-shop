@@ -5,9 +5,8 @@ import clsx from 'clsx';
 
 enum Tab {
   Characteristics = 'Характеристики',
-  Descrtiption = 'Описание'
+  Description = 'Описание'
 }
-
 
 function ProductTabs() {
   const [activeTab, setActiveTab] = useState(Tab.Characteristics);
@@ -28,8 +27,8 @@ function ProductTabs() {
           ))}
       </div>
       <div className="tabs__content">
-        {activeTab === Tab.Characteristics && <CharacteristicTab/>}
-        {activeTab === Tab.Descrtiption && <DescriptionTab/>}
+        <CharacteristicTab isActive={activeTab === Tab.Characteristics}/>
+        <DescriptionTab isActive={activeTab === Tab.Description}/>
       </div>
     </div>
   );

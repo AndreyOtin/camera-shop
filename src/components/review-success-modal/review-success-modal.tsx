@@ -7,19 +7,18 @@ function ReviewSuccessModal() {
   const status = useAppSelector(selectPostStatus);
   const dispatch = useAppDispatch();
 
-  if (status !== Status.Success) {
-    return null;
-  }
-
   return (
-    <Modal onClickOutside={() => dispatch(changePostStatus())}>
+    <Modal
+      isOpened={status === Status.Success}
+      onClickOutside={() => dispatch(changePostStatus(Status.Idle))}
+    >
       <p className="title title--h4">Спасибо за отзыв</p>
       <svg className="modal__icon" width="80" height="78" aria-hidden="true">
         <use xlinkHref="#icon-review-success"></use>
       </svg>
       <div className="modal__buttons">
         <button
-          onClick={() => dispatch(changePostStatus())}
+          onClick={() => dispatch(changePostStatus(Status.Idle))}
           className="btn btn--purple modal__btn modal__btn--fit-width"
           type="button"
         >
@@ -27,7 +26,7 @@ function ReviewSuccessModal() {
         </button>
       </div>
       <button
-        onClick={() => dispatch(changePostStatus())}
+        onClick={() => dispatch(changePostStatus(Status.Idle))}
         className="cross-btn"
         type="button"
         aria-label="Закрыть попап"

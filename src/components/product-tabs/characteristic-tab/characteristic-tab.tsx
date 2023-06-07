@@ -1,7 +1,12 @@
 import { useAppSelector } from '../../../hooks/store-hooks';
 import { selectProduct } from '../../../store/product-slice/product-slice';
+import clsx from 'clsx';
 
-function CharacteristicTab() {
+type CharacteristicTabProps = {
+  isActive: boolean;
+}
+
+function CharacteristicTab({ isActive }: CharacteristicTabProps) {
   const product = useAppSelector(selectProduct);
 
   if (!product) {
@@ -9,7 +14,7 @@ function CharacteristicTab() {
   }
 
   return (
-    <div className="tabs__element is-active">
+    <div className={clsx('tabs__element', isActive && 'is-active')}>
       <ul className="product__tabs-list">
         <li className="item-list"><span className="item-list__title">Артикул:</span>
           <p className="item-list__text">{product.vendorCode}</p>
