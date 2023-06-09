@@ -30,7 +30,8 @@ export enum StatusCode {
 }
 
 export enum SearchParam {
-  Page = 'page'
+  Page = 'page',
+  Tab = 'tab'
 }
 
 export enum MaxElementCount {
