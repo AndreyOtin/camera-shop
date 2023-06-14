@@ -41,7 +41,7 @@ const fetchProduct = createAsyncThunk<Camera, string, ThunkConfig>(
 const fetchSimilarProducts = createAsyncThunk<Camera[], string, ThunkConfig>(
   `${SliceNameSpace.Product}/fetchSimilarProducts`,
   async (id, { extra: api }) => {
-    const { data } = await api.fetchSimiliarCameras(id);
+    const { data } = await api.fetchSimilarCameras(id);
 
     return data;
   }
@@ -59,7 +59,7 @@ const productSlice = createSlice({
       .addCase(fetchProduct.rejected, (state, action) => {
         state.productStatus.status = Status.Error;
 
-        if (action.error.message) {
+        if (action.error?.message) {
           state.productStatus.code = action.error.message;
         }
       })
@@ -73,7 +73,7 @@ const productSlice = createSlice({
       .addCase(fetchSimilarProducts.rejected, (state, action) => {
         state.similarProductStatus.status = Status.Error;
 
-        if (action.error.message) {
+        if (action.error?.message) {
           state.similarProductStatus.code = action.error.message;
         }
       })
@@ -96,5 +96,6 @@ export {
   fetchProduct,
   fetchSimilarProducts,
   selectSimilarProducts,
-  selectSimilarProductStatus
+  selectSimilarProductStatus,
+  initialState
 };

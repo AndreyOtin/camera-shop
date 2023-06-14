@@ -70,4 +70,4 @@ const selectPromo = (state: RootState) => state[SliceNameSpace.Catalog].promo;
 const selectPromoStatus = (state: RootState) => state[SliceNameSpace.Catalog].promoStatus;
 
 export default catalogSlice.reducer;
-export { getCameras, getPromo, selectCameras, selectCamerasStatus, selectPromo, selectPromoStatus };
+export { getCameras, getPromo, selectCameras, selectCamerasStatus, selectPromo, selectPromoStatus, initialState };

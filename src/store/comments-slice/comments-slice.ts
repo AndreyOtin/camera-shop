@@ -56,7 +56,7 @@ const commentsSlice = createSlice({
       .addCase(fetchComments.rejected, (state, action) => {
         state.commentsStatus.status = Status.Error;
 
-        if (action.error.message) {
+        if (action.error?.message) {
           state.commentsStatus.code = action.error.message;
         }
       })
@@ -75,5 +75,5 @@ const selectCommentsStatus = (state: RootState) => state[SliceNameSpace.Comments
 const selectPostStatus = (state: RootState) => state[SliceNameSpace.Comments].postStatus;
 
 export default commentsSlice.reducer;
-export { selectComments, selectCommentsStatus, fetchComments, postComment, selectPostStatus };
+export { selectComments, selectCommentsStatus, fetchComments, postComment, selectPostStatus, initialState };
 export const { changePostStatus } = commentsSlice.actions;

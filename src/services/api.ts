@@ -21,7 +21,7 @@ const client = {
     api.get<Camera[]>('/cameras'),
   fetchCamera: (cameraId: string) =>
     api.get<Camera>(`/cameras/${cameraId}`),
-  fetchSimiliarCameras: (cameraId: string) =>
+  fetchSimilarCameras: (cameraId: string) =>
     api.get<Camera[]>(`/cameras/${cameraId}/similar`),
   getPromo: () =>
     api.get<Promo>('/promo'),
@@ -36,3 +36,4 @@ const client = {
 };
 
 export default client;
+export { api };

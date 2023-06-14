@@ -92,7 +92,7 @@ function ReviewModal({ cameraId }: ReviewModalProps) {
     await dispatch(postComment(formData));
 
     setReviewDisplay(false);
-    setTimeout(() => dispatch(changePostStatus(Status.Success)), 0);
+    setTimeout(() => dispatch(changePostStatus(Status.Success)));
   };
 
   const onSubmit = (evt: FormEvent<HTMLFormElement>) => {
@@ -119,7 +119,7 @@ function ReviewModal({ cameraId }: ReviewModalProps) {
                 </svg>
               </legend>
               <div className="rate__bar">
-                <div className="rate__group">
+                <div style={{ direction: 'rtl', flexDirection: 'row' }} className="rate__group">
                   {Array(5).fill('').map((_, index) => (
                     <Fragment key={`rating-${index.toString()}`}>
                       <input
