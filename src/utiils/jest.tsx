@@ -8,7 +8,7 @@ import thunk, { ThunkDispatch } from 'redux-thunk';
 import MockAdapter from 'axios-mock-adapter';
 import { BrowserRouter } from 'react-router-dom';
 import { Action } from 'redux';
-import { api } from '../services/api';
+import client, { api } from '../services/api';
 
 const mockStore = configureMockStore<RootState>()({});
 
@@ -33,12 +33,12 @@ const ProviderWrapper = ({ children, fakeStore }: TestWrapperProps) => {
 
 const createMockStoreWithAPI = (fakeState: DeepPartial<RootState>) => {
   const mockAPI = new MockAdapter(api);
-  const middlewares = [thunk.withExtraArgument(api)];
+  const middlewares = [thunk.withExtraArgument(client)];
 
   const fakeStore = configureMockStore<
     RootState,
     Action<string>,
-    ThunkDispatch<RootState, typeof api, Action<string>>
+    ThunkDispatch<RootState, typeof client, Action<string>>
   >(middlewares)(fakeState);
 
   return { fakeStore, mockAPI };

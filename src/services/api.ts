@@ -3,6 +3,7 @@ import { Camera, Promo } from '../types/camera';
 import { NewReview, Review } from '../types/review';
 import { Coupon } from '../types/coupon';
 import { NewOrder } from '../types/order';
+import { ApiRoute } from '../consts/enums';
 
 const BACKEND_URL = 'https://camera-shop.accelerator.pages.academy';
 const REQUEST_TIMEOUT = 5000;
@@ -18,21 +19,21 @@ api.interceptors.response.use((response) => response, (error: AxiosError) => {
 
 const client = {
   fetchCameras: () =>
-    api.get<Camera[]>('/cameras'),
+    api.get<Camera[]>(ApiRoute.Cameras),
   fetchCamera: (cameraId: string) =>
-    api.get<Camera>(`/cameras/${cameraId}`),
+    api.get<Camera>(`${ApiRoute.Cameras}/${cameraId}`),
   fetchSimilarCameras: (cameraId: string) =>
-    api.get<Camera[]>(`/cameras/${cameraId}/similar`),
+    api.get<Camera[]>(`${ApiRoute.Cameras}/${cameraId}/similar`),
   getPromo: () =>
-    api.get<Promo>('/promo'),
+    api.get<Promo>(`${ApiRoute.Promo}`),
   getReviews: (cameraId: string) =>
-    api.get<Review[]>(`/cameras/${cameraId}/reviews`),
+    api.get<Review[]>(`${ApiRoute.Cameras}/${cameraId}/reviews`),
   postReview: (body: NewReview) =>
-    api.post<Review>('/reviews', body),
+    api.post<Review>(ApiRoute.Reviews, body),
   checkCoupon: (body: Coupon) =>
-    api.post<number>('/coupons', body),
+    api.post<number>(ApiRoute.Coupons, body),
   postOrder: (body: NewOrder) =>
-    api.post('/orders', body),
+    api.post(ApiRoute.Orders, body),
 };
 
 export default client;

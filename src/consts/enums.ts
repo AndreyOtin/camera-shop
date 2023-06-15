@@ -17,6 +17,14 @@ export enum AppRoute {
   Product = '/catalog/:product'
 }
 
+export enum ApiRoute {
+  Cameras = '/cameras',
+  Promo = '/promo',
+  Reviews = '/reviews',
+  Coupons = '/coupons',
+  Orders = '/orders'
+}
+
 export enum MainMenu {
   Catalog = 'catalog',
   Delivery = 'delivey',

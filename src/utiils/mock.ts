@@ -1,6 +1,6 @@
 import { Camera, Promo } from '../types/camera';
 import * as faker from 'faker';
-import { Review } from '../types/review';
+import { NewReview, Review } from '../types/review';
 
 const createFakeCamera = (): Camera => ({
   type: faker.lorem.word(1),
@@ -38,4 +38,13 @@ const createFakeComment = (): Review => ({
   cameraId: faker.datatype.number(3)
 });
 
-export { createFakeCamera, createFakePromo, createFakeComment };
+const createFakeNewCommentBody = (): NewReview => ({
+  review: faker.lorem.word(1),
+  disadvantage: faker.lorem.word(1),
+  advantage: faker.lorem.word(1),
+  userName: faker.lorem.word(1),
+  rating: faker.datatype.number(3),
+  cameraId: faker.datatype.number(3)
+});
+
+export { createFakeCamera, createFakePromo, createFakeComment, createFakeNewCommentBody };
