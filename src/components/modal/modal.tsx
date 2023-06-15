@@ -47,6 +47,7 @@ function Modal({ children, onClickOutside, isOpened }: ModalProps) {
       <div
         onClick={onClickOutside}
         className="modal__wrapper"
+        data-testid='modal'
       >
         <div className="modal__overlay"></div>
         <div

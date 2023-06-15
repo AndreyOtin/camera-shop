@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import { CSSProperties } from 'react';
 import { Camera } from '../../types/camera';
 import { formatPrice } from '../../utiils/formaters';
 import { generatePath, Link, useOutletContext } from 'react-router-dom';

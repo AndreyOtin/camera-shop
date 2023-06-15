@@ -74,7 +74,7 @@ function ProductCardScreen() {
         <div className="page-content">
           <Breadcrumbs productName={product.name}/>
           <div className="page-content__section">
-            <section className="product">
+            <section className="product" data-testid="product-card-screen">
               <div className="container">
                 <div className="product__img">
                   <picture>

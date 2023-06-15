@@ -31,7 +31,7 @@ function ReviewCard({ review }: ReviewCardProps) {
         ))}
         <p className="visually-hidden">Оценка: {review.rating}</p>
       </div>
-      <ul className="review-card__list">
+      <ul className="review-card__list" data-testid='card-list'>
         <li className="item-list"><span className="item-list__title">Достоинства:</span>
           <p className="item-list__text">{review.advantage}</p>
         </li>

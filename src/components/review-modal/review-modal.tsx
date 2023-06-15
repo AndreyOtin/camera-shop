@@ -64,7 +64,7 @@ function ReviewModal({ cameraId }: ReviewModalProps) {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitted, isSubmitSuccessful }
+    formState: { errors, isSubmitted, isSubmitSuccessful, isSubmitting }
   } = useForm<FormFields>();
 
   watch();
@@ -198,7 +198,12 @@ function ReviewModal({ cameraId }: ReviewModalProps) {
               <div className="custom-textarea__error">Нужно добавить комментарий</div>
             </div>
           </div>
-          <button className="btn btn--purple form-review__btn" type="submit">Отправить отзыв</button>
+          <button
+            className={`${clsx('btn btn--purple form-review__btn', isSubmitting && 'disabled')}`}
+            type="submit"
+          >
+            Отправить отзыв
+          </button>
         </form>
       </div>
       <button

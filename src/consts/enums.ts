@@ -27,7 +27,7 @@ export enum ApiRoute {
 
 export enum MainMenu {
   Catalog = 'catalog',
-  Delivery = 'delivey',
+  Delivery = 'delivery',
   Warranties = 'warranties',
   About = 'about'
 }

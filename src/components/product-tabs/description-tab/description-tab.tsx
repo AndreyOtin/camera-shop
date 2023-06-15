@@ -15,7 +15,7 @@ function DescriptionTab({ isActive }: DescriptionTabProps) {
 
   return (
     <div className={clsx('tabs__element', isActive && 'is-active')}>
-      <div className="product__tabs-text">
+      <div className="product__tabs-text" data-testid='description-tab-text'>
         <p>
           {product.description}
         </p>

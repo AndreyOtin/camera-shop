@@ -15,7 +15,7 @@ function CharacteristicTab({ isActive }: CharacteristicTabProps) {
 
   return (
     <div className={clsx('tabs__element', isActive && 'is-active')}>
-      <ul className="product__tabs-list">
+      <ul className="product__tabs-list" data-testid="characteristic-tab-text">
         <li className="item-list"><span className="item-list__title">Артикул:</span>
           <p className="item-list__text">{product.vendorCode}</p>
         </li>

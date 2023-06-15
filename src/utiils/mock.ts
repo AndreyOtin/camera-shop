@@ -1,6 +1,8 @@
 import { Camera, Promo } from '../types/camera';
 import * as faker from 'faker';
 import { NewReview, Review } from '../types/review';
+import { RootState } from '../types/store';
+import { SliceNameSpace, Status } from '../consts/enums';
 
 const createFakeCamera = (): Camera => ({
   type: faker.lorem.word(1),
@@ -47,4 +49,34 @@ const createFakeNewCommentBody = (): NewReview => ({
   cameraId: faker.datatype.number(3)
 });
 
-export { createFakeCamera, createFakePromo, createFakeComment, createFakeNewCommentBody };
+
+const createMockStore = (): RootState => ({
+  [SliceNameSpace.Comments]: {
+    commentsStatus: {
+      status: Status.Success,
+      code: ''
+    },
+    comments: [createFakeComment()],
+    postStatus: Status.Idle
+  },
+  [SliceNameSpace.Product]: {
+    product: createFakeCamera(),
+    similarProducts: [createFakeCamera()],
+    similarProductStatus: {
+      status: Status.Success,
+      code: ''
+    },
+    productStatus: {
+      status: Status.Success,
+      code: ''
+    }
+  },
+  [SliceNameSpace.Catalog]: {
+    camerasStatus: Status.Success,
+    promoStatus: Status.Success,
+    cameras: [createFakeCamera()],
+    promo: createFakePromo()
+  },
+});
+
+export { createFakeCamera, createFakePromo, createFakeComment, createFakeNewCommentBody, createMockStore };
