@@ -6,7 +6,7 @@ describe('Component: PreviewModal', () => {
   it('should render correctly', () => {
     render(
       <ProviderWrapper>
-        <RoutesWrapper jsxElement={<PreviewModal/>}/>
+        <RoutesWrapper jsxElement={<PreviewModal contentRef={{ current: document.createElement('div') }}/>}/>
       </ProviderWrapper>
     );
 

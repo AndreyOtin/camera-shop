@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { createMockStoreWithAPI, ProviderWrapper } from '../../utiils/jest';
+import { createMockStoreWithAPI, ProviderWrapper, RoutesWrapper } from '../../utiils/jest';
 import ReviewSuccessModal from './review-success-modal';
 import { createMockStore } from '../../utiils/mock';
 
@@ -10,7 +10,7 @@ describe('Component: ReviewSuccessModal', () => {
   it('should render correctly', () => {
     render(
       <ProviderWrapper fakeStore={fakeStore}>
-        <ReviewSuccessModal/>
+        <RoutesWrapper jsxElement={<ReviewSuccessModal contentRef={{ current: document.createElement('div') }}/>}/>
       </ProviderWrapper>
     );
 

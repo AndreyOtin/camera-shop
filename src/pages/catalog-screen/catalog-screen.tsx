@@ -6,7 +6,7 @@ import CatalogSort from '../../components/catalog-sort/catalog-sort';
 import Pagination from '../../components/pagination/pagination';
 import ProductCard from '../../components/product-card/product-card';
 import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MaxElementCount, SearchParam, Status } from '../../consts/enums';
 import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
@@ -32,6 +32,7 @@ function CatalogScreen() {
   const [searchParams] = useSearchParams();
   const { isLoading, isError } = useStatus({ status: { camerasStatus, promoStatus } });
   const [bannerPosition, setBannerPosition] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (camerasStatus === Status.Idle || promoStatus === Status.Idle) {
@@ -70,7 +71,7 @@ function CatalogScreen() {
       />
       <div className="page-content">
         <Breadcrumbs/>
-        <section className="catalog">
+        <section ref={ref} className="catalog">
           <div className="container">
             <h1 className="title title--h2">Каталог фото- и видеотехники</h1>
             <div className="page-content__columns">
@@ -95,7 +96,7 @@ function CatalogScreen() {
           </div>
         </section>
       </div>
-      <PreviewModal/>
+      <PreviewModal contentRef={ref}/>
     </main>
   );
 }

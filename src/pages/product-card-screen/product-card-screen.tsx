@@ -146,11 +146,9 @@ function ProductCardScreen() {
             <Reviews/>
           </div>
         </div>
-        <ReviewModal
-          cameraId={product.id}
-        />
-        <PreviewModal/>
-        <ReviewSuccessModal/>
+        <ReviewModal contentRef={ref}/>
+        <PreviewModal contentRef={ref}/>
+        <ReviewSuccessModal contentRef={ref}/>
       </main>
       <a
         onClick={(evt) => handleUpButtonClick(evt)}

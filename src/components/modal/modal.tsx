@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react';
+import React, { ReactNode, RefObject, useEffect } from 'react';
 import clsx from 'clsx';
 import ReactFocusLock from 'react-focus-lock';
 
@@ -6,9 +6,10 @@ type ModalProps = {
   children: ReactNode;
   onClickOutside: () => void;
   isOpened?: boolean;
+  contentRef: RefObject<HTMLDivElement>;
 }
 
-function Modal({ children, onClickOutside, isOpened }: ModalProps) {
+function Modal({ children, onClickOutside, isOpened, contentRef }: ModalProps) {
   const onEcsKeyDown = (evt: KeyboardEvent) => {
     if (evt.code === 'Escape') {
       onClickOutside();
@@ -20,11 +21,13 @@ function Modal({ children, onClickOutside, isOpened }: ModalProps) {
       return;
     }
 
+    contentRef.current?.setAttribute('inert', '');
     document.body.style.overflow = 'hidden';
     document.documentElement.style.paddingRight = 'calc(17px - (100vw - 100%)';
     document.addEventListener('keydown', onEcsKeyDown);
 
     return () => {
+      contentRef.current?.removeAttribute('inert');
       document.body.style.overflow = '';
       document.documentElement.style.paddingRight = '';
       document.removeEventListener('keydown', onEcsKeyDown);

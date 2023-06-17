@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { Provider } from 'react-redux';
 import { HelmetProvider } from 'react-helmet-async';
 import { configureMockStore } from '@jedmao/redux-mock-store';
@@ -10,9 +10,11 @@ import { Action } from 'redux';
 import client, { api } from '../services/api';
 import { createMemoryHistory } from 'history';
 import HistoryRouter from '../components/history-router/history-router';
-import { Route, Routes } from 'react-router-dom';
-import Layout from '../components/layout/layout';
+import { Outlet, Route, Routes } from 'react-router-dom';
 import { AppRoute } from '../consts/enums';
+import { PreviewModal } from '../types/app';
+import Header from '../components/header/header';
+import Footer from '../components/footer/footer';
 
 const mockStore = configureMockStore<RootState>()({});
 const history = createMemoryHistory();
@@ -42,24 +44,44 @@ const ProviderWrapper = ({ children, fakeStore, fakeHistory }: TestWrapperProps)
   );
 };
 
-const RoutesWrapper = ({ jsxElement }: RoutesWrapperProps) => (
-  <Routes>
-    <Route path={AppRoute.Root} element={<Layout/>}>
-      <Route
-        index
-        element={
-          jsxElement
-        }
-      />
-      <Route
-        path="*"
-        element={
-          <div>not found</div>
-        }
-      />
-    </Route>
-  </Routes>
-);
+const RoutesWrapper = ({ jsxElement }: RoutesWrapperProps) => {
+  const [, setPreviewDisplay] = useState<PreviewModal>({ isModalOpened: false });
+  const [, setReviewDisplay] = useState(false);
+
+  const mockContext = {
+    preview: { isModalOpened: true },
+    isReviewOpened: true,
+    setPreviewDisplay,
+    setReviewDisplay
+  };
+
+  const mockLayout = (
+    <div className="wrapper">
+      <Header/>
+      <Outlet context={mockContext}/>
+      <Footer/>
+    </div>
+  );
+
+  return (
+    <Routes>
+      <Route path={AppRoute.Root} element={mockLayout}>
+        <Route
+          index
+          element={
+            jsxElement
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <div>not found</div>
+          }
+        />
+      </Route>
+    </Routes>
+  );
+};
 
 const createMockStoreWithAPI = (fakeState: DeepPartial<RootState>) => {
   const mockAPI = new MockAdapter(api);

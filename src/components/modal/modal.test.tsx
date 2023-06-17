@@ -6,7 +6,11 @@ describe('Component: Modal', () => {
   it('should render correctly', () => {
     render(
       <ProviderWrapper>
-        <Modal isOpened onClickOutside={jest.fn}>
+        <Modal
+          contentRef={{ current: document.createElement('div') }}
+          isOpened
+          onClickOutside={jest.fn}
+        >
           <h1>modal</h1>
         </Modal>
       </ProviderWrapper>

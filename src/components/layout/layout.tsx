@@ -16,7 +16,7 @@ const Layout = () => {
   };
 
   return (
-    <div className='wrapper'>
+    <div className="wrapper">
       <Header/>
       <Outlet context={context}/>
       <Footer/>

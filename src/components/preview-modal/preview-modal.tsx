@@ -2,12 +2,14 @@ import { formatPrice } from '../../utiils/formaters';
 import { useOutletContext } from 'react-router-dom';
 import { OutletContext } from '../../types/app';
 import Modal from '../modal/modal';
+import { RefObject } from 'react';
 
-function PreviewModal() {
+function PreviewModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> }) {
   const { preview, setPreviewDisplay } = useOutletContext<OutletContext>();
 
   return (
     <Modal
+      contentRef={contentRef}
       isOpened={preview.isModalOpened}
       onClickOutside={() => setPreviewDisplay({ isModalOpened: false, camera: preview.camera })}
     >

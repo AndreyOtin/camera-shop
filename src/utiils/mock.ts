@@ -57,7 +57,7 @@ const createMockStore = (): RootState => ({
       code: ''
     },
     comments: [createFakeComment()],
-    postStatus: Status.Idle
+    postStatus: Status.Success
   },
   [SliceNameSpace.Product]: {
     product: createFakeCamera(),

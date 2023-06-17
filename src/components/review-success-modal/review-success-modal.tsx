@@ -2,13 +2,15 @@ import Modal from '../modal/modal';
 import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
 import { changePostStatus, selectPostStatus } from '../../store/comments-slice/comments-slice';
 import { Status } from '../../consts/enums';
+import { RefObject } from 'react';
 
-function ReviewSuccessModal() {
+function ReviewSuccessModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> }) {
   const status = useAppSelector(selectPostStatus);
   const dispatch = useAppDispatch();
 
   return (
     <Modal
+      contentRef={contentRef}
       isOpened={status === Status.Success}
       onClickOutside={() => dispatch(changePostStatus(Status.Idle))}
     >
