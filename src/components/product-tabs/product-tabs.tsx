@@ -19,7 +19,7 @@ function ProductTabs() {
     const urlTab = Object.values(Tab).find((value) => value === activeTab);
 
     if (!urlTab) {
-      setParams({ [SearchParam.Tab]: Tab.Description });
+      setParams({ [SearchParam.Tab]: Tab.Description }, {replace:true});
     }
 
   }, [activeTab, setParams]);

@@ -1,6 +1,6 @@
-import { ReactNode, useEffect, useRef } from 'react';
-import { disableInteractiveElements } from '../../utiils/dom';
+import { ReactNode, useEffect } from 'react';
 import clsx from 'clsx';
+import ReactFocusLock from 'react-focus-lock';
 
 type ModalProps = {
   children: ReactNode;
@@ -9,17 +9,14 @@ type ModalProps = {
 }
 
 function Modal({ children, onClickOutside, isOpened }: ModalProps) {
-  const ref = useRef(null);
-
   const onEcsKeyDown = (evt: KeyboardEvent) => {
     if (evt.code === 'Escape') {
       onClickOutside();
     }
   };
 
-
   useEffect(() => {
-    if (!ref.current || !isOpened) {
+    if (!isOpened) {
       return;
     }
 
@@ -27,37 +24,33 @@ function Modal({ children, onClickOutside, isOpened }: ModalProps) {
     document.documentElement.style.paddingRight = 'calc(17px - (100vw - 100%)';
     document.addEventListener('keydown', onEcsKeyDown);
 
-    const cancel = disableInteractiveElements(ref.current);
-
     return () => {
       document.body.style.overflow = '';
       document.documentElement.style.paddingRight = '';
       document.removeEventListener('keydown', onEcsKeyDown);
-
-      cancel();
     };
   });
 
-
   return (
-    <div
-      ref={ref}
-      className={clsx('modal', isOpened && 'is-active')}
-    >
+    <ReactFocusLock disabled={!isOpened} returnFocus>
       <div
-        onClick={onClickOutside}
-        className="modal__wrapper"
-        data-testid='modal'
+        className={clsx('modal', isOpened && 'is-active')}
       >
-        <div className="modal__overlay"></div>
         <div
-          onClick={(evt) => evt.stopPropagation()}
-          className="modal__content"
+          onClick={onClickOutside}
+          className="modal__wrapper"
+          data-testid="modal"
         >
-          {children}
+          <div className="modal__overlay"></div>
+          <div
+            onClick={(evt) => evt.stopPropagation()}
+            className="modal__content"
+          >
+            {children}
+          </div>
         </div>
       </div>
-    </div>
+    </ReactFocusLock>
   );
 }
 

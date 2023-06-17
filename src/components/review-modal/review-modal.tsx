@@ -113,7 +113,7 @@ function ReviewModal({ cameraId }: ReviewModalProps) {
           <div className="form-review__rate">
             <fieldset className={`rate form-review__item ${createValidationClass(Field.Rate)}`}>
               < legend className="rate__caption">
-                Рейтинг
+                  Рейтинг
                 <svg width="9" height="9" aria-hidden="true">
                   <use xlinkHref="#icon-snowflake"></use>
                 </svg>
@@ -202,7 +202,7 @@ function ReviewModal({ cameraId }: ReviewModalProps) {
             className={`${clsx('btn btn--purple form-review__btn', isSubmitting && 'disabled')}`}
             type="submit"
           >
-            Отправить отзыв
+              Отправить отзыв
           </button>
         </form>
       </div>

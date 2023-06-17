@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
 import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
-import { MouseEvent, useEffect } from 'react';
+import { MouseEvent, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumbs from '../../components/breadcrumps/breadcrumbs';
 import { formatPrice } from '../../utiils/formaters';
@@ -32,6 +32,7 @@ function ProductCardScreen() {
   const { status: similarProductStatus, code: similarProductStatusCode } = useAppSelector(selectSimilarProductStatus);
 
   const id = useParams().product;
+  const ref = useRef<HTMLDivElement>(null);
   const { isLoading, isNotFound, isError } = useStatus({
     status: { productStatus, commentsStatus, similarProductStatus },
     code: { productStatusCode, commentsStatusCode, similarProductStatusCode }
@@ -61,6 +62,8 @@ function ProductCardScreen() {
 
   const handleUpButtonClick = (evt: MouseEvent<HTMLAnchorElement>) => {
     evt.preventDefault();
+    ref.current?.focus();
+
     window.scroll({
       top: 0,
       behavior: 'smooth'
@@ -71,7 +74,7 @@ function ProductCardScreen() {
     <>
       <main>
         <ScrollToTop/>
-        <div className="page-content">
+        <div ref={ref} className="page-content" tabIndex={-1} style={{ outline: 'none' }}>
           <Breadcrumbs productName={product.name}/>
           <div className="page-content__section">
             <section className="product" data-testid="product-card-screen">
