@@ -56,6 +56,7 @@ const levelFilter = {
 };
 
 const priceFilter = {
+  name: 'price',
   min: {
     enName: 'min-price',
     ruName: 'от',

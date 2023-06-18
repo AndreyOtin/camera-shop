@@ -11,8 +11,7 @@ import { MaxElementCount, SearchParam, Status } from '../../consts/enums';
 import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
 import PreviewModal from '../../components/preview-modal/preview-modal';
-import useStatus from '../../hooks/use-status';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import {
   getCameras,
   getPromo,
@@ -21,6 +20,7 @@ import {
   selectPromo,
   selectPromoStatus
 } from '../../store/catalog-slice/catalog-slice';
+import { checkStatus } from '../../utiils/common';
 
 function CatalogScreen() {
   const dispatch = useAppDispatch();
@@ -30,8 +30,7 @@ function CatalogScreen() {
   const promo = useAppSelector(selectPromo);
 
   const [searchParams] = useSearchParams();
-  const location = useLocation();
-  const { isLoading, isError } = useStatus({ status: { camerasStatus, promoStatus } });
+  const { isLoading, isError } = checkStatus({ status: { camerasStatus, promoStatus } });
   const [bannerPosition, setBannerPosition] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 

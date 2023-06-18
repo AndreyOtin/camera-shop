@@ -1,19 +1,22 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { categoryFilter } from '../../../consts/filter';
 import { useSearchParams } from 'react-router-dom';
 import { debounce } from '../../../utiils/dom';
 import { DEBOUNCE_TIMEOUT } from '../../../consts/app';
 import { EvtChange } from '../../../types/app';
+import { getObjectKeys } from '../../../utiils/types';
+import queryString from 'query-string';
 
-type Category = [keyof typeof categoryFilter['category']];
+type Category = typeof categoryFilter.category
+type CategoryKeys = keyof Category
 
 function CategoryFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [category, setCategory] = useState(() => {
-    const initialState = { ...categoryFilter.category };
+    const initialState = structuredClone(categoryFilter.category) as Category;
     const categories = searchParams.getAll(categoryFilter.name);
-    const keys = Object.keys(initialState) as Category;
+    const keys = getObjectKeys(initialState);
 
     keys.forEach((key) => {
       if (categories.includes(key)) {
@@ -24,61 +27,54 @@ function CategoryFilter() {
     return initialState;
   });
 
-
   const debouncer = useRef<{ [key: string]: ReturnType<typeof debounce> }>({
-    [categoryFilter.name]: debounce((arg) => {
-      const filter = arg as string;
-      const filters = new Set(searchParams.getAll(categoryFilter.name));
+    [categoryFilter.name]: debounce((state, search) => {
 
-      filters.has(filter) ? filters.delete(filter) : filters.add(filter);
+      const currentCategory = state as Category;
+      const currentSearchParams = search as URLSearchParams;
+      const prevQuery = queryString.parse(currentSearchParams.toString());
 
-      searchParams.delete(categoryFilter.name);
+      const categoryQuery = getObjectKeys(currentCategory)
+        .reduce<{ category: CategoryKeys[] }>((obj, key) =>
+          currentCategory[key].checked ? { category: [...obj.category, key] } : obj, { category: [] });
 
-      filters.forEach((item) => {
-        searchParams.append(categoryFilter.name, item);
-      });
-
-      setSearchParams(searchParams.toString());
+      setSearchParams({ ...prevQuery, ...categoryQuery });
     }, DEBOUNCE_TIMEOUT),
   });
 
-  const handleFilterChange = (evt: EvtChange, filter: keyof typeof category) => {
+  const handleFilterChange = (evt: EvtChange, key: CategoryKeys) => {
     setCategory((prevState) => {
-      const state = structuredClone(prevState) as typeof prevState;
+      const currentCategory = structuredClone(prevState) as typeof prevState;
 
-      state[filter].checked = evt.target.checked;
+      currentCategory[key].checked = evt.target.checked;
 
-      return state;
+      debouncer.current[categoryFilter.name](currentCategory, searchParams);
+
+      return currentCategory;
     });
-
-    debouncer.current[categoryFilter.name]?.(filter);
   };
 
   return (
     <fieldset className="catalog-filter__block">
       <legend className="title title--h5">Категория</legend>
-      {Object.keys(category).map((key) => {
-        const filter = key as keyof typeof category;
-
-        return (
-          <div key={category[filter].ruName}
-            className="custom-checkbox catalog-filter__item"
-          >
-            <label>
-              <input
-                onChange={(evt) => handleFilterChange(evt, filter)}
-                type="checkbox"
-                name={category[filter].enName}
-                checked={category[filter].checked}
-              />
-              <span className="custom-checkbox__icon"></span>
-              <span className="custom-checkbox__label">
-                {category[filter].ruName}
-              </span>
-            </label>
-          </div>
-        );
-      })}
+      {getObjectKeys(category).map((key) => (
+        <div key={category[key].ruName}
+          className="custom-checkbox catalog-filter__item"
+        >
+          <label>
+            <input
+              onChange={(evt) => handleFilterChange(evt, key)}
+              type="checkbox"
+              name={category[key].enName}
+              checked={category[key].checked}
+            />
+            <span className="custom-checkbox__icon"></span>
+            <span className="custom-checkbox__label">
+              {category[key].ruName}
+            </span>
+          </label>
+        </div>
+      ))}
     </fieldset>
   );
 }

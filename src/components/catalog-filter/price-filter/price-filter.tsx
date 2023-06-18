@@ -11,27 +11,30 @@ function PriceFilter() {
   const [maxPrice, SetMaxPrice] = useState(searchParams.get(priceFilter.max.enName) || '');
 
   const debouncer = useRef<{ [key: string]: ReturnType<typeof debounce> }>({
-    [priceFilter.min.enName]: debounce((event) => {
+    [priceFilter.min.enName]: debounce((event, search) => {
       const evt = event as EvtChange;
+      const currentSearchParams = search as URLSearchParams;
 
-      searchParams.delete(priceFilter.min.enName);
+      currentSearchParams.delete(priceFilter.min.enName);
 
       if (evt.target.value) {
-        searchParams.append(priceFilter.min.enName, evt.target.value);
+        currentSearchParams.append(priceFilter.min.enName, evt.target.value);
       }
 
-      setSearchParams(searchParams.toString());
+      setSearchParams(currentSearchParams.toString());
 
     }, DEBOUNCE_TIMEOUT),
-    [priceFilter.max.enName]: debounce((price) => {
+    [priceFilter.max.enName]: debounce((price, search) => {
+      const currentSearchParams = search as URLSearchParams;
+
       if (typeof price === 'string') {
-        searchParams.delete(priceFilter.max.enName);
+        currentSearchParams.delete(priceFilter.max.enName);
 
         if (price) {
-          searchParams.append(priceFilter.max.enName, price);
+          currentSearchParams.append(priceFilter.max.enName, price);
         }
 
-        setSearchParams(searchParams.toString());
+        setSearchParams(currentSearchParams.toString());
       }
     },
     DEBOUNCE_TIMEOUT)
@@ -41,11 +44,11 @@ function PriceFilter() {
     const price = +evt.target.value > +maxPrice ? evt.target.value : maxPrice;
 
     SetMinPrice(evt.target.value);
-    debouncer.current[priceFilter.min.enName]?.(evt);
+    debouncer.current[priceFilter.min.enName]?.(evt, searchParams);
 
     if (maxPrice) {
       SetMaxPrice(price);
-      debouncer.current[priceFilter.max.enName]?.(price);
+      debouncer.current[priceFilter.max.enName]?.(price, searchParams);
     }
   };
 
@@ -63,10 +66,10 @@ function PriceFilter() {
     const price = evt.target.value;
 
     if (price && +price < +minPrice) {
-      debouncer.current[priceFilter.max.enName]?.(minPrice);
+      debouncer.current[priceFilter.max.enName]?.(minPrice, searchParams);
       SetMaxPrice(minPrice);
     } else {
-      debouncer.current[priceFilter.max.enName]?.(price);
+      debouncer.current[priceFilter.max.enName]?.(price, searchParams);
       SetMaxPrice(price);
     }
   };
