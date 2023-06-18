@@ -1,5 +1,5 @@
 import { Camera } from './camera';
-import { Dispatch, SetStateAction } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
 export type PreviewModal = {
   camera?: Camera;
@@ -12,3 +12,5 @@ export type OutletContext = {
   isReviewOpened: boolean;
   setReviewDisplay: Dispatch<SetStateAction<boolean>>;
 }
+
+export type EvtChange = ChangeEvent<HTMLInputElement>

@@ -2,6 +2,7 @@ import { Camera, Promo } from '../../types/camera';
 import { SliceNameSpace, Status } from '../../consts/enums';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState, ThunkConfig } from '../../types/store';
+import client from '../../services/api';
 
 type InitialState = {
   camerasStatus: Status;
@@ -17,12 +18,21 @@ const initialState: InitialState = {
   promo: null
 };
 
-const getCameras = createAsyncThunk<Camera[], undefined, ThunkConfig>(
+const getCameras = createAsyncThunk<Camera[], number, ThunkConfig>(
   `${SliceNameSpace.Catalog}/getCameras`,
-  async (_, { extra: api }) => {
-    const { data } = await api.fetchCameras();
+  async (currentPage, { extra: api }) => {
+    const data: Camera[] = [];
 
-    return data;
+    const { data:cameras } = await api.fetchCameras();
+    // for (let i = 0; i < cameras.length; i++) {
+    //   const { data: reviews } = await client.getReviews(cameras[i].id.toString());
+    //
+    //   const rating = reviews.reduce((p, c) => p + c.rating, 0) / reviews.length;
+    //
+    //   data.push({ ...cameras[i], rating });
+    // }
+
+    return cameras;
   }
 );
 

@@ -12,7 +12,7 @@ import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
 import PreviewModal from '../../components/preview-modal/preview-modal';
 import useStatus from '../../hooks/use-status';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import {
   getCameras,
   getPromo,
@@ -30,13 +30,14 @@ function CatalogScreen() {
   const promo = useAppSelector(selectPromo);
 
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const { isLoading, isError } = useStatus({ status: { camerasStatus, promoStatus } });
   const [bannerPosition, setBannerPosition] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (camerasStatus === Status.Idle || promoStatus === Status.Idle) {
-      dispatch(getCameras());
+      dispatch(getCameras(1));
       dispatch(getPromo());
     }
   }, [camerasStatus, dispatch, promoStatus]);
