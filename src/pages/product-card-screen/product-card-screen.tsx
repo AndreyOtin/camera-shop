@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
 import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
 import { MouseEvent, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import Breadcrumbs from '../../components/breadcrumps/breadcrumbs';
 import { formatPrice } from '../../utiils/formaters';
 import ProductTabs from '../../components/product-tabs/product-tabs';
@@ -22,6 +22,7 @@ import {
 import ReviewModal from '../../components/review-modal/review-modal';
 import ReviewSuccessModal from '../../components/review-success-modal/review-success-modal';
 import { checkStatus } from '../../utiils/common';
+import { SearchParam } from '../../consts/enums';
 
 function ProductCardScreen() {
   const dispatch = useAppDispatch();
@@ -37,6 +38,8 @@ function ProductCardScreen() {
     status: { productStatus, commentsStatus, similarProductStatus },
     code: { productStatusCode, commentsStatusCode, similarProductStatusCode }
   });
+
+
 
   useEffect(() => {
     if (!id) {

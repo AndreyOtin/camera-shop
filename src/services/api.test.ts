@@ -17,7 +17,7 @@ describe('Async actions', () => {
 
     store.clearActions();
 
-    await store.dispatch(getCameras(1));
+    await store.dispatch(getCameras());
 
     const actions = store.getActions().map(({ type }) => type);
 

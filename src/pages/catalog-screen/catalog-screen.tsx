@@ -29,6 +29,7 @@ function CatalogScreen() {
   const cameras = useAppSelector(selectCameras);
   const promo = useAppSelector(selectPromo);
 
+
   const [searchParams] = useSearchParams();
   const { isLoading, isError } = checkStatus({ status: { camerasStatus, promoStatus } });
   const [bannerPosition, setBannerPosition] = useState(0);
@@ -37,7 +38,7 @@ function CatalogScreen() {
 
   useEffect(() => {
     if (camerasStatus === Status.Idle || promoStatus === Status.Idle) {
-      dispatch(getCameras(currentPage));
+      dispatch(getCameras());
       dispatch(getPromo());
     }
   }, [camerasStatus, currentPage, dispatch, promoStatus]);
