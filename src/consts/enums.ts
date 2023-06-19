@@ -39,7 +39,10 @@ export enum StatusCode {
 
 export enum SearchParam {
   Page = 'page',
-  Tab = 'tab'
+  Tab = 'tab',
+  Category = 'category',
+  Level = 'level',
+  Type = 'type'
 }
 
 export enum MaxElementCount {

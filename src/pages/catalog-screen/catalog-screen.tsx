@@ -33,13 +33,14 @@ function CatalogScreen() {
   const { isLoading, isError } = checkStatus({ status: { camerasStatus, promoStatus } });
   const [bannerPosition, setBannerPosition] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const currentPage = Number(searchParams.get(SearchParam.Page)) || 1;
 
   useEffect(() => {
     if (camerasStatus === Status.Idle || promoStatus === Status.Idle) {
-      dispatch(getCameras(1));
+      dispatch(getCameras(currentPage));
       dispatch(getPromo());
     }
-  }, [camerasStatus, dispatch, promoStatus]);
+  }, [camerasStatus, currentPage, dispatch, promoStatus]);
 
   useEffect(() => {
     window.history.scrollRestoration = 'manual';
@@ -53,7 +54,7 @@ function CatalogScreen() {
     return <ErrorScreen variant="error"/>;
   }
 
-  const currentPage = Number(searchParams.get(SearchParam.Page)) || 1;
+
   const promoDescription = cameras.find((item) => item.id === promo.id)?.description;
   const sliceStart = (currentPage - 1) * MaxElementCount.ProductCard;
   const sliceEnd = sliceStart + MaxElementCount.ProductCard;

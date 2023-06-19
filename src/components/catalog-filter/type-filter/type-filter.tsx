@@ -1,13 +1,6 @@
 import { getObjectKeys } from '../../../utiils/types';
-import { useSearchParams } from 'react-router-dom';
-import { useState } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
-import queryString from 'query-string';
-import { DEBOUNCE_TIMEOUT } from '../../../consts/app';
-import { EvtChange } from '../../../types/app';
 import useCheckboxFilter from '../../../hooks/use-checkbox-filter';
-
-const PARAM_NAME = 'type';
+import { SearchParam } from '../../../consts/enums';
 
 const typeFilter = {
   digital: {
@@ -32,52 +25,8 @@ const typeFilter = {
   }
 };
 
-type TypeFilterType = typeof typeFilter
-type TypeFilterKeys = keyof TypeFilterType
-
 function TypeFilter() {
-  const {filter, handleFilterChange} = useCheckboxFilter(typeFilter, PARAM_NAME);
-  // const [searchParams, setSearchParams] = useSearchParams();
-  //
-  // const [type, setType] = useState(() => {
-  //   const initialState = structuredClone(typeFilter) as TypeFilterType;
-  //   const categories = searchParams.getAll(PARAM_NAME);
-  //   const keys = getObjectKeys(initialState);
-  //
-  //   keys.forEach((key) => {
-  //     if (categories.includes(key)) {
-  //       initialState[key].checked = true;
-  //     }
-  //   });
-  //
-  //   return initialState;
-  // });
-  //
-  // const debounced = useDebouncedCallback(
-  //   () => {
-  //     setSearchParams((prev) => {
-  //       const prevQuery = queryString.parse(prev.toString());
-  //       const categoryQuery = getObjectKeys(type)
-  //         .reduce<{ [PARAM_NAME]: string[] }>((obj, key) =>
-  //           type[key].checked ? { [PARAM_NAME]: [...obj[PARAM_NAME], type[key].ruName] } : obj, { [PARAM_NAME]: [] });
-  //
-  //       return { ...prevQuery, ...categoryQuery };
-  //     });
-  //   },
-  //   DEBOUNCE_TIMEOUT
-  // );
-  //
-  // const handleFilterChange = (evt: EvtChange, key: TypeFilterKeys) => {
-  //   setType((prevState) => {
-  //     const currentCategory = structuredClone(prevState) as typeof prevState;
-  //
-  //     currentCategory[key].checked = evt.target.checked;
-  //
-  //     debounced();
-  //
-  //     return currentCategory;
-  //   });
-  // };
+  const { filter, handleFilterChange } = useCheckboxFilter(typeFilter, SearchParam.Type);
 
   return (
     <fieldset className="catalog-filter__block">

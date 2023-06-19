@@ -1,7 +1,6 @@
 import { getObjectKeys } from '../../../utiils/types';
 import useCheckboxFilter from '../../../hooks/use-checkbox-filter';
-
-const PARAM_NAME = 'level';
+import { SearchParam } from '../../../consts/enums';
 
 const levelFilter = {
   zero: {
@@ -22,7 +21,7 @@ const levelFilter = {
 };
 
 function LevelFilter() {
-  const { filter, handleFilterChange } = useCheckboxFilter(levelFilter, PARAM_NAME);
+  const { filter, handleFilterChange } = useCheckboxFilter(levelFilter, SearchParam.Level);
 
   return (
     <fieldset className="catalog-filter__block">

@@ -14,3 +14,12 @@ export type OutletContext = {
 }
 
 export type EvtChange = ChangeEvent<HTMLInputElement>
+
+export type QueryParseResult = {
+  page?: string;
+  category: string | string[];
+  level?: string | string[];
+  type?: string | string[];
+  'max-price'?: string;
+  'min-price'?: string;
+}
