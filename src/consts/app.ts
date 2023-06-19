@@ -9,6 +9,4 @@ const menuNameToRuName: Record<string, string> = {
   [MainMenu.Delivery]: 'Доставка'
 };
 
-
-
 export { menuNameToRuName, DEBOUNCE_TIMEOUT };

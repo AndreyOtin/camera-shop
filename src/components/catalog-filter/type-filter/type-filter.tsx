@@ -1,33 +1,46 @@
-import { useState } from 'react';
+import { getObjectKeys } from '../../../utiils/types';
 import { useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
+import queryString from 'query-string';
 import { DEBOUNCE_TIMEOUT } from '../../../consts/app';
 import { EvtChange } from '../../../types/app';
-import { getObjectKeys } from '../../../utiils/types';
-import queryString from 'query-string';
-import { useDebouncedCallback } from 'use-debounce';
 import useCheckboxFilter from '../../../hooks/use-checkbox-filter';
 
-const PARAM_NAME = 'category';
+const PARAM_NAME = 'type';
 
-const categoryFilter = {
-  photo: {
-    enName: 'photo-camera',
-    ruName: 'Фотокамера',
+const typeFilter = {
+  digital: {
+    enName: 'digital',
+    ruName: 'Цифровая',
     checked: false
   },
-  video: {
-    enName: 'video-camera',
-    ruName: 'Видеокамера',
+  collection: {
+    enName: 'collection',
+    ruName: 'Коллекционная',
+    checked: false
+  },
+  snapshot: {
+    enName: 'snapshot',
+    ruName: 'Моментальная',
+    checked: false
+  },
+  film: {
+    enName: 'film',
+    ruName: 'Плёночная',
     checked: false
   }
 };
 
-function CategoryFilter() {
-  const {filter, handleFilterChange} = useCheckboxFilter(categoryFilter, PARAM_NAME);
+type TypeFilterType = typeof typeFilter
+type TypeFilterKeys = keyof TypeFilterType
+
+function TypeFilter() {
+  const {filter, handleFilterChange} = useCheckboxFilter(typeFilter, PARAM_NAME);
   // const [searchParams, setSearchParams] = useSearchParams();
   //
-  // const [category, setCategory] = useState(() => {
-  //   const initialState = structuredClone(categoryFilter) as Category;
+  // const [type, setType] = useState(() => {
+  //   const initialState = structuredClone(typeFilter) as TypeFilterType;
   //   const categories = searchParams.getAll(PARAM_NAME);
   //   const keys = getObjectKeys(initialState);
   //
@@ -44,9 +57,9 @@ function CategoryFilter() {
   //   () => {
   //     setSearchParams((prev) => {
   //       const prevQuery = queryString.parse(prev.toString());
-  //       const categoryQuery = getObjectKeys(category)
-  //         .reduce<{ [PARAM_NAME]: CategoryKeys[] }>((obj, key) =>
-  //           category[key].checked ? { [PARAM_NAME]: [...obj.category, key] } : obj, { [PARAM_NAME]: [] });
+  //       const categoryQuery = getObjectKeys(type)
+  //         .reduce<{ [PARAM_NAME]: string[] }>((obj, key) =>
+  //           type[key].checked ? { [PARAM_NAME]: [...obj[PARAM_NAME], type[key].ruName] } : obj, { [PARAM_NAME]: [] });
   //
   //       return { ...prevQuery, ...categoryQuery };
   //     });
@@ -54,8 +67,8 @@ function CategoryFilter() {
   //   DEBOUNCE_TIMEOUT
   // );
   //
-  // const handleFilterChange = (evt: EvtChange, key: CategoryKeys) => {
-  //   setCategory((prevState) => {
+  // const handleFilterChange = (evt: EvtChange, key: TypeFilterKeys) => {
+  //   setType((prevState) => {
   //     const currentCategory = structuredClone(prevState) as typeof prevState;
   //
   //     currentCategory[key].checked = evt.target.checked;
@@ -68,22 +81,18 @@ function CategoryFilter() {
 
   return (
     <fieldset className="catalog-filter__block">
-      <legend className="title title--h5">Категория</legend>
+      <legend className="title title--h5">Тип камеры</legend>
       {getObjectKeys(filter).map((key) => (
-        <div key={filter[key].ruName}
-          className="custom-checkbox catalog-filter__item"
-        >
+        <div key={filter[key].enName} className="custom-checkbox catalog-filter__item">
           <label>
             <input
               onChange={(evt) => handleFilterChange(evt, key)}
+              checked={filter[key].checked}
               type="checkbox"
               name={filter[key].enName}
-              checked={filter[key].checked}
             />
             <span className="custom-checkbox__icon"></span>
-            <span className="custom-checkbox__label">
-              {filter[key].ruName}
-            </span>
+            <span className="custom-checkbox__label">{filter[key].ruName}</span>
           </label>
         </div>
       ))}
@@ -91,4 +100,4 @@ function CategoryFilter() {
   );
 }
 
-export default CategoryFilter;
+export default TypeFilter;

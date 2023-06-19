@@ -1,54 +1,49 @@
 import { useSearchParams } from 'react-router-dom';
-import { FocusEvent, useRef, useState } from 'react';
-import { priceFilter } from '../../../consts/filter';
-import { debounce } from '../../../utiils/dom';
+import { FocusEvent, useState } from 'react';
 import { DEBOUNCE_TIMEOUT } from '../../../consts/app';
 import { EvtChange } from '../../../types/app';
+import queryString from 'query-string';
+import { useDebouncedCallback } from 'use-debounce';
+
+const priceFilter = {
+  name: 'price',
+  min: {
+    enName: 'min-price',
+    ruName: 'от',
+  },
+  max: {
+    enName: 'max-price',
+    ruName: 'до',
+  },
+};
 
 function PriceFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [minPrice, SetMinPrice] = useState(searchParams.get(priceFilter.min.enName) || '');
   const [maxPrice, SetMaxPrice] = useState(searchParams.get(priceFilter.max.enName) || '');
 
-  const debouncer = useRef<{ [key: string]: ReturnType<typeof debounce> }>({
-    [priceFilter.min.enName]: debounce((event, search) => {
-      const evt = event as EvtChange;
-      const currentSearchParams = search as URLSearchParams;
+  const debounced = useDebouncedCallback(
+    () => {
+      setSearchParams((prev) => {
+        const prevQuery = queryString.parse(prev.toString());
 
-      currentSearchParams.delete(priceFilter.min.enName);
-
-      if (evt.target.value) {
-        currentSearchParams.append(priceFilter.min.enName, evt.target.value);
-      }
-
-      setSearchParams(currentSearchParams.toString());
-
-    }, DEBOUNCE_TIMEOUT),
-    [priceFilter.max.enName]: debounce((price, search) => {
-      const currentSearchParams = search as URLSearchParams;
-
-      if (typeof price === 'string') {
-        currentSearchParams.delete(priceFilter.max.enName);
-
-        if (price) {
-          currentSearchParams.append(priceFilter.max.enName, price);
-        }
-
-        setSearchParams(currentSearchParams.toString());
-      }
+        return queryString.stringify({
+          ...prevQuery,
+          [priceFilter.min.enName]: minPrice || [],
+          [priceFilter.max.enName]: maxPrice || [],
+        });
+      });
     },
-    DEBOUNCE_TIMEOUT)
-  });
+    DEBOUNCE_TIMEOUT
+  );
 
   const handleMinPriceChange = (evt: EvtChange) => {
-    const price = +evt.target.value > +maxPrice ? evt.target.value : maxPrice;
-
     SetMinPrice(evt.target.value);
-    debouncer.current[priceFilter.min.enName]?.(evt, searchParams);
+    debounced();
 
-    if (maxPrice) {
-      SetMaxPrice(price);
-      debouncer.current[priceFilter.max.enName]?.(price, searchParams);
+    if (maxPrice && +evt.target.value > +maxPrice) {
+      SetMaxPrice(evt.target.value);
+      debounced();
     }
   };
 
@@ -66,10 +61,10 @@ function PriceFilter() {
     const price = evt.target.value;
 
     if (price && +price < +minPrice) {
-      debouncer.current[priceFilter.max.enName]?.(minPrice, searchParams);
+      debounced();
       SetMaxPrice(minPrice);
     } else {
-      debouncer.current[priceFilter.max.enName]?.(price, searchParams);
+      debounced();
       SetMaxPrice(price);
     }
   };
