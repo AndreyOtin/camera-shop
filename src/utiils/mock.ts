@@ -75,6 +75,10 @@ const createMockStore = (): RootState => ({
   [SliceNameSpace.Catalog]: {
     camerasStatus: Status.Success,
     promoStatus: Status.Success,
+    fullLoadStatus: {
+      status: Status.Success,
+      page: 1
+    },
     cameras: [createFakeCamera()],
     promo: createFakePromo()
   },

@@ -1,12 +1,18 @@
 import { Camera, Promo } from '../../types/camera';
 import { MaxElementCount, SliceNameSpace, Status } from '../../consts/enums';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, ThunkConfig } from '../../types/store';
-import { filterCameras } from '../../utiils/filter';
 import client from '../../services/api';
+import { filterCameras } from '../../utiils/filter';
+import queryString from 'query-string';
+import { QueryParseResult } from '../../types/app';
 
 type InitialState = {
   camerasStatus: Status;
+  fullLoadStatus: {
+    status: Status;
+    page: number;
+  };
   promoStatus: Status;
   cameras: Camera[];
   promo: Promo | null;
@@ -15,6 +21,10 @@ type InitialState = {
 const initialState: InitialState = {
   camerasStatus: Status.Idle,
   promoStatus: Status.Idle,
+  fullLoadStatus: {
+    status: Status.Loading,
+    page: 0
+  },
   cameras: [],
   promo: null
 };
@@ -22,32 +32,39 @@ const initialState: InitialState = {
 const getCameras = createAsyncThunk<Camera[], undefined, ThunkConfig>(
   `${SliceNameSpace.Catalog}/getCameras`,
   async (_, { extra: api, dispatch }) => {
-    const camerasWithRating: Camera[] = [];
     const query = window.location.search;
+    const parsedQuery = queryString.parse(window.location.search) as QueryParseResult;
 
     const { data: cameras } = await api.fetchCameras();
 
     const filteredCameras = filterCameras(cameras, query);
-    const maxElementsCount = Math.min(filteredCameras.length, MaxElementCount.ProductCard);
 
-    for (let i = 0; i < maxElementsCount; i++) {
+    const totalPages = Math.ceil(cameras.length / MaxElementCount.ProductCard);
+    const currentPage = +(parsedQuery.page || 1) > totalPages ? 1 : +(parsedQuery.page || 1);
+    const sliceStart = (currentPage - 1) * MaxElementCount.ProductCard;
+    const leftCameras = filteredCameras.length - sliceStart;
+    const maxElementsCount = Math.min(leftCameras, filteredCameras.length, MaxElementCount.ProductCard);
+
+    const camerasWithRating = filteredCameras.slice();
+    for (let i = sliceStart; i < sliceStart + maxElementsCount; i++) {
       const { data: reviews } = await client.getReviews(cameras[i].id.toString());
 
-      const rating = Math.round(reviews.reduce((p, c) => p + c.rating, 0) / reviews.length);
+      const rating = Math.round(reviews.reduce((total, review) => total + review.rating, 0) / reviews.length);
 
-      camerasWithRating.push({ ...filteredCameras[i], rating });
+      camerasWithRating[i] = { ...filteredCameras[i], rating };
     }
 
     dispatch(getCamerasFull());
+    dispatch(catalogSlice.actions.initPage(currentPage));
 
-    return [...camerasWithRating, ...filteredCameras.slice(maxElementsCount)];
+    return camerasWithRating;
   }
 );
 
 const getCamerasFull = createAsyncThunk<Camera[], undefined, ThunkConfig>(
   `${SliceNameSpace.Catalog}/getCamerasFull`,
   async (currentPage, { extra: api }) => {
-    const data: Camera[] = [];
+    const camerasWithRating: Camera[] = [];
     const query = window.location.search;
 
     const { data: cameras } = await api.fetchCameras();
@@ -57,11 +74,11 @@ const getCamerasFull = createAsyncThunk<Camera[], undefined, ThunkConfig>(
     for (let i = 0; i < filteredCameras.length; i++) {
       const { data: reviews } = await client.getReviews(cameras[i].id.toString());
 
-      const rating = Math.round(reviews.reduce((p, c) => p + c.rating, 0) / reviews.length);
+      const rating = Math.round(reviews.reduce((total, review) => total + review.rating, 0) / reviews.length);
 
-      data.push({ ...filteredCameras[i], rating });
+      camerasWithRating.push({ ...filteredCameras[i], rating });
     }
-    return data;
+    return camerasWithRating;
   }
 );
 
@@ -77,7 +94,11 @@ const getPromo = createAsyncThunk<Promo, undefined, ThunkConfig>(
 const catalogSlice = createSlice({
   initialState,
   name: SliceNameSpace.Catalog,
-  reducers: {},
+  reducers: {
+    initPage(state, action: PayloadAction<number>) {
+      state.fullLoadStatus.page = action.payload;
+    }
+  },
   extraReducers(builder) {
     builder
       .addCase(getCameras.pending, (state) => {
@@ -92,6 +113,7 @@ const catalogSlice = createSlice({
       })
       .addCase(getCamerasFull.fulfilled, (state, action) => {
         state.cameras = action.payload;
+        state.fullLoadStatus.status = Status.Success;
       })
       .addCase(getPromo.pending, (state) => {
         state.promoStatus = Status.Loading;
@@ -108,8 +130,18 @@ const catalogSlice = createSlice({
 
 const selectCameras = (state: RootState) => state[SliceNameSpace.Catalog].cameras;
 const selectCamerasStatus = (state: RootState) => state[SliceNameSpace.Catalog].camerasStatus;
+const selectCamerasFullLoadStatus = (state: RootState) => state[SliceNameSpace.Catalog].fullLoadStatus;
 const selectPromo = (state: RootState) => state[SliceNameSpace.Catalog].promo;
 const selectPromoStatus = (state: RootState) => state[SliceNameSpace.Catalog].promoStatus;
 
 export default catalogSlice.reducer;
-export { getCameras, getPromo, selectCameras, selectCamerasStatus, selectPromo, selectPromoStatus, initialState };
+export {
+  getCameras,
+  getPromo,
+  selectCameras,
+  selectCamerasStatus,
+  selectPromo,
+  selectPromoStatus,
+  selectCamerasFullLoadStatus,
+  initialState
+};

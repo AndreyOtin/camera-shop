@@ -31,8 +31,8 @@ const filterCameras = (cameras: Camera[], query: string) => {
   const parsedQuery = queryString.parse(query) as QueryParseResult;
   const parsedQueryKeys = getObjectKeys(parsedQuery);
 
-  return cameras.filter((camera) => {
-    const isKey = parsedQueryKeys.every((key) => {
+  return cameras.filter((camera) =>
+    parsedQueryKeys.every((key) => {
       const cameraValue = camera[key as keyof typeof camera];
       const queryValue = parsedQuery[key];
       let isPrice = true;
@@ -47,10 +47,7 @@ const filterCameras = (cameras: Camera[], query: string) => {
       }
 
       return isFilter && isPrice;
-    });
-
-    return isKey;
-  });
+    }));
 };
 
 export { filterCameras };

@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { useAppSelector } from '../../hooks/store-hooks';
+import { selectCamerasFullLoadStatus } from '../../store/catalog-slice/catalog-slice';
+import { Status } from '../../consts/enums';
 
 enum SortType {
   Popular = 'popular',
@@ -10,9 +13,16 @@ enum SortType {
 function CatalogSort() {
   const [sortType, setSortType] = useState(SortType.Price);
   const [sortDirection, setSortDirection] = useState(SortType.Down);
+  const status = useAppSelector(selectCamerasFullLoadStatus);
 
   return (
-    <div className="catalog-sort">
+    <div
+      style={status.status === Status.Loading ? {
+        opacity: 0.4,
+        pointerEvents: 'none'
+      } : {}}
+      className="catalog-sort"
+    >
       <form action="#">
         <div className="catalog-sort__inner">
           <p className="title title--h5">Сортировать:</p>

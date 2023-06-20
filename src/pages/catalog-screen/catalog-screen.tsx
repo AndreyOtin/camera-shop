@@ -29,12 +29,13 @@ function CatalogScreen() {
   const cameras = useAppSelector(selectCameras);
   const promo = useAppSelector(selectPromo);
 
-
   const [searchParams] = useSearchParams();
   const { isLoading, isError } = checkStatus({ status: { camerasStatus, promoStatus } });
   const [bannerPosition, setBannerPosition] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-  const currentPage = Number(searchParams.get(SearchParam.Page)) || 1;
+  const page = Number(searchParams.get(SearchParam.Page)) || 1;
+  const totalPages = Math.ceil(cameras.length / MaxElementCount.ProductCard);
+  const currentPage = page > totalPages ? 1 : page;
 
   useEffect(() => {
     if (camerasStatus === Status.Idle || promoStatus === Status.Idle) {
@@ -55,8 +56,7 @@ function CatalogScreen() {
     return <ErrorScreen variant="error"/>;
   }
 
-
-  const promoDescription = cameras.find((item) => item.id === promo.id)?.description;
+  const promoDescription = cameras.find((item) => item?.id === promo.id)?.description;
   const sliceStart = (currentPage - 1) * MaxElementCount.ProductCard;
   const sliceEnd = sliceStart + MaxElementCount.ProductCard;
   const slicedCameras = cameras.slice(sliceStart, sliceEnd);
