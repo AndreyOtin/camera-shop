@@ -1,16 +1,14 @@
 import { Link } from 'react-router-dom';
-import { AppRoute, MaxElementCount } from '../../consts/enums';
+import { AppRoute } from '../../consts/enums';
 import clsx from 'clsx';
 
 type PaginationProps = {
-  camerasCount: number;
+  pages: number;
   bannerPosition: number;
   currentPage: number;
 }
 
-function Pagination({ camerasCount, bannerPosition, currentPage }: PaginationProps) {
-  const pages = Math.ceil(camerasCount / MaxElementCount.ProductCard);
-
+function Pagination({ pages, bannerPosition, currentPage }: PaginationProps) {
   return (
     <div className="pagination">
       <ul className="pagination__list">

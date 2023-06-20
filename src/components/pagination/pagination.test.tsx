@@ -6,7 +6,7 @@ describe('Component: Pagination', () => {
   it('should render correctly', () => {
     render(
       <ProviderWrapper>
-        <Pagination bannerPosition={0} camerasCount={20} currentPage={1}/>
+        <Pagination bannerPosition={0} pages={3} currentPage={1}/>
       </ProviderWrapper>
     );
 

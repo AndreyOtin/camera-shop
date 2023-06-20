@@ -17,7 +17,7 @@ function Header() {
             {Object.values(MainMenu).map((menu) => (
               <li key={menu} className="main-nav__item">
                 <NavLink
-                  className={({ isActive }) => clsx('main-nav__link', isActive && 'main-nav__link--active')}
+                  className={clsx('main-nav__link')}
                   to={`/${menu}`}
                 >
                   {menuNameToRuName[menu]}

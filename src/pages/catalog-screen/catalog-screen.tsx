@@ -53,8 +53,13 @@ function CatalogScreen() {
     return <ErrorScreen variant="error"/>;
   }
 
-  const currentPage = Number(searchParams.get(SearchParam.Page)) || 1;
+
+  const pages = Math.ceil(cameras.length / MaxElementCount.ProductCard);
+  const page = Number(searchParams.get(SearchParam.Page)) || 1;
+  const currentPage = pages < page ? 1 : page;
+
   const promoDescription = cameras.find((item) => item.id === promo.id)?.description;
+
   const sliceStart = (currentPage - 1) * MaxElementCount.ProductCard;
   const sliceEnd = sliceStart + MaxElementCount.ProductCard;
   const slicedCameras = cameras.slice(sliceStart, sliceEnd);
@@ -89,7 +94,7 @@ function CatalogScreen() {
                 <Pagination
                   currentPage={currentPage}
                   bannerPosition={bannerPosition}
-                  camerasCount={cameras.length}
+                  pages={pages}
                 />
               </div>
             </div>
