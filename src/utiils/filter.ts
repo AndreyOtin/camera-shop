@@ -2,7 +2,15 @@ import { Camera } from '../types/camera';
 import { ParsedQueryString } from '../types/app';
 import { getObjectKeys } from './types';
 
-const isPriceInRange = (camera: Camera, minPrice?: string, maxPrice?: string) => {
+const getMinMax = (cameras: Camera[]) => {
+  const prices = cameras.map((camera) => camera.price);
+  const min = cameras.length ? Math.min(...prices).toString() : '';
+  const max = cameras.length ? Math.max(...prices).toString() : '';
+
+  return { min, max };
+};
+
+const isCameraPriceInRange = (camera: Camera, minPrice?: string, maxPrice?: string) => {
   if (minPrice && maxPrice) {
     return +minPrice <= camera.price && camera.price <= +maxPrice;
   }
@@ -15,44 +23,34 @@ const isPriceInRange = (camera: Camera, minPrice?: string, maxPrice?: string) =>
     return +maxPrice >= camera.price;
   }
 
-  return false;
+  return true;
 };
 
-const isFilterInCamera = (filter: string | string[] | undefined, cameraValue: string | number) => {
-  if (filter && Array.isArray(filter)) {
+const isFilterInCamera = (filter: string | string[] | undefined, cameraValue: string | number | undefined) => {
+  if (filter && cameraValue && Array.isArray(filter)) {
     return filter.includes(cameraValue.toString());
   }
 
-  return cameraValue === filter;
+  if (cameraValue) {
+    return cameraValue === filter;
+  }
+
+  return true;
 };
 
 const filterCameras = (cameras: Camera[], parsedQuery: ParsedQueryString) => {
   const parsedQueryKeys = getObjectKeys(parsedQuery);
 
-  return cameras.filter((camera) =>
-    parsedQueryKeys.every((key) => {
-      const cameraValue = camera[key as keyof typeof camera];
-      let isPrice = true;
-      let isFilter = true;
+  const filteredCameras = cameras.filter((camera) =>
+    parsedQueryKeys.every((key) =>
+      isFilterInCamera(parsedQuery[key], camera[key as keyof typeof camera])));
 
-      if (parsedQuery['min-price'] || parsedQuery['max-price']) {
-        isPrice = isPriceInRange(camera, parsedQuery['min-price'], parsedQuery['max-price']);
-      }
+  const filteredCamerasWithPrice = filteredCameras.filter((camera) =>
+    isCameraPriceInRange(camera, parsedQuery['min-price'], parsedQuery['max-price']));
 
-      if (cameraValue) {
-        isFilter = isFilterInCamera(parsedQuery[key], cameraValue);
-      }
+  const { min, max } = getMinMax(filteredCameras);
 
-      return isFilter && isPrice;
-    }));
+  return { filteredCamerasWithPrice, min, max };
 };
 
-const getMinMax = (cameras: Camera[]) => {
-  const prices = cameras.map((camera) => camera.price);
-  const min = cameras.length ? Math.min(...prices).toString() : '';
-  const max = cameras.length ? Math.max(...prices).toString() : '';
-
-  return { min, max };
-};
-
-export { filterCameras, getMinMax };
+export { filterCameras };

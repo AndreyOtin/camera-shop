@@ -6,7 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import queryString from 'query-string';
 import { ParsedQueryString } from '../../types/app';
 import { SearchParam } from '../../consts/enums';
-import { filterCameras, getMinMax } from '../../utiils/filter';
+import { filterCameras } from '../../utiils/filter';
 import sortBy from '../../utiils/sort';
 import getPaginationVariables from '../../utiils/pagination';
 
@@ -22,25 +22,24 @@ function CatalogContent({ bannerPosition, cameras }: CatalogContentProps) {
   const sortDirection = parsedQuery[SearchParam.SortDirection];
   const page = parsedQuery.page;
 
-  const filteredCameras = filterCameras(cameras, parsedQuery);
-  const { min, max } = getMinMax(filteredCameras);
+  const { filteredCamerasWithPrice, max, min } = filterCameras(cameras, parsedQuery);
 
   if (sortType && sortDirection) {
-    filteredCameras.sort(sortBy(sortType, sortDirection));
+    filteredCamerasWithPrice.sort(sortBy(sortType, sortDirection));
   }
 
   const {
     sliceStart,
     sliceEnd,
-  } = getPaginationVariables(filteredCameras.length, page);
+  } = getPaginationVariables(filteredCamerasWithPrice.length, page);
 
-  const slicedCameras = filteredCameras.slice(sliceStart, sliceEnd);
+  const slicedCameras = filteredCamerasWithPrice.slice(sliceStart, sliceEnd);
 
   return (
     <div className="page-content__columns">
       <CatalogFilter minPrice={min} maxPrice={max}/>
       <Catalog
-        filteredCameras={filteredCameras}
+        filteredCameras={filteredCamerasWithPrice}
         cameras={slicedCameras}
         bannerPosition={bannerPosition}
         sortType={sortType}

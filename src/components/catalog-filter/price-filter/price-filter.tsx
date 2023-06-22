@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { FocusEvent, useState } from 'react';
+import { FocusEvent, useEffect, useState } from 'react';
 import { DEBOUNCE_TIMEOUT } from '../../../consts/app';
 import { EvtChange } from '../../../types/app';
 import queryString from 'query-string';
@@ -44,6 +44,7 @@ function PriceFilter({ min, max }: CatalogFilterProps) {
 
   const handleMinPriceChange = (evt: EvtChange) => {
     const price = +evt.target.value < 0 || evt.target.value === '-0' ? '' : evt.target.value;
+
     if (maxPrice && +evt.target.value > +maxPrice) {
       SetMaxPrice(evt.target.value);
       debounced();
@@ -55,7 +56,6 @@ function PriceFilter({ min, max }: CatalogFilterProps) {
 
   const handleMaxPriceChange = (evt: EvtChange) => {
     const price = +evt.target.value < 0 || evt.target.value === '-0' ? '' : evt.target.value;
-
 
     if (price && +price > +max) {
       debounced();

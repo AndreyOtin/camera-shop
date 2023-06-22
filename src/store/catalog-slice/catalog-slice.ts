@@ -39,7 +39,7 @@ const getCameras = createAsyncThunk<Camera[], undefined, ThunkConfig>(
 
     const { data: cameras } = await api.fetchCameras();
 
-    const filteredCameras = filterCameras(cameras, parsedQuery);
+    const { filteredCamerasWithPrice:filteredCameras } = filterCameras(cameras, parsedQuery);
 
     if (sortType && sortDirection) {
       filteredCameras.sort(sortBy(sortType, sortDirection));
