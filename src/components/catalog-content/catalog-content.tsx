@@ -7,8 +7,8 @@ import queryString from 'query-string';
 import { ParsedQueryString } from '../../types/app';
 import { SearchParam } from '../../consts/enums';
 import { filterCameras } from '../../utiils/filter';
-import sortBy from '../../utiils/sort';
 import getPaginationVariables from '../../utiils/pagination';
+import sortBy from '../../utiils/sort';
 
 type CatalogContentProps = {
   cameras: Camera[];

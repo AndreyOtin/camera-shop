@@ -39,48 +39,46 @@ const getCameras = createAsyncThunk<Camera[], undefined, ThunkConfig>(
 
     const { data: cameras } = await api.fetchCameras();
 
-    const { filteredCamerasWithPrice:filteredCameras } = filterCameras(cameras, parsedQuery);
+    const { filteredCamerasWithPrice } = filterCameras(cameras, parsedQuery);
 
     if (sortType && sortDirection) {
-      filteredCameras.sort(sortBy(sortType, sortDirection));
+      filteredCamerasWithPrice.sort(sortBy(sortType, sortDirection));
     }
 
     const {
       currentPage,
       sliceStart,
       sliceEnd,
-    } = getPaginationVariables(filteredCameras.length, parsedQuery.page);
+    } = getPaginationVariables(filteredCamerasWithPrice.length, parsedQuery.page);
 
 
     for (let i = sliceStart; i < sliceEnd; i++) {
-      const { data: reviews } = await api.getReviews(filteredCameras[i].id.toString());
+      const { data: reviews } = await api.getReviews(filteredCamerasWithPrice[i].id.toString());
 
       const rating = Math.ceil(reviews.reduce((total, review) => total + review.rating, 0) / reviews.length);
 
-      filteredCameras[i] = { ...filteredCameras[i], rating };
+      filteredCamerasWithPrice[i] = { ...filteredCamerasWithPrice[i], rating: Number.isNaN(rating) ? 0 : rating };
     }
 
     dispatch(getCamerasFull());
     dispatch(catalogSlice.actions.initPage(currentPage));
 
-    return filteredCameras;
+    return filteredCamerasWithPrice;
   }
 );
 
 const getCamerasFull = createAsyncThunk<Camera[], undefined, ThunkConfig>(
   `${SliceNameSpace.Catalog}/getCamerasFull`,
   async (currentPage, { extra: api }) => {
-    const camerasWithRating: Camera[] = [];
-
     const { data: cameras } = await api.fetchCameras();
 
-
+    const camerasWithRating: Camera[] = [];
     for (let i = 0; i < cameras.length; i++) {
       const { data: reviews } = await api.getReviews(cameras[i].id.toString());
 
       const rating = Math.ceil(reviews.reduce((total, review) => total + review.rating, 0) / reviews.length);
 
-      camerasWithRating.push({ ...cameras[i], rating });
+      camerasWithRating.push({ ...cameras[i], rating: Number.isNaN(rating) ? 0 : rating });
     }
 
     return camerasWithRating;

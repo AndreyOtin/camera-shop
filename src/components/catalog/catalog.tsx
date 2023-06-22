@@ -39,12 +39,11 @@ function Catalog({ cameras, bannerPosition, sortType, filteredCameras }: Catalog
         {cameras
           .map((camera) => (
             <ProductCard
-              sortType={sortType}
               key={camera.id}
               camera={camera}
             />))}
       </div>
-      {!cameras.length && <p style={{ textAlign: 'center' }}><b>«Hо вашему запросу ничего не найдено»</b></p>}
+      {!filteredCameras.length && <p style={{ textAlign: 'center' }}><b>«Hо вашему запросу ничего не найдено»</b></p>}
       <Pagination
         bannerPosition={bannerPosition}
         cameras={filteredCameras}

@@ -47,7 +47,7 @@ function CatalogFilter({ maxPrice, minPrice }: CatalogFilterProps) {
     });
     setReset((prevState) => ({
       ...prevState,
-      price: --reset.price,
+      price: --prevState.price,
     }));
   };
   return (
