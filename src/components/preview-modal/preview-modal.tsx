@@ -39,7 +39,11 @@ function PreviewModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> })
                 {preview?.camera?.vendorCode}
               </span>
             </li>
-            <li className="basket-item__list-item">{preview?.camera?.type} фотокамера</li>
+            <li
+              className="basket-item__list-item"
+            >
+              {preview?.camera?.type} {preview?.camera?.category.toLocaleLowerCase()}
+            </li>
             <li className="basket-item__list-item">{preview?.camera?.level} уровень</li>
           </ul>
           <p className="basket-item__price">

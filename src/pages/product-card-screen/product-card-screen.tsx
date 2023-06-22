@@ -9,7 +9,6 @@ import ProductTabs from '../../components/product-tabs/product-tabs';
 import ScrollToTop from '../../components/scroll-to-top/scroll-to-top';
 import { fetchComments, selectCommentsStatus } from '../../store/comments-slice/comments-slice';
 import Reviews from '../../components/reviews/reviews';
-import useStatus from '../../hooks/use-status';
 import SimilarProductsSlider from '../../components/similar-products-slider/similar-products-slider';
 import PreviewModal from '../../components/preview-modal/preview-modal';
 import {
@@ -22,6 +21,7 @@ import {
 } from '../../store/product-slice/product-slice';
 import ReviewModal from '../../components/review-modal/review-modal';
 import ReviewSuccessModal from '../../components/review-success-modal/review-success-modal';
+import { checkStatus } from '../../utiils/common';
 
 function ProductCardScreen() {
   const dispatch = useAppDispatch();
@@ -33,7 +33,7 @@ function ProductCardScreen() {
 
   const id = useParams().product;
   const ref = useRef<HTMLDivElement>(null);
-  const { isLoading, isNotFound, isError } = useStatus({
+  const { isLoading, isNotFound, isError } = checkStatus({
     status: { productStatus, commentsStatus, similarProductStatus },
     code: { productStatusCode, commentsStatusCode, similarProductStatusCode }
   });

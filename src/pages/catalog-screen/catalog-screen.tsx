@@ -1,18 +1,12 @@
 import { Helmet } from 'react-helmet-async';
 import Breadcrumbs from '../../components/breadcrumps/breadcrumbs';
 import Promo from '../../components/promo/promo';
-import CatalogFilter from '../../components/catalog-filter/catalog-filter';
-import CatalogSort from '../../components/catalog-sort/catalog-sort';
-import Pagination from '../../components/pagination/pagination';
-import ProductCard from '../../components/product-card/product-card';
 import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
 import { useEffect, useRef, useState } from 'react';
-import { MaxElementCount, SearchParam, Status } from '../../consts/enums';
+import { Status } from '../../consts/enums';
 import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
 import PreviewModal from '../../components/preview-modal/preview-modal';
-import useStatus from '../../hooks/use-status';
-import { useSearchParams } from 'react-router-dom';
 import {
   getCameras,
   getPromo,
@@ -21,6 +15,8 @@ import {
   selectPromo,
   selectPromoStatus
 } from '../../store/catalog-slice/catalog-slice';
+import { checkStatus } from '../../utiils/common';
+import CatalogContent from '../../components/catalog-content/catalog-content';
 
 function CatalogScreen() {
   const dispatch = useAppDispatch();
@@ -29,8 +25,7 @@ function CatalogScreen() {
   const cameras = useAppSelector(selectCameras);
   const promo = useAppSelector(selectPromo);
 
-  const [searchParams] = useSearchParams();
-  const { isLoading, isError } = useStatus({ status: { camerasStatus, promoStatus } });
+  const { isLoading, isError } = checkStatus({ status: { camerasStatus, promoStatus } });
   const [bannerPosition, setBannerPosition] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -53,16 +48,7 @@ function CatalogScreen() {
     return <ErrorScreen variant="error"/>;
   }
 
-
-  const pages = Math.ceil(cameras.length / MaxElementCount.ProductCard);
-  const page = Number(searchParams.get(SearchParam.Page)) || 1;
-  const currentPage = pages < page ? 1 : page;
-
-  const promoDescription = cameras.find((item) => item.id === promo.id)?.description;
-
-  const sliceStart = (currentPage - 1) * MaxElementCount.ProductCard;
-  const sliceEnd = sliceStart + MaxElementCount.ProductCard;
-  const slicedCameras = cameras.slice(sliceStart, sliceEnd);
+  const promoDescription = cameras.find((item) => item?.id === promo.id)?.description;
 
   return (
     <main>
@@ -79,25 +65,7 @@ function CatalogScreen() {
         <section ref={ref} className="catalog">
           <div className="container">
             <h1 className="title title--h2">Каталог фото- и видеотехники</h1>
-            <div className="page-content__columns">
-              <CatalogFilter/>
-              <div className="catalog__content">
-                <CatalogSort/>
-                <div className="cards catalog__cards">
-                  {slicedCameras
-                    .map((camera) => (
-                      <ProductCard
-                        key={camera.id}
-                        camera={camera}
-                      />))}
-                </div>
-                <Pagination
-                  currentPage={currentPage}
-                  bannerPosition={bannerPosition}
-                  pages={pages}
-                />
-              </div>
-            </div>
+            <CatalogContent cameras={cameras} bannerPosition={bannerPosition}/>
           </div>
         </section>
       </div>

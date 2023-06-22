@@ -39,7 +39,21 @@ export enum StatusCode {
 
 export enum SearchParam {
   Page = 'page',
-  Tab = 'tab'
+  Tab = 'tab',
+  Category = 'category',
+  Level = 'level',
+  Type = 'type',
+  SortType = 'sort-type',
+  SortDirection = 'sort-direction',
+  PriceMin = 'min-price',
+  PriceMax = 'max-price'
+}
+
+export enum SortType {
+  Popular = 'rating',
+  Price = 'price',
+  Up = 'up',
+  Down = 'down'
 }
 
 export enum MaxElementCount {

@@ -17,7 +17,8 @@ const createFakeCamera = (): Camera => ({
   description: faker.lorem.word(1),
   price: faker.datatype.number(3),
   id: faker.datatype.number(3),
-  reviewCount: faker.datatype.number(3)
+  reviewCount: faker.datatype.number(3),
+  rating: 3
 });
 
 const createFakePromo = (): Promo => ({
@@ -74,6 +75,10 @@ const createMockStore = (): RootState => ({
   [SliceNameSpace.Catalog]: {
     camerasStatus: Status.Success,
     promoStatus: Status.Success,
+    fullLoadStatus: {
+      status: Status.Success,
+      page: 1
+    },
     cameras: [createFakeCamera()],
     promo: createFakePromo()
   },
