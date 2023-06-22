@@ -25,7 +25,7 @@ describe('Application Routing', () => {
     expect(screen.getByText('Каталог фото- и видеотехники')).toBeInTheDocument();
   });
 
-  it('should render "CatalogScreen" when user navigate to "/catalog"', () => {
+  it('should render "CatalogScreen" when user navigate to "/catalog.tsx"', () => {
     history.push(AppRoute.Catalog);
 
     render(fakeApp);
@@ -33,7 +33,7 @@ describe('Application Routing', () => {
     expect(screen.getByText(/Каталог фото- и видеотехники/i)).toBeInTheDocument();
   });
 
-  it('should render "ProductCardScreen" when user navigate to "/catalog/1"', () => {
+  it('should render "ProductCardScreen" when user navigate to "/catalog.tsx/1"', () => {
     history.push(generatePath(AppRoute.Product, { product: '1' }));
     window.scrollTo = jest.fn();
 

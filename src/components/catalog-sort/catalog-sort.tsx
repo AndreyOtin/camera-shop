@@ -1,19 +1,50 @@
 import { useState } from 'react';
 import { useAppSelector } from '../../hooks/store-hooks';
 import { selectCamerasFullLoadStatus } from '../../store/catalog-slice/catalog-slice';
-import { Status } from '../../consts/enums';
-
-enum SortType {
-  Popular = 'popular',
-  Price = 'price',
-  Up = 'up',
-  Down = 'down'
-}
+import { SearchParam, SortType, Status } from '../../consts/enums';
+import { useSearchParams } from 'react-router-dom';
+import { useDebouncedCallback } from 'use-debounce';
+import { DEBOUNCE_TIMEOUT } from '../../consts/app';
+import queryString from 'query-string';
 
 function CatalogSort() {
-  const [sortType, setSortType] = useState(SortType.Price);
-  const [sortDirection, setSortDirection] = useState(SortType.Down);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [sortType, setSortType] = useState(searchParams.get(SearchParam.SortType));
+  const [sortDirection, setSortDirection] = useState(searchParams.get(SearchParam.SortDirection));
   const status = useAppSelector(selectCamerasFullLoadStatus);
+
+  const debounced = useDebouncedCallback(() => {
+    const prevParams = queryString.parse(searchParams.toString());
+    const newParams = queryString.stringify({
+      ...prevParams,
+      [SearchParam.SortType]: sortType,
+      [SearchParam.SortDirection]: sortDirection
+    });
+
+    setSearchParams(newParams);
+  }, DEBOUNCE_TIMEOUT);
+
+  const handleTypeChange = (type: SortType) => {
+    if (!sortDirection) {
+      setSortDirection(SortType.Up);
+      setSortType(type);
+    } else {
+      setSortType(type);
+    }
+
+    debounced();
+  };
+
+  const handleDirectionChange = (direction: SortType) => {
+    if (!sortType) {
+      setSortDirection(direction);
+      setSortType(SortType.Price);
+    } else {
+      setSortDirection(direction);
+    }
+
+    debounced();
+  };
 
   return (
     <div
@@ -29,7 +60,7 @@ function CatalogSort() {
           <div className="catalog-sort__type">
             <div className="catalog-sort__btn-text">
               <input
-                onChange={() => setSortType(SortType.Price)}
+                onChange={() => handleTypeChange(SortType.Price)}
                 type="radio"
                 id="sortPrice"
                 name="sort"
@@ -39,7 +70,7 @@ function CatalogSort() {
             </div>
             <div className="catalog-sort__btn-text">
               <input
-                onChange={() => setSortType(SortType.Popular)}
+                onChange={() => handleTypeChange(SortType.Popular)}
                 type="radio"
                 id="sortPopular"
                 name="sort"
@@ -51,7 +82,7 @@ function CatalogSort() {
           <div className="catalog-sort__order">
             <div className="catalog-sort__btn catalog-sort__btn--up">
               <input
-                onChange={() => setSortDirection(SortType.Up)}
+                onChange={() => handleDirectionChange(SortType.Up)}
                 type="radio"
                 id="up"
                 name="sort-icon"
@@ -66,7 +97,7 @@ function CatalogSort() {
             </div>
             <div className="catalog-sort__btn catalog-sort__btn--down">
               <input
-                onChange={() => setSortDirection(SortType.Down)}
+                onChange={() => handleDirectionChange(SortType.Down)}
                 type="radio"
                 id="down"
                 name="sort-icon"

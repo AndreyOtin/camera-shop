@@ -1,28 +1,35 @@
 import { Link, useSearchParams } from 'react-router-dom';
-import { AppRoute, MaxElementCount, SearchParam, Status } from '../../consts/enums';
+import { AppRoute, SearchParam, Status } from '../../consts/enums';
 import clsx from 'clsx';
 import { useAppSelector } from '../../hooks/store-hooks';
 import { selectCamerasFullLoadStatus } from '../../store/catalog-slice/catalog-slice';
 import Spinner from '../spinner/spinner';
+import getPaginationVariables from '../../utiils/pagination';
+import { Camera } from '../../types/camera';
+import queryString from 'query-string';
 
 type PaginationProps = {
-  camerasCount: number;
+  cameras: Camera[];
   bannerPosition: number;
-  currentPage: number;
 }
 
-function Pagination({ camerasCount, bannerPosition, currentPage }: PaginationProps) {
-  const pages = Math.ceil(camerasCount / MaxElementCount.ProductCard);
-  const [params] = useSearchParams();
+function Pagination({ cameras, bannerPosition }: PaginationProps) {
+  const [searchParams] = useSearchParams();
   const status = useAppSelector(selectCamerasFullLoadStatus);
 
+  const {
+    totalPages,
+    currentPage
+  } = getPaginationVariables(cameras.length, searchParams.get(SearchParam.Page) || undefined);
 
   const updateQueryString = () => {
-    params.delete(SearchParam.Page);
+    const query = queryString.parse(searchParams.toString());
 
-    const queryString = params.toString();
+    delete query[SearchParam.Page];
 
-    return queryString && `&${queryString}`;
+    const newQuery = queryString.stringify(query);
+
+    return newQuery && `&${newQuery}`;
   };
 
   return (
@@ -46,7 +53,7 @@ function Pagination({ camerasCount, bannerPosition, currentPage }: PaginationPro
               </Link>
             </li>)}
 
-        {Array(pages).fill('').map((_, index) => (
+        {totalPages > 1 && Array(totalPages).fill('').map((_, index) => (
           status.status === Status.Loading && index + 1 !== status.page
             ?
             <Spinner key={`${index.toString()}`} variant="small" className="pagination__item" isActive/>
@@ -69,7 +76,7 @@ function Pagination({ camerasCount, bannerPosition, currentPage }: PaginationPro
             </li>
         ))}
 
-        {currentPage !== pages &&
+        {currentPage !== totalPages && (cameras.length || null) &&
           (status.status === Status.Loading
             ?
             <Spinner variant="small" className="pagination__item" isActive/>
@@ -82,7 +89,7 @@ function Pagination({ camerasCount, bannerPosition, currentPage }: PaginationPro
                 })}
                 className="pagination__link pagination__link--text"
                 to={`${AppRoute.Catalog}?page=${currentPage + 1}${updateQueryString()}`}
-
+                replace={false}
               >
                 Далее
               </Link>

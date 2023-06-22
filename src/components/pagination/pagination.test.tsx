@@ -1,18 +1,21 @@
 import { render, screen } from '@testing-library/react';
-import { ProviderWrapper } from '../../utiils/jest';
+import { createMockStoreWithAPI, ProviderWrapper } from '../../utiils/jest';
 import Pagination from './pagination';
+import { createFakeCamera, createMockStore } from '../../utiils/mock';
+
+const store = createMockStore();
+const { fakeStore } = createMockStoreWithAPI(store);
 
 describe('Component: Pagination', () => {
   it('should render correctly', () => {
     render(
-      <ProviderWrapper>
-        <Pagination bannerPosition={0} camerasCount={20} currentPage={1}/>
+      <ProviderWrapper fakeStore={fakeStore}>
+        <Pagination bannerPosition={0} cameras={Array(10).fill(createFakeCamera())}/>
       </ProviderWrapper>
     );
 
 
     expect(screen.getByText('Далее')).toBeInTheDocument();
-    expect(screen.getByText('2')).toBeInTheDocument();
-    expect(screen.queryByText('4')).not.toBeInTheDocument();
+    expect(screen.getByText('1')).toBeInTheDocument();
   });
 });

@@ -1,32 +1,39 @@
 import { getObjectKeys } from '../../../utiils/types';
 import useCheckboxFilter from '../../../hooks/use-checkbox-filter';
 import { SearchParam } from '../../../consts/enums';
+import { useSearchParams } from 'react-router-dom';
 
 const typeFilter = {
   digital: {
     enName: 'digital',
     ruName: 'Цифровая',
-    checked: false
-  },
-  collection: {
-    enName: 'collection',
-    ruName: 'Коллекционная',
-    checked: false
+    checked: false,
+    disabled: ''
   },
   snapshot: {
     enName: 'snapshot',
     ruName: 'Моментальная',
-    checked: false
+    checked: false,
+    disabled: 'Видеокамера'
   },
   film: {
     enName: 'film',
     ruName: 'Плёночная',
-    checked: false
-  }
+    checked: false,
+    disabled: 'Видеокамера'
+  },
+  collection: {
+    enName: 'collection',
+    ruName: 'Коллекционная',
+    checked: false,
+    disabled: ''
+  },
 };
 
 function TypeFilter() {
   const { filter, handleFilterChange } = useCheckboxFilter(typeFilter, SearchParam.Type);
+  const [searchParam] = useSearchParams();
+  const category = searchParam.get(SearchParam.Category);
 
   return (
     <fieldset className="catalog-filter__block">
@@ -39,6 +46,7 @@ function TypeFilter() {
               checked={filter[key].checked}
               type="checkbox"
               name={filter[key].enName}
+              disabled={filter[key].disabled === category}
             />
             <span className="custom-checkbox__icon"></span>
             <span className="custom-checkbox__label">{filter[key].ruName}</span>

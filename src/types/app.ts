@@ -1,5 +1,6 @@
 import { Camera } from './camera';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { SearchParam } from '../consts/enums';
 
 export type PreviewModal = {
   camera?: Camera;
@@ -15,11 +16,13 @@ export type OutletContext = {
 
 export type EvtChange = ChangeEvent<HTMLInputElement>
 
-export type QueryParseResult = {
-  page?: string;
-  category: string | string[];
-  level?: string | string[];
-  type?: string | string[];
-  'max-price'?: string;
-  'min-price'?: string;
+export type ParsedQueryString = {
+  [SearchParam.Page]?: string;
+  [SearchParam.Category]: string | string[];
+  [SearchParam.Level]?: string | string[];
+  [SearchParam.Type]?: string | string[];
+  [SearchParam.PriceMax]?: string;
+  [SearchParam.PriceMin]?: string;
+  [SearchParam.SortType]?: string;
+  [SearchParam.SortDirection]?: string;
 }

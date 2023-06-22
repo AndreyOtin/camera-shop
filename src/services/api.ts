@@ -19,7 +19,7 @@ api.interceptors.response.use((response) => response, (error: AxiosError) => {
 
 const client = {
   fetchCameras: () =>
-    api.get<Camera[]>(ApiRoute.Cameras),
+    api.get<Camera[]>(`${ApiRoute.Cameras}`),
   fetchCamera: (cameraId: string) =>
     api.get<Camera>(`${ApiRoute.Cameras}/${cameraId}`),
   fetchSimilarCameras: (cameraId: string) =>

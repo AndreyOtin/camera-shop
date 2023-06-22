@@ -6,7 +6,8 @@
       ".jest-test-results.json"
     ],
     "transformIgnorePatterns": [
-      "/node_modules/(?!(swiper|ssr-window|dom7|swiper/))"
+      "/node_modules/(?!(swiper||ssr-window|dom7))",
+      "/node_modules/(?!(query-string||ssr-window|dom7))"
     ]
   },
   "version": "0.1.0",

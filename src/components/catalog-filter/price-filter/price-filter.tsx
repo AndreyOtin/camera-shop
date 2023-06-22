@@ -17,7 +17,12 @@ const priceFilter = {
   },
 };
 
-function PriceFilter() {
+type CatalogFilterProps = {
+  max: string;
+  min: string;
+}
+
+function PriceFilter({ min, max }: CatalogFilterProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [minPrice, SetMinPrice] = useState(searchParams.get(priceFilter.min.enName) || '');
   const [maxPrice, SetMaxPrice] = useState(searchParams.get(priceFilter.max.enName) || '');
@@ -38,22 +43,34 @@ function PriceFilter() {
   );
 
   const handleMinPriceChange = (evt: EvtChange) => {
-    SetMinPrice(evt.target.value);
-    debounced();
-
+    const price = +evt.target.value < 0 || evt.target.value === '-0' ? '' : evt.target.value;
     if (maxPrice && +evt.target.value > +maxPrice) {
       SetMaxPrice(evt.target.value);
+      debounced();
+    } else {
+      SetMinPrice(price);
       debounced();
     }
   };
 
   const handleMaxPriceChange = (evt: EvtChange) => {
-    const price = evt.target.value;
+    const price = +evt.target.value < 0 || evt.target.value === '-0' ? '' : evt.target.value;
 
-    if (!price) {
-      SetMaxPrice('');
+
+    if (price && +price > +max) {
+      debounced();
+      SetMaxPrice(max);
     } else {
       SetMaxPrice(price);
+    }
+  };
+
+  const handleMinPriceBlur = (evt: FocusEvent<HTMLInputElement>) => {
+    const price = evt.target.value;
+
+    if (price && +price < +min) {
+      debounced();
+      SetMinPrice(min);
     }
   };
 
@@ -63,10 +80,17 @@ function PriceFilter() {
     if (price && +price < +minPrice) {
       debounced();
       SetMaxPrice(minPrice);
-    } else {
-      debounced();
-      SetMaxPrice(price);
+      return;
     }
+
+    if (price && +price < +min) {
+      debounced();
+      SetMaxPrice(min);
+      return;
+    }
+
+    debounced();
+    SetMaxPrice(price);
   };
 
   return (
@@ -76,10 +100,11 @@ function PriceFilter() {
         <div className="custom-input">
           <label>
             <input
+              onBlur={handleMinPriceBlur}
               onChange={handleMinPriceChange}
               type="number"
               name="price"
-              placeholder="от"
+              placeholder={min.toString()}
               value={minPrice}
             />
           </label>
@@ -91,7 +116,7 @@ function PriceFilter() {
               onChange={handleMaxPriceChange}
               type="number"
               name="priceUp"
-              placeholder="до"
+              placeholder={max.toString()}
               value={maxPrice}
             />
           </label>

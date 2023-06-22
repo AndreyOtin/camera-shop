@@ -6,17 +6,20 @@ const levelFilter = {
   zero: {
     enName: 'zero',
     ruName: 'Нулевой',
-    checked: false
+    checked: false,
+    disabled: ''
   },
   nonProfessional: {
     enName: 'non-professional',
     ruName: 'Любительский',
-    checked: false
+    checked: false,
+    disabled: ''
   },
   professional: {
     enName: 'professional',
     ruName: 'Профессиональный',
-    checked: false
+    checked: false,
+    disabled: ''
   }
 };
 

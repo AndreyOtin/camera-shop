@@ -1,6 +1,5 @@
 import { Camera } from '../types/camera';
-import { QueryParseResult } from '../types/app';
-import queryString from 'query-string';
+import { ParsedQueryString } from '../types/app';
 import { getObjectKeys } from './types';
 
 const isPriceInRange = (camera: Camera, minPrice?: string, maxPrice?: string) => {
@@ -19,22 +18,20 @@ const isPriceInRange = (camera: Camera, minPrice?: string, maxPrice?: string) =>
   return false;
 };
 
-const isQueryValueInCamera = (queryValue: string | string[] | undefined, cameraValue: string | number) => {
-  if (queryValue && Array.isArray(queryValue)) {
-    return queryValue.includes(cameraValue.toString());
+const isFilterInCamera = (filter: string | string[] | undefined, cameraValue: string | number) => {
+  if (filter && Array.isArray(filter)) {
+    return filter.includes(cameraValue.toString());
   }
 
-  return cameraValue === queryValue;
+  return cameraValue === filter;
 };
 
-const filterCameras = (cameras: Camera[], query: string) => {
-  const parsedQuery = queryString.parse(query) as QueryParseResult;
+const filterCameras = (cameras: Camera[], parsedQuery: ParsedQueryString) => {
   const parsedQueryKeys = getObjectKeys(parsedQuery);
 
   return cameras.filter((camera) =>
     parsedQueryKeys.every((key) => {
       const cameraValue = camera[key as keyof typeof camera];
-      const queryValue = parsedQuery[key];
       let isPrice = true;
       let isFilter = true;
 
@@ -43,11 +40,19 @@ const filterCameras = (cameras: Camera[], query: string) => {
       }
 
       if (cameraValue) {
-        isFilter = isQueryValueInCamera(queryValue, cameraValue);
+        isFilter = isFilterInCamera(parsedQuery[key], cameraValue);
       }
 
       return isFilter && isPrice;
     }));
 };
 
-export { filterCameras };
+const getMinMax = (cameras: Camera[]) => {
+  const prices = cameras.map((camera) => camera.price);
+  const min = cameras.length ? Math.min(...prices).toString() : '';
+  const max = cameras.length ? Math.max(...prices).toString() : '';
+
+  return { min, max };
+};
+
+export { filterCameras, getMinMax };

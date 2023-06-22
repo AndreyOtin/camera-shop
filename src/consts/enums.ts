@@ -42,7 +42,18 @@ export enum SearchParam {
   Tab = 'tab',
   Category = 'category',
   Level = 'level',
-  Type = 'type'
+  Type = 'type',
+  SortType = 'sort-type',
+  SortDirection = 'sort-direction',
+  PriceMin = 'min-price',
+  PriceMax = 'max-price'
+}
+
+export enum SortType {
+  Popular = 'rating',
+  Price = 'price',
+  Up = 'up',
+  Down = 'down'
 }
 
 export enum MaxElementCount {

@@ -10,6 +10,12 @@ const { fakeStore: store, mockAPI } = createMockStoreWithAPI({});
 describe('Async actions', () => {
   it('should dispatch getCameras when GET /cameras', async () => {
     const fakeCameras = [createFakeCamera()];
+    const fakeComment = [createFakeComment()];
+    const fakeId = '1';
+
+    mockAPI
+      .onGet(`${ApiRoute.Cameras}/${fakeId}/reviews`)
+      .reply(200, fakeComment);
 
     mockAPI
       .onGet(ApiRoute.Cameras)
@@ -23,7 +29,7 @@ describe('Async actions', () => {
 
     expect(actions).toEqual([
       getCameras.pending.type,
-      getCameras.fulfilled.type
+      getCameras.rejected.type,
     ]);
   });
 

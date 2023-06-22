@@ -5,11 +5,13 @@ import { useDebouncedCallback } from 'use-debounce';
 import queryString from 'query-string';
 import { DEBOUNCE_TIMEOUT } from '../consts/app';
 import { EvtChange } from '../types/app';
+import { SearchParam } from '../consts/enums';
 
 type FilterConfig = Record<string, {
   enName: string;
   ruName: string;
   checked: boolean;
+  disabled: string;
 }>
 type FilterConfigKeys = keyof FilterConfig
 
@@ -17,12 +19,12 @@ function UseCheckboxFilter(filterConfig: FilterConfig, paramName: string) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [filter, setFilter] = useState(() => {
-    const initialState = structuredClone(filterConfig) as FilterConfig;
-    const categories = searchParams.getAll(paramName);
+    const initialState = JSON.parse(JSON.stringify(filterConfig)) as FilterConfig;
+    const filters = searchParams.getAll(paramName);
     const keys = getObjectKeys(initialState);
 
     keys.forEach((key) => {
-      if (categories.includes(initialState[key].ruName)) {
+      if (filters.includes(initialState[key].ruName)) {
         initialState[key].checked = true;
       }
     });
@@ -38,7 +40,7 @@ function UseCheckboxFilter(filterConfig: FilterConfig, paramName: string) {
           .reduce<{ [paramName: string]: string[] }>((obj, key) =>
             filter[key].checked ? { [paramName]: [...obj[paramName], filter[key].ruName] } : obj, { [paramName]: [] });
 
-        return queryString.stringify({ ...prevQuery, ...categoryQuery });
+        return queryString.stringify({ ...prevQuery, ...categoryQuery, [SearchParam.Page]: '1' });
       });
     },
     DEBOUNCE_TIMEOUT

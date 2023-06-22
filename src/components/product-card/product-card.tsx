@@ -8,9 +8,10 @@ import { OutletContext } from '../../types/app';
 type ProductCardProps = {
   camera: Camera;
   style?: CSSProperties;
+  sortType?: string;
 }
 
-function ProductCard({ camera, style }: ProductCardProps) {
+function ProductCard({ camera, style, sortType }: ProductCardProps) {
   const { setPreviewDisplay } = useOutletContext<OutletContext>();
 
   return (

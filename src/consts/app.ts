@@ -1,6 +1,6 @@
 import { MainMenu } from './enums';
 
-const DEBOUNCE_TIMEOUT = 500;
+const DEBOUNCE_TIMEOUT = 300;
 
 const menuNameToRuName: Record<string, string> = {
   [MainMenu.Catalog]: 'Kаталог',

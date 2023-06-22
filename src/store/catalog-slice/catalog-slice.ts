@@ -1,11 +1,12 @@
 import { Camera, Promo } from '../../types/camera';
-import { MaxElementCount, SliceNameSpace, Status } from '../../consts/enums';
+import { SearchParam, SliceNameSpace, Status } from '../../consts/enums';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, ThunkConfig } from '../../types/store';
-import client from '../../services/api';
 import { filterCameras } from '../../utiils/filter';
 import queryString from 'query-string';
-import { QueryParseResult } from '../../types/app';
+import getPaginationVariables from '../../utiils/pagination';
+import sortBy from '../../utiils/sort';
+import { ParsedQueryString } from '../../types/app';
 
 type InitialState = {
   camerasStatus: Status;
@@ -32,32 +33,37 @@ const initialState: InitialState = {
 const getCameras = createAsyncThunk<Camera[], undefined, ThunkConfig>(
   `${SliceNameSpace.Catalog}/getCameras`,
   async (_, { extra: api, dispatch }) => {
-    const query = window.location.search;
-    const parsedQuery = queryString.parse(window.location.search) as QueryParseResult;
+    const parsedQuery = queryString.parse(window.location.search) as ParsedQueryString;
+    const sortType = parsedQuery[SearchParam.SortType];
+    const sortDirection = parsedQuery[SearchParam.SortDirection];
 
     const { data: cameras } = await api.fetchCameras();
 
-    const filteredCameras = filterCameras(cameras, query);
+    const filteredCameras = filterCameras(cameras, parsedQuery);
 
-    const totalPages = Math.ceil(cameras.length / MaxElementCount.ProductCard);
-    const currentPage = +(parsedQuery.page || 1) > totalPages ? 1 : +(parsedQuery.page || 1);
-    const sliceStart = (currentPage - 1) * MaxElementCount.ProductCard;
-    const leftCameras = filteredCameras.length - sliceStart;
-    const maxElementsCount = Math.min(leftCameras, filteredCameras.length, MaxElementCount.ProductCard);
+    if (sortType && sortDirection) {
+      filteredCameras.sort(sortBy(sortType, sortDirection));
+    }
 
-    const camerasWithRating = filteredCameras.slice();
-    for (let i = sliceStart; i < sliceStart + maxElementsCount; i++) {
-      const { data: reviews } = await client.getReviews(cameras[i].id.toString());
+    const {
+      currentPage,
+      sliceStart,
+      sliceEnd,
+    } = getPaginationVariables(filteredCameras.length, parsedQuery.page);
 
-      const rating = Math.round(reviews.reduce((total, review) => total + review.rating, 0) / reviews.length);
 
-      camerasWithRating[i] = { ...filteredCameras[i], rating };
+    for (let i = sliceStart; i < sliceEnd; i++) {
+      const { data: reviews } = await api.getReviews(filteredCameras[i].id.toString());
+
+      const rating = Math.ceil(reviews.reduce((total, review) => total + review.rating, 0) / reviews.length);
+
+      filteredCameras[i] = { ...filteredCameras[i], rating };
     }
 
     dispatch(getCamerasFull());
     dispatch(catalogSlice.actions.initPage(currentPage));
 
-    return camerasWithRating;
+    return filteredCameras;
   }
 );
 
@@ -65,19 +71,18 @@ const getCamerasFull = createAsyncThunk<Camera[], undefined, ThunkConfig>(
   `${SliceNameSpace.Catalog}/getCamerasFull`,
   async (currentPage, { extra: api }) => {
     const camerasWithRating: Camera[] = [];
-    const query = window.location.search;
 
     const { data: cameras } = await api.fetchCameras();
 
-    const filteredCameras = filterCameras(cameras, query);
 
-    for (let i = 0; i < filteredCameras.length; i++) {
-      const { data: reviews } = await client.getReviews(cameras[i].id.toString());
+    for (let i = 0; i < cameras.length; i++) {
+      const { data: reviews } = await api.getReviews(cameras[i].id.toString());
 
-      const rating = Math.round(reviews.reduce((total, review) => total + review.rating, 0) / reviews.length);
+      const rating = Math.ceil(reviews.reduce((total, review) => total + review.rating, 0) / reviews.length);
 
-      camerasWithRating.push({ ...filteredCameras[i], rating });
+      camerasWithRating.push({ ...cameras[i], rating });
     }
+
     return camerasWithRating;
   }
 );
@@ -143,5 +148,6 @@ export {
   selectPromo,
   selectPromoStatus,
   selectCamerasFullLoadStatus,
+  getCamerasFull,
   initialState
 };
