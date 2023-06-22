@@ -2,6 +2,7 @@ import { Camera } from '../../types/camera';
 import { SliceNameSpace, Status } from '../../consts/enums';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState, ThunkConfig } from '../../types/store';
+import { getCamerasWithRating } from '../../utiils/api';
 
 type InitialState = {
   product: Camera | null;
@@ -33,8 +34,9 @@ const fetchProduct = createAsyncThunk<Camera, string, ThunkConfig>(
   `${SliceNameSpace.Product}/fetchProduct`,
   async (id, { extra: api }) => {
     const { data } = await api.fetchCamera(id);
+    const [camera] = await getCamerasWithRating([data]);
 
-    return data;
+    return camera;
   }
 );
 
@@ -43,7 +45,7 @@ const fetchSimilarProducts = createAsyncThunk<Camera[], string, ThunkConfig>(
   async (id, { extra: api }) => {
     const { data } = await api.fetchSimilarCameras(id);
 
-    return data;
+    return await getCamerasWithRating(data);
   }
 );
 

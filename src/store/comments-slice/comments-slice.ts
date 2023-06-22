@@ -2,6 +2,7 @@ import { NewReview, Review } from '../../types/review';
 import { SliceNameSpace, Status } from '../../consts/enums';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState, ThunkConfig } from '../../types/store';
+import { getCamerasFull } from '../catalog-slice/catalog-slice';
 
 type InitialState = {
   comments: Review[];
@@ -32,8 +33,10 @@ const fetchComments = createAsyncThunk<Review[], string, ThunkConfig>(
 
 const postComment = createAsyncThunk<Review, NewReview, ThunkConfig>(
   `${SliceNameSpace.Comments}/postComment`,
-  async (newComment, { extra: api }) => {
+  async (newComment, { extra: api, dispatch }) => {
     const { data } = await api.postReview(newComment);
+
+    dispatch(getCamerasFull());
 
     return data;
   }

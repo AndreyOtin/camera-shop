@@ -7,6 +7,7 @@ import queryString from 'query-string';
 import getPaginationVariables from '../../utiils/pagination';
 import sortBy from '../../utiils/sort';
 import { ParsedQueryString } from '../../types/app';
+import { getCamerasWithRating } from '../../utiils/api';
 
 type InitialState = {
   camerasStatus: Status;
@@ -51,19 +52,12 @@ const getCameras = createAsyncThunk<Camera[], undefined, ThunkConfig>(
       sliceEnd,
     } = getPaginationVariables(filteredCamerasWithPrice.length, parsedQuery.page);
 
-
-    for (let i = sliceStart; i < sliceEnd; i++) {
-      const { data: reviews } = await api.getReviews(filteredCamerasWithPrice[i].id.toString());
-
-      const rating = Math.ceil(reviews.reduce((total, review) => total + review.rating, 0) / reviews.length);
-
-      filteredCamerasWithPrice[i] = { ...filteredCamerasWithPrice[i], rating: Number.isNaN(rating) ? 0 : rating };
-    }
+    const CamerasWithRating = await getCamerasWithRating(filteredCamerasWithPrice, sliceStart, sliceEnd);
 
     dispatch(getCamerasFull());
     dispatch(catalogSlice.actions.initPage(currentPage));
 
-    return filteredCamerasWithPrice;
+    return CamerasWithRating;
   }
 );
 
@@ -72,16 +66,7 @@ const getCamerasFull = createAsyncThunk<Camera[], undefined, ThunkConfig>(
   async (currentPage, { extra: api }) => {
     const { data: cameras } = await api.fetchCameras();
 
-    const camerasWithRating: Camera[] = [];
-    for (let i = 0; i < cameras.length; i++) {
-      const { data: reviews } = await api.getReviews(cameras[i].id.toString());
-
-      const rating = Math.ceil(reviews.reduce((total, review) => total + review.rating, 0) / reviews.length);
-
-      camerasWithRating.push({ ...cameras[i], rating: Number.isNaN(rating) ? 0 : rating });
-    }
-
-    return camerasWithRating;
+    return await getCamerasWithRating(cameras);
   }
 );
 
@@ -138,6 +123,7 @@ const selectPromo = (state: RootState) => state[SliceNameSpace.Catalog].promo;
 const selectPromoStatus = (state: RootState) => state[SliceNameSpace.Catalog].promoStatus;
 
 export default catalogSlice.reducer;
+export const { initPage } = catalogSlice.actions;
 export {
   getCameras,
   getPromo,

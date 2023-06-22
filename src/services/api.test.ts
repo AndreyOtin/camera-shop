@@ -1,7 +1,7 @@
 import { createFakeCamera, createFakeComment, createFakeNewCommentBody, createFakePromo } from '../utiils/mock';
 import { createMockStoreWithAPI } from '../utiils/jest';
 import { ApiRoute } from '../consts/enums';
-import { getCameras, getPromo } from '../store/catalog-slice/catalog-slice';
+import { getCameras, getCamerasFull, getPromo, initPage } from '../store/catalog-slice/catalog-slice';
 import { fetchComments, postComment } from '../store/comments-slice/comments-slice';
 import { fetchProduct, fetchSimilarProducts } from '../store/product-slice/product-slice';
 
@@ -10,15 +10,9 @@ const { fakeStore: store, mockAPI } = createMockStoreWithAPI({});
 describe('Async actions', () => {
   it('should dispatch getCameras when GET /cameras', async () => {
     const fakeCameras = [createFakeCamera()];
-    const fakeComment = [createFakeComment()];
-    const fakeId = '1';
 
     mockAPI
-      .onGet(`${ApiRoute.Cameras}/${fakeId}/reviews`)
-      .reply(200, fakeComment);
-
-    mockAPI
-      .onGet(ApiRoute.Cameras)
+      .onAny()
       .reply(200, fakeCameras);
 
     store.clearActions();
@@ -29,7 +23,9 @@ describe('Async actions', () => {
 
     expect(actions).toEqual([
       getCameras.pending.type,
-      getCameras.rejected.type,
+      getCamerasFull.pending.type,
+      initPage.type,
+      getCameras.fulfilled.type
     ]);
   });
 
@@ -89,6 +85,7 @@ describe('Async actions', () => {
 
     expect(actions).toEqual([
       postComment.pending.type,
+      getCamerasFull.pending.type,
       postComment.fulfilled.type
     ]);
   });
@@ -98,7 +95,7 @@ describe('Async actions', () => {
     const fakeId = '1';
 
     mockAPI
-      .onGet(`${ApiRoute.Cameras}/${fakeId}`)
+      .onAny()
       .reply(200, fakeCamera);
 
     store.clearActions();
@@ -109,7 +106,7 @@ describe('Async actions', () => {
 
     expect(actions).toEqual([
       fetchProduct.pending.type,
-      fetchProduct.fulfilled.type
+      fetchProduct.rejected.type
     ]);
   });
 

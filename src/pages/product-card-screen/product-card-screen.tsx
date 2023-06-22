@@ -22,14 +22,18 @@ import {
 import ReviewModal from '../../components/review-modal/review-modal';
 import ReviewSuccessModal from '../../components/review-success-modal/review-success-modal';
 import { checkStatus } from '../../utiils/common';
+import Stars from '../../components/stars/stars';
+import { selectCameras } from '../../store/catalog-slice/catalog-slice';
 
 function ProductCardScreen() {
   const dispatch = useAppDispatch();
   const product = useAppSelector(selectProduct);
+  const cameras = useAppSelector(selectCameras);
   const similarProducts = useAppSelector(selectSimilarProducts);
   const { status: productStatus, code: productStatusCode } = useAppSelector(selectProductStatus);
   const { status: commentsStatus, code: commentsStatusCode } = useAppSelector(selectCommentsStatus);
   const { status: similarProductStatus, code: similarProductStatusCode } = useAppSelector(selectSimilarProductStatus);
+
 
   const id = useParams().product;
   const ref = useRef<HTMLDivElement>(null);
@@ -70,6 +74,10 @@ function ProductCardScreen() {
     });
   };
 
+  const camera = cameras.find((item) => item.id === product.id);
+  const rating = camera?.rating || product.rating;
+  const previewCount = camera?.reviewCount || product.reviewCount;
+
   return (
     <>
       <main>
@@ -97,25 +105,11 @@ function ProductCardScreen() {
                 <div className="product__content">
                   <h1 className="title title--h3">{product.name}</h1>
                   <div className="rate product__rate">
-                    <svg width="17" height="16" aria-hidden="true">
-                      <use xlinkHref="#icon-full-star"></use>
-                    </svg>
-                    <svg width="17" height="16" aria-hidden="true">
-                      <use xlinkHref="#icon-full-star"></use>
-                    </svg>
-                    <svg width="17" height="16" aria-hidden="true">
-                      <use xlinkHref="#icon-full-star"></use>
-                    </svg>
-                    <svg width="17" height="16" aria-hidden="true">
-                      <use xlinkHref="#icon-full-star"></use>
-                    </svg>
-                    <svg width="17" height="16" aria-hidden="true">
-                      <use xlinkHref="#icon-star"></use>
-                    </svg>
-                    <p className="visually-hidden">Рейтинг: 4</p>
+                    <Stars rating={rating}/>
+                    <p className="visually-hidden">Рейтинг: {rating}</p>
                     <p className="rate__count">
                       <span className="visually-hidden">Всего оценок:</span>
-                      {product.reviewCount}
+                      {previewCount}
                     </p>
                   </div>
                   <p className="product__price">
