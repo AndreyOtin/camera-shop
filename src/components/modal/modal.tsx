@@ -1,6 +1,7 @@
 import React, { ReactNode, RefObject, useEffect } from 'react';
 import clsx from 'clsx';
 import ReactFocusLock from 'react-focus-lock';
+import { Code } from '../../consts/enums';
 
 type ModalProps = {
   children: ReactNode;
@@ -11,7 +12,7 @@ type ModalProps = {
 
 function Modal({ children, onClickOutside, isOpened, contentRef }: ModalProps) {
   const onEcsKeyDown = (evt: KeyboardEvent) => {
-    if (evt.code === 'Escape') {
+    if (evt.code === Code.Esc) {
       onClickOutside();
     }
   };

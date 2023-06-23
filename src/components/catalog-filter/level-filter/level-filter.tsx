@@ -1,7 +1,6 @@
 import { getObjectKeys } from '../../../utiils/types';
 import useCheckboxFilter from '../../../hooks/use-checkbox-filter';
 import { SearchParam } from '../../../consts/enums';
-import { ChangeEvent } from 'react';
 
 const levelFilter = {
   zero: {
@@ -24,17 +23,8 @@ const levelFilter = {
   }
 };
 
-type TypeFilterProps = {
-  onChange: () => void;
-}
-
-function LevelFilter({ onChange }: TypeFilterProps) {
+function LevelFilter() {
   const { filter, handleFilterChange } = useCheckboxFilter(levelFilter, SearchParam.Level);
-
-  const handleChange = (evt: ChangeEvent<HTMLInputElement>, key: string) => {
-    handleFilterChange(evt, key);
-    onChange();
-  };
 
   return (
     <fieldset className="catalog-filter__block">
@@ -43,7 +33,7 @@ function LevelFilter({ onChange }: TypeFilterProps) {
         <div key={filter[key].enName} className="custom-checkbox catalog-filter__item">
           <label>
             <input
-              onChange={(evt) => handleChange(evt, key)}
+              onChange={(evt) => handleFilterChange(evt, key)}
               checked={filter[key].checked}
               type="checkbox"
               name={filter[key].enName}

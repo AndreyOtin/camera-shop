@@ -2,7 +2,6 @@ import { getObjectKeys } from '../../../utiils/types';
 import useCheckboxFilter from '../../../hooks/use-checkbox-filter';
 import { SearchParam } from '../../../consts/enums';
 import { useSearchParams } from 'react-router-dom';
-import { ChangeEvent } from 'react';
 
 const typeFilter = {
   digital: {
@@ -31,19 +30,10 @@ const typeFilter = {
   },
 };
 
-type TypeFilterProps = {
-  onChange: () => void;
-}
-
-function TypeFilter({ onChange }: TypeFilterProps) {
+function TypeFilter() {
   const { filter, handleFilterChange } = useCheckboxFilter(typeFilter, SearchParam.Type);
   const [searchParam] = useSearchParams();
   const category = searchParam.get(SearchParam.Category);
-
-  const handleChange = (evt: ChangeEvent<HTMLInputElement>, key: string) => {
-    handleFilterChange(evt, key);
-    onChange();
-  };
 
   return (
     <fieldset className="catalog-filter__block">
@@ -52,7 +42,7 @@ function TypeFilter({ onChange }: TypeFilterProps) {
         <div key={filter[key].enName} className="custom-checkbox catalog-filter__item">
           <label>
             <input
-              onChange={(evt) => handleChange(evt, key)}
+              onChange={(evt) => handleFilterChange(evt, key)}
               checked={filter[key].checked}
               type="checkbox"
               name={filter[key].enName}

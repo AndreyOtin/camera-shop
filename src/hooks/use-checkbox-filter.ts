@@ -15,7 +15,7 @@ type FilterConfig = Record<string, {
 }>
 type FilterConfigKeys = keyof FilterConfig
 
-function UseCheckboxFilter(filterConfig: FilterConfig, paramName: string) {
+function UseCheckboxFilter(filterConfig: FilterConfig, paramName: string, onChange?: () => void) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [filter, setFilter] = useState(() => {
@@ -34,13 +34,16 @@ function UseCheckboxFilter(filterConfig: FilterConfig, paramName: string) {
 
   const debounced = useDebouncedCallback(
     () => {
+      onChange?.();
       setSearchParams((prev) => {
         const prevQuery = queryString.parse(prev.toString());
         const categoryQuery = getObjectKeys(filter)
           .reduce<{ [paramName: string]: string[] }>((obj, key) =>
             filter[key].checked ? { [paramName]: [...obj[paramName], filter[key].ruName] } : obj, { [paramName]: [] });
 
-        return queryString.stringify({ ...prevQuery, ...categoryQuery, [SearchParam.Page]: '1' });
+        return queryString.stringify({
+          ...prevQuery, ...categoryQuery, [SearchParam.Page]: '1'
+        });
       });
     },
     DEBOUNCE_TIMEOUT

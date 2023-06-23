@@ -1,9 +1,60 @@
-import { AppRoute, MainMenu } from '../../consts/enums';
-import { Link, NavLink } from 'react-router-dom';
+import { AppRoute, Code, MainMenu, Status } from '../../consts/enums';
+import { generatePath, Link, NavLink, useNavigate } from 'react-router-dom';
 import { menuNameToRuName } from '../../consts/app';
 import clsx from 'clsx';
+import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
+import {
+  getCameras,
+  getPromo,
+  selectCameras,
+  selectCamerasStatus,
+  selectPromoStatus
+} from '../../store/catalog-slice/catalog-slice';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { filterCamerasBySearch } from '../../utiils/filter';
+import { Camera } from '../../types/camera';
+import useArrowNavigation from '../../hooks/use-arrow-navigation';
 
 function Header() {
+  const cameras = useAppSelector(selectCameras);
+  const dispatch = useAppDispatch();
+  const camerasStatus = useAppSelector(selectCamerasStatus);
+  const promoStatus = useAppSelector(selectPromoStatus);
+  const ref = useRef<HTMLUListElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const [search, setSearch] = useState('');
+  const navigate = useNavigate();
+  const filteredCameras = filterCamerasBySearch(cameras, search);
+  const resetArrowNav = useArrowNavigation(searchRef, ref);
+
+  useEffect(() => {
+    if (camerasStatus === Status.Idle || promoStatus === Status.Idle) {
+      dispatch(getCameras());
+      dispatch(getPromo());
+    }
+  }, [camerasStatus, dispatch, promoStatus]);
+
+  const handleNavigation = (camera: Camera) => {
+    navigate(generatePath(AppRoute.Product, { product: camera.id.toString() }));
+    setSearch('');
+    resetArrowNav();
+  };
+
+  const handleResetClick = () => {
+    setSearch('');
+    resetArrowNav();
+  };
+
+  const onResultClick = (camera: Camera) => {
+    handleNavigation(camera);
+  };
+
+  const onResultKeyDown = (evt: KeyboardEvent<HTMLLIElement>, camera: Camera) => {
+    if (evt.code === Code.Enter) {
+      handleNavigation(camera);
+    }
+  };
+
   return (
     <header className="header" id="header">
       <div className="container">
@@ -26,23 +77,44 @@ function Header() {
             ))}
           </ul>
         </nav>
-        <div className="form-search" data-testid='form-search'>
+        <div
+          className={clsx('form-search', filteredCameras.length && 'list-opened')}
+          data-testid="form-search"
+        >
           <form>
             <label>
               <svg className="form-search__icon" width="16" height="16" aria-hidden="true">
                 <use xlinkHref="#icon-lens"></use>
               </svg>
-              <input className="form-search__input" type="text" autoComplete="off" placeholder="Поиск по сайту"/>
+              <input
+                ref={searchRef}
+                onChange={(evt) => setSearch(evt.target.value)}
+                className="form-search__input"
+                type="text"
+                autoComplete="off"
+                placeholder="Поиск по сайту"
+                value={search}
+              />
             </label>
-            <ul className="form-search__select-list">
-              <li className="form-search__select-item" tabIndex={0}>Cannonball Pro MX 8i</li>
-              <li className="form-search__select-item" tabIndex={0}>Cannonball Pro MX 7i</li>
-              <li className="form-search__select-item" tabIndex={0}>Cannonball Pro MX 6i</li>
-              <li className="form-search__select-item" tabIndex={0}>Cannonball Pro MX 5i</li>
-              <li className="form-search__select-item" tabIndex={0}>Cannonball Pro MX 4i</li>
+            <ul ref={ref} className="form-search__select-list scroller">
+              {filteredCameras.map((camera) => (
+                <li
+                  onKeyDown={(evt) => onResultKeyDown(evt, camera)}
+                  onClick={() => onResultClick(camera)}
+                  key={camera.id}
+                  className="form-search__select-item"
+                  tabIndex={0}
+                >
+                  {camera.name}
+                </li>
+              ))}
             </ul>
           </form>
-          <button className="form-search__reset" type="reset">
+          <button
+            onClick={handleResetClick}
+            className="form-search__reset"
+            type="reset"
+          >
             <svg width="10" height="10" aria-hidden="true">
               <use xlinkHref="#icon-close"></use>
             </svg>

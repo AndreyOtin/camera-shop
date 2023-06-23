@@ -4,11 +4,10 @@ import TypeFilter from './type-filter/type-filter';
 import LevelFilter from './level-filter/level-filter';
 import { useAppSelector } from '../../hooks/store-hooks';
 import { selectCamerasFullLoadStatus } from '../../store/catalog-slice/catalog-slice';
-import { SearchParam, Status } from '../../consts/enums';
+import { Status } from '../../consts/enums';
 import Spinner from '../spinner/spinner';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import queryString from 'query-string';
 
 type CatalogFilterProps = {
   maxPrice: string;
@@ -19,7 +18,7 @@ function CatalogFilter({ maxPrice, minPrice }: CatalogFilterProps) {
   const status = useAppSelector(selectCamerasFullLoadStatus);
   const [, setSearchParams] = useSearchParams();
   const [reset, setReset] = useState({
-    price: -1,
+    price: 1,
     category: 2,
     level: 3,
     type: 4
@@ -35,21 +34,6 @@ function CatalogFilter({ maxPrice, minPrice }: CatalogFilterProps) {
     setSearchParams();
   };
 
-  const handlePriceReset = () => {
-    setSearchParams((prev) => {
-      const prevQuery = queryString.parse(prev.toString());
-
-      return queryString.stringify({
-        ...prevQuery,
-        [SearchParam.PriceMin]: [],
-        [SearchParam.PriceMax]: [],
-      });
-    });
-    setReset((prevState) => ({
-      ...prevState,
-      price: --prevState.price,
-    }));
-  };
   return (
     <div
       style={status.status === Status.Loading ? {
@@ -70,9 +54,9 @@ function CatalogFilter({ maxPrice, minPrice }: CatalogFilterProps) {
             />}
           <h2 className="visually-hidden">Фильтр</h2>
           <PriceFilter key={reset.price} min={minPrice} max={maxPrice}/>
-          <CategoryFilter onChange={handlePriceReset} key={reset.category}/>
-          <TypeFilter onChange={handlePriceReset} key={reset.type}/>
-          <LevelFilter onChange={handlePriceReset} key={reset.level}/>
+          <CategoryFilter key={reset.category}/>
+          <TypeFilter key={reset.type}/>
+          <LevelFilter key={reset.level}/>
           <button
             onClick={handleAllReset}
             className="btn catalog-filter__reset-btn"

@@ -60,3 +60,12 @@ export enum MaxElementCount {
   Reviews = 3,
   ProductCard = 9
 }
+
+export enum Code {
+  ShiftLeft = 'ShiftLeft',
+  Tab = 'Tab',
+  Enter = 'Enter',
+  ArrowUp = 'ArrowUp',
+  ArrowDown = 'ArrowDown',
+  Esc = 'Escape'
+}

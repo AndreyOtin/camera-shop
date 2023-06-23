@@ -36,7 +36,7 @@ function CatalogContent({ bannerPosition, cameras }: CatalogContentProps) {
   const slicedCameras = filteredCamerasWithPrice.slice(sliceStart, sliceEnd);
 
   return (
-    <div className="page-content__columns">
+    <div className="page-content__columns" data-testid='catalog-content'>
       <CatalogFilter minPrice={min} maxPrice={max}/>
       <Catalog
         filteredCameras={filteredCamerasWithPrice}

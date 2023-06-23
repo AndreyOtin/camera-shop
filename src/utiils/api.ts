@@ -19,4 +19,4 @@ const getCamerasWithRating = async (cameras: Camera[], start = 0, end = cameras.
   return camerasWithRating;
 };
 
-export { getCamerasWithRating, calculateRating };
+export { getCamerasWithRating };

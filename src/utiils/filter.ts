@@ -53,4 +53,14 @@ const filterCameras = (cameras: Camera[], parsedQuery: ParsedQueryString) => {
   return { filteredCamerasWithPrice, min, max };
 };
 
-export { filterCameras };
+const filterCamerasBySearch = (cameras: Camera[], search: string) => {
+  if (!search) {
+    return [];
+  }
+
+  return cameras.filter((camera) =>
+    camera.name.toLowerCase().replaceAll(' ', '')
+      .includes(search && search.replaceAll(' ', '').toLowerCase()));
+};
+
+export { filterCameras, filterCamerasBySearch };

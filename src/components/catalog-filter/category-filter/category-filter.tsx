@@ -1,7 +1,6 @@
 import { getObjectKeys } from '../../../utiils/types';
 import useCheckboxFilter from '../../../hooks/use-checkbox-filter';
 import { SearchParam } from '../../../consts/enums';
-import { ChangeEvent } from 'react';
 
 const categoryFilter = {
   photo: {
@@ -18,29 +17,19 @@ const categoryFilter = {
   }
 };
 
-type CategoryFilterProps = {
-  onChange: () => void;
-}
-
-function CategoryFilter({ onChange }: CategoryFilterProps) {
+function CategoryFilter() {
   const { filter, handleFilterChange } = useCheckboxFilter(categoryFilter, SearchParam.Category);
-  const filterKeys = getObjectKeys(filter);
-
-  const handleChange = (evt: ChangeEvent<HTMLInputElement>, key: string) => {
-    handleFilterChange(evt, key);
-    onChange();
-  };
 
   return (
     <fieldset className="catalog-filter__block">
       <legend className="title title--h5">Категория</legend>
-      {filterKeys.map((key) => (
+      {getObjectKeys(filter).map((key) => (
         <div key={filter[key].ruName}
           className="custom-checkbox catalog-filter__item"
         >
           <label>
             <input
-              onChange={(evt) => handleChange(evt, key)}
+              onChange={(evt) => handleFilterChange(evt, key)}
               type="checkbox"
               name={filter[key].enName}
               checked={filter[key].checked}

@@ -43,7 +43,7 @@ function Catalog({ cameras, bannerPosition, sortType, filteredCameras }: Catalog
               camera={camera}
             />))}
       </div>
-      {!filteredCameras.length && <p style={{ textAlign: 'center' }}><b>«Hо вашему запросу ничего не найдено»</b></p>}
+      {!filteredCameras.length && <p style={{ textAlign: 'center' }}><b>«По вашему запросу ничего не найдено»</b></p>}
       <Pagination
         bannerPosition={bannerPosition}
         cameras={filteredCameras}
