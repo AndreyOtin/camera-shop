@@ -1,11 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import Header from './header';
-import { ProviderWrapper } from '../../utiils/jest';
+import { createMockStoreWithAPI, ProviderWrapper } from '../../utiils/jest';
+import { createMockStore } from '../../utiils/mock';
+
+const store = createMockStore();
+const { fakeStore } = createMockStoreWithAPI(store);
 
 describe('Component: Header', () => {
   it('should render correctly', () => {
     render(
-      <ProviderWrapper>
+      <ProviderWrapper fakeStore={fakeStore}>
         <Header/>
       </ProviderWrapper>
     );

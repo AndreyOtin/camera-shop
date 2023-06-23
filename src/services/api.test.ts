@@ -29,6 +29,25 @@ describe('Async actions', () => {
     ]);
   });
 
+  it('should dispatch getCamerasFull when GET /cameras', async () => {
+    const fakeCameras = [createFakeCamera()];
+
+    mockAPI
+      .onAny()
+      .reply(200, fakeCameras);
+
+    store.clearActions();
+
+    await store.dispatch(getCamerasFull());
+
+    const actions = store.getActions().map(({ type }) => type);
+
+    expect(actions).toEqual([
+      getCamerasFull.pending.type,
+      getCamerasFull.fulfilled.type
+    ]);
+  });
+
   it('should dispatch getPromo when GET /promo', async () => {
     const fakePromo = [createFakePromo()];
 

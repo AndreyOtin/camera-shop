@@ -1,14 +1,17 @@
 import { render, screen } from '@testing-library/react';
-import { ProviderWrapper, RoutesWrapper } from '../../utiils/jest';
+import { createMockStoreWithAPI, ProviderWrapper, RoutesWrapper } from '../../utiils/jest';
 import ProductCard from './product-card';
-import { createFakeCamera } from '../../utiils/mock';
+import { createFakeCamera, createMockStore } from '../../utiils/mock';
 
 const fakeCamera = createFakeCamera();
+const store = createMockStore();
+const { fakeStore } = createMockStoreWithAPI(store);
+
 
 describe('Component: ProductCard', () => {
   it('should render correctly', () => {
     render(
-      <ProviderWrapper>
+      <ProviderWrapper fakeStore={fakeStore}>
         <RoutesWrapper jsxElement={<ProductCard camera={fakeCamera}/>}/>
       </ProviderWrapper>
     );
