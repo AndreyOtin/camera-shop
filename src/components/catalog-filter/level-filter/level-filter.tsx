@@ -1,27 +1,7 @@
 import { getObjectKeys } from '../../../utiils/types';
 import useCheckboxFilter from '../../../hooks/use-checkbox-filter';
 import { SearchParam } from '../../../consts/enums';
-
-const levelFilter = {
-  zero: {
-    enName: 'zero',
-    ruName: 'Нулевой',
-    checked: false,
-    disabled: ''
-  },
-  nonProfessional: {
-    enName: 'non-professional',
-    ruName: 'Любительский',
-    checked: false,
-    disabled: ''
-  },
-  professional: {
-    enName: 'professional',
-    ruName: 'Профессиональный',
-    checked: false,
-    disabled: ''
-  }
-};
+import { levelFilter } from '../../../consts/filter';
 
 function LevelFilter() {
   const { filter, handleFilterChange } = useCheckboxFilter(levelFilter, SearchParam.Level);
@@ -33,7 +13,7 @@ function LevelFilter() {
         <div key={filter[key].enName} className="custom-checkbox catalog-filter__item">
           <label>
             <input
-              onChange={(evt) => handleFilterChange(evt, key)}
+              onChange={(evt) => handleFilterChange(evt.target.checked, key)}
               checked={filter[key].checked}
               type="checkbox"
               name={filter[key].enName}

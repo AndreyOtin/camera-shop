@@ -1,24 +1,24 @@
 import { getObjectKeys } from '../../../utiils/types';
 import useCheckboxFilter from '../../../hooks/use-checkbox-filter';
 import { SearchParam } from '../../../consts/enums';
+import { categoryFilter, typeFilter } from '../../../consts/filter';
+import { ChangeEvent } from 'react';
 
-const categoryFilter = {
-  photo: {
-    enName: 'photo-camera',
-    ruName: 'Фотоаппарат',
-    checked: false,
-    disabled: 'video'
-  },
-  video: {
-    enName: 'video-camera',
-    ruName: 'Видеокамера',
-    checked: false,
-    disabled: 'photo'
-  }
-};
+type CategoryFilterProps = {
+  onChange: <T extends keyof typeof typeFilter>(isChecked: boolean, key: T) => void;
+}
 
-function CategoryFilter() {
+function CategoryFilter({ onChange }: CategoryFilterProps) {
   const { filter, handleFilterChange } = useCheckboxFilter(categoryFilter, SearchParam.Category);
+
+  const onFilterChange = (key: string | 'video', evt: ChangeEvent<HTMLInputElement>) => {
+    if (key === 'video' && evt.target.checked) {
+      onChange(false, 'snapshot');
+      onChange(false, 'film');
+    }
+
+    handleFilterChange(evt.target.checked, key);
+  };
 
   return (
     <fieldset className="catalog-filter__block">
@@ -29,7 +29,7 @@ function CategoryFilter() {
         >
           <label>
             <input
-              onChange={(evt) => handleFilterChange(evt, key)}
+              onChange={(evt) => onFilterChange(key, evt)}
               type="checkbox"
               name={filter[key].enName}
               checked={filter[key].checked}

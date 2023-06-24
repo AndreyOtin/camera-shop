@@ -4,18 +4,7 @@ import { DEBOUNCE_TIMEOUT } from '../../../consts/app';
 import { EvtChange } from '../../../types/app';
 import queryString from 'query-string';
 import { useDebouncedCallback } from 'use-debounce';
-
-const priceFilter = {
-  name: 'price',
-  min: {
-    enName: 'min-price',
-    ruName: 'от',
-  },
-  max: {
-    enName: 'max-price',
-    ruName: 'до',
-  },
-};
+import { priceFilter } from '../../../consts/filter';
 
 type CatalogFilterProps = {
   max: string;

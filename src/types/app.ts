@@ -18,11 +18,19 @@ export type EvtChange = ChangeEvent<HTMLInputElement>
 
 export type ParsedQueryString = {
   [SearchParam.Page]?: string;
-  [SearchParam.Category]: string | string[];
-  [SearchParam.Level]?: string | string[];
-  [SearchParam.Type]?: string | string[];
+  [SearchParam.Category]: string | Array<string>;
+  [SearchParam.Level]?: string | Array<string>;
+  [SearchParam.Type]?: Array<string> | string;
   [SearchParam.PriceMax]?: string;
   [SearchParam.PriceMin]?: string;
   [SearchParam.SortType]?: string;
   [SearchParam.SortDirection]?: string;
+  [SearchParam.Tab]?: string;
 }
+
+export type CheckBoxFilter = Record<string, {
+  enName: string;
+  ruName: string;
+  checked: boolean;
+  disabled: string;
+}>

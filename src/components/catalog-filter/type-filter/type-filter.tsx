@@ -1,37 +1,14 @@
 import { getObjectKeys } from '../../../utiils/types';
-import useCheckboxFilter from '../../../hooks/use-checkbox-filter';
 import { SearchParam } from '../../../consts/enums';
 import { useSearchParams } from 'react-router-dom';
+import { CheckBoxFilter } from '../../../types/app';
 
-const typeFilter = {
-  digital: {
-    enName: 'digital',
-    ruName: 'Цифровая',
-    checked: false,
-    disabled: ''
-  },
-  snapshot: {
-    enName: 'snapshot',
-    ruName: 'Моментальная',
-    checked: false,
-    disabled: 'Видеокамера'
-  },
-  film: {
-    enName: 'film',
-    ruName: 'Плёночная',
-    checked: false,
-    disabled: 'Видеокамера'
-  },
-  collection: {
-    enName: 'collection',
-    ruName: 'Коллекционная',
-    checked: false,
-    disabled: ''
-  },
-};
+type Props = {
+  onChange: (isChecked: boolean, key: string) => void;
+  filter: CheckBoxFilter;
+}
 
-function TypeFilter() {
-  const { filter, handleFilterChange } = useCheckboxFilter(typeFilter, SearchParam.Type);
+function TypeFilter({ filter, onChange }: Props) {
   const [searchParam] = useSearchParams();
   const category = searchParam.get(SearchParam.Category);
 
@@ -42,7 +19,7 @@ function TypeFilter() {
         <div key={filter[key].enName} className="custom-checkbox catalog-filter__item">
           <label>
             <input
-              onChange={(evt) => handleFilterChange(evt, key)}
+              onChange={(evt) => onChange(evt.target.checked, key)}
               checked={filter[key].checked}
               type="checkbox"
               name={filter[key].enName}
