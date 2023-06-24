@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef } from 'react';
+import { RefObject, useCallback, useEffect, useRef } from 'react';
 import { Code } from '../consts/enums';
 
 type InputRef = RefObject<HTMLInputElement>;
@@ -76,9 +76,9 @@ function UseArrowNavigation(inputRef: InputRef, linkContainerRef: LinkContainerR
     };
   });
 
-  return () => {
+  return useCallback(() => {
     activeLink.current = -1;
-  };
+  }, []);
 }
 
 export default UseArrowNavigation;

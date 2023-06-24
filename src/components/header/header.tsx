@@ -1,5 +1,5 @@
 import { AppRoute, Code, MainMenu, Status } from '../../consts/enums';
-import { generatePath, Link, NavLink, useNavigate } from 'react-router-dom';
+import { generatePath, Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { menuNameToRuName } from '../../consts/app';
 import clsx from 'clsx';
 import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
@@ -10,7 +10,7 @@ import {
   selectCamerasStatus,
   selectPromoStatus
 } from '../../store/catalog-slice/catalog-slice';
-import { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { filterCamerasBySearch } from '../../utiils/filter';
 import { Camera } from '../../types/camera';
 import useArrowNavigation from '../../hooks/use-arrow-navigation';
@@ -26,6 +26,16 @@ function Header() {
   const navigate = useNavigate();
   const filteredCameras = filterCamerasBySearch(cameras, search);
   const resetArrowNav = useArrowNavigation(searchRef, ref);
+  const location = useLocation();
+
+  const handleResetClick = useCallback(() => {
+    setSearch('');
+    resetArrowNav();
+  }, [resetArrowNav]);
+
+  useEffect(() => {
+    handleResetClick();
+  }, [handleResetClick, location.pathname]);
 
   useEffect(() => {
     if (camerasStatus === Status.Idle || promoStatus === Status.Idle) {
@@ -36,11 +46,6 @@ function Header() {
 
   const handleNavigation = (camera: Camera) => {
     navigate(generatePath(AppRoute.Product, { product: camera.id.toString() }));
-    setSearch('');
-    resetArrowNav();
-  };
-
-  const handleResetClick = () => {
     setSearch('');
     resetArrowNav();
   };
