@@ -1,10 +1,11 @@
 import { useSearchParams } from 'react-router-dom';
-import { FocusEvent, useState } from 'react';
+import { KeyboardEvent, useState } from 'react';
 import { DEBOUNCE_TIMEOUT } from '../../../consts/app';
 import { EvtChange } from '../../../types/app';
 import queryString from 'query-string';
 import { useDebouncedCallback } from 'use-debounce';
 import { priceFilter } from '../../../consts/filter';
+import { Code } from '../../../consts/enums';
 
 type CatalogFilterProps = {
   max: string;
@@ -55,37 +56,54 @@ function PriceFilter({ min, max }: CatalogFilterProps) {
     }
   };
 
-  const handleMinPriceBlur = (evt: FocusEvent<HTMLInputElement>) => {
-    const price = evt.target.value;
-
-    if (price && +price < +min) {
+  const checkMinPrice = () => {
+    if (minPrice && +minPrice < +min) {
       debounced();
       SetMinPrice(min);
     }
 
-    if (price && +price > +max) {
+    if (minPrice && +minPrice > +max) {
       debounced();
       SetMinPrice(max);
     }
   };
 
-  const handleMaxPriceBlur = (evt: FocusEvent<HTMLInputElement>) => {
-    const price = evt.target.value;
-
-    if (price && +price < +minPrice) {
+  const checkMaxPrice = () => {
+    if (maxPrice && +maxPrice < +minPrice) {
       debounced();
       SetMaxPrice(minPrice);
       return;
     }
 
-    if (price && +price < +min) {
+    if (maxPrice && +maxPrice < +min) {
       debounced();
       SetMaxPrice(min);
       return;
     }
 
     debounced();
-    SetMaxPrice(price);
+    SetMaxPrice(maxPrice);
+  };
+
+
+  const handleMinPriceKeyDown = (evt: KeyboardEvent<HTMLInputElement>) => {
+    if (evt.code === Code.Enter) {
+      checkMinPrice();
+    }
+  };
+
+  const handleMaxPriceKeyDown = (evt: KeyboardEvent<HTMLInputElement>) => {
+    if (evt.code === Code.Enter) {
+      checkMaxPrice();
+    }
+  };
+
+  const handleMinPriceBlur = () => {
+    checkMinPrice();
+  };
+
+  const handleMaxPriceBlur = () => {
+    checkMaxPrice();
   };
 
   return (
@@ -95,6 +113,7 @@ function PriceFilter({ min, max }: CatalogFilterProps) {
         <div className="custom-input">
           <label>
             <input
+              onKeyDown={handleMinPriceKeyDown}
               onBlur={handleMinPriceBlur}
               onChange={handleMinPriceChange}
               type="number"
@@ -107,6 +126,7 @@ function PriceFilter({ min, max }: CatalogFilterProps) {
         <div className="custom-input">
           <label>
             <input
+              onKeyDown={handleMaxPriceKeyDown}
               onBlur={handleMaxPriceBlur}
               onChange={handleMaxPriceChange}
               type="number"

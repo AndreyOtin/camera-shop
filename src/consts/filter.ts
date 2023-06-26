@@ -9,13 +9,13 @@ const typeFilter:CheckBoxFilter = {
   },
   snapshot: {
     enName: 'snapshot',
-    ruName: 'Моментальная',
+    ruName: 'Плёночная',
     checked: false,
     disabled: 'Видеокамера'
   },
   film: {
     enName: 'film',
-    ruName: 'Плёночная',
+    ruName: 'Моментальная',
     checked: false,
     disabled: 'Видеокамера'
   },
