@@ -75,7 +75,7 @@ function UseCheckboxFilter(initialState: CheckBoxFilter, paramName: string) {
 
   const handleFilterChange = (isChecked: boolean, key: string) => {
     setFilter((prevState) => {
-      const currentCategory = structuredClone(prevState);
+      const currentCategory = JSON.parse(JSON.stringify(prevState)) as typeof prevState;
 
       currentCategory[key].checked = isChecked;
 
@@ -86,7 +86,7 @@ function UseCheckboxFilter(initialState: CheckBoxFilter, paramName: string) {
   };
 
   const resetState = () => {
-    const iState = structuredClone(initialState);
+    const iState = JSON.parse(JSON.stringify(initialState)) as CheckBoxFilter;
     setFilter(iState);
   };
 
