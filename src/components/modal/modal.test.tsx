@@ -9,7 +9,7 @@ describe('Component: Modal', () => {
         <Modal
           contentRef={{ current: document.createElement('div') }}
           isOpened
-          onClickOutside={jest.fn}
+          onClose={jest.fn}
         >
           <h1>modal</h1>
         </Modal>

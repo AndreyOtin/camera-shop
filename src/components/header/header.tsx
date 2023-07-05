@@ -14,24 +14,31 @@ import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { filterCamerasBySearch } from '../../utiils/filter';
 import { Camera } from '../../types/camera';
 import useArrowNavigation from '../../hooks/use-arrow-navigation';
+import { selectTotalBasketProducts } from '../../store/basket-slice/basket-slice';
 
 function Header() {
-  const cameras = useAppSelector(selectCameras);
   const dispatch = useAppDispatch();
+
+  const cameras = useAppSelector(selectCameras);
   const camerasStatus = useAppSelector(selectCamerasStatus);
   const promoStatus = useAppSelector(selectPromoStatus);
+  const totalProductCount = useAppSelector(selectTotalBasketProducts);
+
   const ref = useRef<HTMLUListElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+
   const [search, setSearch] = useState('');
   const navigate = useNavigate();
-  const filteredCameras = filterCamerasBySearch(cameras, search);
-  const resetArrowNav = useArrowNavigation(searchRef, ref);
   const location = useLocation();
 
-  const handleResetClick = useCallback(() => {
-    setSearch('');
-    resetArrowNav();
-  }, [resetArrowNav]);
+  const filteredCameras = filterCamerasBySearch(cameras, search);
+  const resetArrowNav = useArrowNavigation(searchRef, ref);
+
+  const
+    handleResetClick = useCallback(() => {
+      setSearch('');
+      resetArrowNav();
+    }, [resetArrowNav]);
 
   useEffect(() => {
     handleResetClick();
@@ -126,11 +133,12 @@ function Header() {
             <span className="visually-hidden">Сбросить поиск</span>
           </button>
         </div>
-        <a className="header__basket-link" href="#">
+        <Link className="header__basket-link" to={AppRoute.Basket}>
           <svg width="16" height="16" aria-hidden="true">
             <use xlinkHref="#icon-basket"></use>
           </svg>
-        </a>
+          {!!totalProductCount && <span className="header__basket-count">{totalProductCount}</span>}
+        </Link>
       </div>
     </header>
   );

@@ -4,16 +4,17 @@ import ReactFocusLock from 'react-focus-lock';
 import { Code } from '../../consts/enums';
 
 type ModalProps = {
+  variant?: 'primary' | 'narrow';
   children: ReactNode;
-  onClickOutside: () => void;
-  isOpened?: boolean;
+  onClose: () => void;
+  isOpened: boolean;
   contentRef: RefObject<HTMLDivElement>;
 }
 
-function Modal({ children, onClickOutside, isOpened, contentRef }: ModalProps) {
+function Modal({ children, onClose, isOpened, contentRef, variant = 'primary' }: ModalProps) {
   const onEcsKeyDown = (evt: KeyboardEvent) => {
     if (evt.code === Code.Esc) {
-      onClickOutside();
+      onClose();
     }
   };
 
@@ -38,10 +39,10 @@ function Modal({ children, onClickOutside, isOpened, contentRef }: ModalProps) {
   return (
     <ReactFocusLock disabled={!isOpened} returnFocus>
       <div
-        className={clsx('modal', isOpened && 'is-active')}
+        className={clsx('modal', isOpened && 'is-active', variant === 'narrow' && 'modal--narrow')}
       >
         <div
-          onClick={onClickOutside}
+          onClick={onClose}
           className="modal__wrapper"
           data-testid="modal"
         >
@@ -51,6 +52,16 @@ function Modal({ children, onClickOutside, isOpened, contentRef }: ModalProps) {
             className="modal__content"
           >
             {children}
+            <button
+              onClick={onClose}
+              className="cross-btn"
+              type="button"
+              aria-label="Закрыть попап"
+            >
+              <svg width="10" height="10" aria-hidden="true">
+                <use xlinkHref="#icon-close"></use>
+              </svg>
+            </button>
           </div>
         </div>
       </div>

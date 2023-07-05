@@ -11,20 +11,10 @@ function ReviewModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> }) 
     <Modal
       contentRef={contentRef}
       isOpened={isReviewOpened}
-      onClickOutside={() => setReviewDisplay(false)}
+      onClose={() => setReviewDisplay(false)}
     >
       <p className="title title--h4">Оставить отзыв</p>
       <ReviewForm/>
-      <button
-        onClick={() => setReviewDisplay(false)}
-        className="cross-btn"
-        type="button"
-        aria-label="Закрыть попап"
-      >
-        <svg width="10" height="10" aria-hidden="true">
-          <use xlinkHref="#icon-close"></use>
-        </svg>
-      </button>
     </Modal>
   );
 }

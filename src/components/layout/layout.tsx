@@ -7,12 +7,15 @@ import { PreviewModal } from '../../types/app';
 const Layout = () => {
   const [preview, setPreviewDisplay] = useState<PreviewModal>({ isModalOpened: false });
   const [isReviewOpened, setReviewDisplay] = useState(false);
+  const [isAddItemSuccessOpened, setAddItemSuccessDisplay] = useState(false);
 
   const context = {
     preview,
     setPreviewDisplay,
     isReviewOpened,
-    setReviewDisplay
+    setReviewDisplay,
+    isAddItemSuccessOpened,
+    setAddItemSuccessDisplay
   };
 
   return (

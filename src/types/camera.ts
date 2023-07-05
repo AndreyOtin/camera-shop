@@ -13,7 +13,12 @@ export type Camera = {
   previewImgWebp: string;
   previewImgWebp2x: string;
   rating: number;
+  count?: number;
+  totalPrice?: number;
 }
+
+export type BasketCamera = Camera & { count: number; totalPrice: number }
+
 
 export type Promo = {
   id: number;

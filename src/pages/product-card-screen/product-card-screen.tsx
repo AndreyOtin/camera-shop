@@ -24,6 +24,8 @@ import ReviewSuccessModal from '../../components/review-success-modal/review-suc
 import { checkStatus } from '../../utiils/common';
 import Stars from '../../components/stars/stars';
 import { selectCameras } from '../../store/catalog-slice/catalog-slice';
+import AddItemSuccessModal from '../../components/add-item-success-modal/add-item-success-modal';
+import AddItemButton from '../../components/add-item-button/add-item-button';
 
 function ProductCardScreen() {
   const dispatch = useAppDispatch();
@@ -116,12 +118,7 @@ function ProductCardScreen() {
                     <span className="visually-hidden">Цена:</span>
                     {formatPrice((product.price))} ₽
                   </p>
-                  <button className="btn btn--purple" type="button">
-                    <svg width="24" height="16" aria-hidden="true">
-                      <use xlinkHref="#icon-add-basket"></use>
-                    </svg>
-                    Добавить в корзину
-                  </button>
+                  <AddItemButton camera={product}/>
                   <ProductTabs/>
                 </div>
               </div>
@@ -143,6 +140,7 @@ function ProductCardScreen() {
         <ReviewModal contentRef={ref}/>
         <PreviewModal contentRef={ref}/>
         <ReviewSuccessModal contentRef={ref}/>
+        <AddItemSuccessModal contentRef={ref}/>
       </main>
       <a
         onClick={(evt) => handleUpButtonClick(evt)}

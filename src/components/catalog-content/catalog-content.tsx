@@ -21,7 +21,6 @@ function CatalogContent({ bannerPosition, cameras }: CatalogContentProps) {
   const sortType = parsedQuery[SearchParam.SortType];
   const sortDirection = parsedQuery[SearchParam.SortDirection];
   const page = parsedQuery.page;
-
   const { filteredCamerasWithPrice, max, min } = filterCameras(cameras, parsedQuery);
 
   if (sortType && sortDirection) {

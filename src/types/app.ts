@@ -12,6 +12,8 @@ export type OutletContext = {
   setPreviewDisplay: Dispatch<SetStateAction<PreviewModal>>;
   isReviewOpened: boolean;
   setReviewDisplay: Dispatch<SetStateAction<boolean>>;
+  isAddItemSuccessOpened: boolean;
+  setAddItemSuccessDisplay: Dispatch<SetStateAction<boolean>>;
 }
 
 export type EvtChange = ChangeEvent<HTMLInputElement>

@@ -8,13 +8,15 @@ export enum Status {
 export enum SliceNameSpace {
   Catalog = 'catalog',
   Product = 'product',
-  Comments = 'comments'
+  Comments = 'comments',
+  Basket = 'basket'
 }
 
 export enum AppRoute {
   Root = '/',
   Catalog = '/catalog',
-  Product = '/catalog/:product'
+  Product = '/catalog/:product',
+  Basket = '/catalog/basket'
 }
 
 export enum ApiRoute {
@@ -29,7 +31,8 @@ export enum MainMenu {
   Catalog = 'catalog',
   Delivery = 'delivery',
   Warranties = 'warranties',
-  About = 'about'
+  About = 'about',
+  Basket = 'basket'
 }
 
 export enum StatusCode {

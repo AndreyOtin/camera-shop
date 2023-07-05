@@ -3,6 +3,7 @@ import * as faker from 'faker';
 import { NewReview, Review } from '../types/review';
 import { RootState } from '../types/store';
 import { SliceNameSpace, Status } from '../consts/enums';
+import { productsAdapter } from '../store/basket-slice/basket-slice';
 
 const createFakeCamera = (): Camera => ({
   type: faker.lorem.word(1),
@@ -82,6 +83,10 @@ const createMockStore = (): RootState => ({
     cameras: [createFakeCamera()],
     promo: createFakePromo()
   },
+  [SliceNameSpace.Basket]: {
+    ...productsAdapter.getInitialState(),
+    totalCount: 0
+  }
 });
 
 export { createFakeCamera, createFakePromo, createFakeComment, createFakeNewCommentBody, createMockStore };

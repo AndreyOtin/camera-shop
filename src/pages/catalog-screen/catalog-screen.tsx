@@ -14,6 +14,7 @@ import {
   selectPromo,
   selectPromoStatus
 } from '../../store/catalog-slice/catalog-slice';
+import AddItemSuccessModal from '../../components/add-item-success-modal/add-item-success-modal';
 
 function CatalogScreen() {
   const camerasStatus = useAppSelector(selectCamerasStatus);
@@ -39,6 +40,7 @@ function CatalogScreen() {
 
   const promoDescription = cameras.find((item) => item?.id === promo.id)?.description;
 
+
   return (
     <main>
       <Helmet>
@@ -59,6 +61,7 @@ function CatalogScreen() {
         </section>
       </div>
       <PreviewModal contentRef={ref}/>
+      <AddItemSuccessModal contentRef={ref}/>
     </main>
   );
 }

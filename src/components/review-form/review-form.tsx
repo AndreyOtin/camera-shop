@@ -8,6 +8,7 @@ import { Status } from '../../consts/enums';
 import { selectProduct } from '../../store/product-slice/product-slice';
 import { useOutletContext } from 'react-router-dom';
 import { OutletContext } from '../../types/app';
+import { flushSync } from 'react-dom';
 
 enum Field {
   Rate = 'rate',
@@ -89,8 +90,8 @@ function ReviewForm() {
 
     await dispatch(postComment(formData));
 
-    setReviewDisplay(false);
-    setTimeout(() => dispatch(changePostStatus(Status.Success)));
+    flushSync(() => setReviewDisplay(false));
+    dispatch(changePostStatus(Status.Success));
   };
 
   const onSubmit = (evt: FormEvent<HTMLFormElement>) => {

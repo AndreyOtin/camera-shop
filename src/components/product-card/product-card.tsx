@@ -1,10 +1,12 @@
-import { CSSProperties } from 'react';
+import { CSSProperties, memo } from 'react';
 import { Camera } from '../../types/camera';
 import { formatPrice } from '../../utiils/formaters';
 import { generatePath, Link, useOutletContext } from 'react-router-dom';
 import { AppRoute } from '../../consts/enums';
 import { OutletContext } from '../../types/app';
 import Stars from '../stars/stars';
+import { useAppSelector } from '../../hooks/store-hooks';
+import { selectProductById } from '../../store/basket-slice/basket-slice';
 
 type ProductCardProps = {
   camera: Camera;
@@ -13,6 +15,7 @@ type ProductCardProps = {
 
 function ProductCard({ camera, style }: ProductCardProps) {
   const { setPreviewDisplay } = useOutletContext<OutletContext>();
+  const isInBasket = useAppSelector((state) => selectProductById(state, camera.id));
 
   return (
     <div
@@ -54,13 +57,28 @@ function ProductCard({ camera, style }: ProductCardProps) {
         </p>
       </div>
       <div className="product-card__buttons">
-        <button
-          onClick={() => setPreviewDisplay({ isModalOpened: true, camera })}
-          className="btn btn--purple product-card__btn"
-          type="button"
-        >
-          Купить
-        </button>
+        {
+          isInBasket
+            ?
+            <button
+              onClick={() => setPreviewDisplay({ isModalOpened: true, camera })}
+              className="btn btn--purple-border product-card__btn"
+              type="button"
+            >
+              <svg width="16" height="16" aria-hidden="true">
+                <use xlinkHref="#icon-basket"></use>
+              </svg>
+              В корозине
+            </button>
+            :
+            <button
+              onClick={() => setPreviewDisplay({ isModalOpened: true, camera })}
+              className="btn btn--purple product-card__btn"
+              type="button"
+            >
+              Купить
+            </button>
+        }
         <Link
           className="btn btn--transparent"
           to={generatePath(AppRoute.Product, { product: camera.id.toString() })}
@@ -72,4 +90,4 @@ function ProductCard({ camera, style }: ProductCardProps) {
   );
 }
 
-export default ProductCard;
+export default memo(ProductCard);

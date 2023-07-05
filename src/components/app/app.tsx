@@ -5,6 +5,7 @@ import Layout from '../layout/layout';
 import ErrorScreen from '../../pages/error-screen/error-screen';
 import MainScreen from '../../pages/main-screen/main-screen';
 import ProductCardScreen from '../../pages/product-card-screen/product-card-screen';
+import BasketScreen from '../../pages/basket-screen/basket-screen';
 
 const App = (): JSX.Element => (
   <Routes>
@@ -12,6 +13,7 @@ const App = (): JSX.Element => (
       <Route index element={<MainScreen/>}/>
       <Route path={AppRoute.Catalog} element={<CatalogScreen/>}/>
       <Route path={AppRoute.Product} element={<ProductCardScreen/>}/>
+      <Route path={AppRoute.Basket} element={<BasketScreen/>}/>
       <Route path="*" element={<ErrorScreen variant="404"/>}/>
     </Route>
   </Routes>
