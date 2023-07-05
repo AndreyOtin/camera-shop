@@ -3,7 +3,7 @@ import { formatPrice } from '../../utiils/formaters';
 import { categoryFilter } from '../../consts/filter';
 import { typeNameToFormattedName } from '../../consts/format';
 import clsx from 'clsx';
-import { ChangeEventHandler, KeyboardEventHandler, useEffect, useRef, useState } from 'react';
+import { KeyboardEventHandler, useEffect, useRef } from 'react';
 import { Code } from '../../consts/enums';
 import { useAppDispatch } from '../../hooks/store-hooks';
 import { changeCount, decreaseCount, increaseCount } from '../../store/basket-slice/basket-slice';
@@ -18,7 +18,6 @@ type BasketPreviewProps = {
 
 function BasketPreview({ preview, variant = 'primary' }: BasketPreviewProps) {
   const ref = useRef<HTMLInputElement>(null);
-  const [count, setCount] = useState(preview?.count || MIN_BASKET_PRODUCTS.toString());
   const dispatch = useAppDispatch();
   const { setPreviewDisplay } = useOutletContext<OutletContext>();
 
@@ -37,22 +36,16 @@ function BasketPreview({ preview, variant = 'primary' }: BasketPreviewProps) {
   }, [preview?.count]);
 
   const checkCount = () => {
-    if (!preview) {
+    if (!ref.current || !preview) {
       return;
     }
 
-    let value = Number(count);
+    let value = Number(ref.current.value);
 
     value = value > MAX_BASKET_PRODUCTS ? MAX_BASKET_PRODUCTS : value;
     value = value < MIN_BASKET_PRODUCTS ? MIN_BASKET_PRODUCTS : value;
 
-    setCount(value);
     dispatch(changeCount({ count: value, id: preview.id }));
-  };
-
-  const handleCountChange: ChangeEventHandler<HTMLInputElement> = (evt) => {
-    const value = Number.isNaN(+evt.target.value) ? 1 : evt.target.value;
-    setCount(value);
   };
 
   const handleCountBlur = () => {
@@ -166,9 +159,9 @@ function BasketPreview({ preview, variant = 'primary' }: BasketPreviewProps) {
               min="1"
               max="99"
               aria-label="количество товара"
-              value={count}
+              // value={count}
               onBlur={handleCountBlur}
-              onChange={handleCountChange}
+              // onChange={handleCountChange}
               onKeyDown={handleInputKeyDown}
             />
             <button
