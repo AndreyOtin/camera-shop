@@ -3,7 +3,7 @@ import { formatPrice } from '../../utiils/formaters';
 import { categoryFilter } from '../../consts/filter';
 import { typeNameToFormattedName } from '../../consts/format';
 import clsx from 'clsx';
-import { KeyboardEventHandler, useEffect, useRef } from 'react';
+import React, { KeyboardEventHandler, ReactNode, useEffect, useRef } from 'react';
 import { Code } from '../../consts/enums';
 import { useAppDispatch } from '../../hooks/store-hooks';
 import { changeCount, decreaseCount, increaseCount } from '../../store/basket-slice/basket-slice';
@@ -13,7 +13,20 @@ import { OutletContext } from '../../types/app';
 
 type BasketPreviewProps = {
   preview: Camera | undefined;
-  variant?: 'short' | 'primary' | 'basketModal' | 'previewModal';
+  variant?: 'short' | 'primary' | 'basketModal';
+}
+
+
+function Div({ children, ...rest }: { children: ReactNode; className: string }) {
+  return (
+    <div {...rest}>{children}</div>
+  );
+}
+
+function Li({ children, ...rest }: { children: ReactNode; className: string }) {
+  return (
+    <li {...rest}> {children}</li>
+  );
 }
 
 function BasketPreview({ preview, variant = 'primary' }: BasketPreviewProps) {
@@ -87,13 +100,13 @@ function BasketPreview({ preview, variant = 'primary' }: BasketPreviewProps) {
     number = number >= MAX_BASKET_PRODUCTS ? MAX_BASKET_PRODUCTS : ++number;
     ref.current.value = number.toString();
   };
+  const Element = variant === 'primary' ? Li : Div;
 
   return (
-    <div className={clsx('basket-item', {
+    <Element className={clsx('basket-item', {
       'basket-item--short':
         variant === 'short' ||
-        variant === 'previewModal' ||
-        variant === 'basketModal'
+        variant === 'basketModal',
     })}
     >
       <div className="basket-item__img">
@@ -159,9 +172,7 @@ function BasketPreview({ preview, variant = 'primary' }: BasketPreviewProps) {
               min="1"
               max="99"
               aria-label="количество товара"
-              // value={count}
               onBlur={handleCountBlur}
-              // onChange={handleCountChange}
               onKeyDown={handleInputKeyDown}
             />
             <button
@@ -188,7 +199,7 @@ function BasketPreview({ preview, variant = 'primary' }: BasketPreviewProps) {
             </svg>
           </button>
         </>}
-    </div>
+    </Element>
   );
 }
 

@@ -31,7 +31,7 @@ const client = {
   postReview: (body: NewReview) =>
     api.post<Review>(ApiRoute.Reviews, body),
   checkCoupon: (body: Coupon) =>
-    api.post<number>(ApiRoute.Coupons, body),
+    api.post<string>(ApiRoute.Coupons, body),
   postOrder: (body: NewOrder) =>
     api.post(ApiRoute.Orders, body),
 };

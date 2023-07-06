@@ -14,7 +14,8 @@ import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { filterCamerasBySearch } from '../../utiils/filter';
 import { Camera } from '../../types/camera';
 import useArrowNavigation from '../../hooks/use-arrow-navigation';
-import { selectTotalBasketProducts } from '../../store/basket-slice/basket-slice';
+import { selectBasketProductsCount } from '../../store/basket-slice/basket-slice';
+
 
 function Header() {
   const dispatch = useAppDispatch();
@@ -22,7 +23,7 @@ function Header() {
   const cameras = useAppSelector(selectCameras);
   const camerasStatus = useAppSelector(selectCamerasStatus);
   const promoStatus = useAppSelector(selectPromoStatus);
-  const totalProductCount = useAppSelector(selectTotalBasketProducts);
+  const totalProductCount = useAppSelector(selectBasketProductsCount);
 
   const ref = useRef<HTMLUListElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -78,14 +79,15 @@ function Header() {
         <nav className="main-nav header__main-nav">
           <ul className="main-nav__list">
             {Object.values(MainMenu).map((menu) => (
-              <li key={menu} className="main-nav__item">
-                <NavLink
-                  className={clsx('main-nav__link')}
-                  to={`/${menu}`}
-                >
-                  {menuNameToRuName[menu]}
-                </NavLink>
-              </li>
+              menu === MainMenu.Basket ? null :
+                <li key={menu} className="main-nav__item">
+                  <NavLink
+                    className={clsx('main-nav__link')}
+                    to={`/${menu}`}
+                  >
+                    {menuNameToRuName[menu]}
+                  </NavLink>
+                </li>
             ))}
           </ul>
         </nav>
