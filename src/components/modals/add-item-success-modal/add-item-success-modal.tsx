@@ -1,11 +1,21 @@
 import React, { RefObject } from 'react';
 import Modal from '../../modal/modal';
-import { Link, useOutletContext } from 'react-router-dom';
+import { Link, useMatch, useNavigate, useOutletContext } from 'react-router-dom';
 import { OutletContext } from '../../../types/app';
 import { AppRoute } from '../../../consts/enums';
 
 function AddItemSuccessModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> }) {
   const { setAddItemSuccessDisplay, isAddItemSuccessOpened } = useOutletContext<OutletContext>();
+  const navigate = useNavigate();
+  const isCatalog = useMatch(AppRoute.Catalog);
+
+  const handleContinueClick = () => {
+    setAddItemSuccessDisplay(false);
+
+    if (!isCatalog) {
+      navigate(AppRoute.Catalog);
+    }
+  };
 
   return (
     <Modal
@@ -22,7 +32,7 @@ function AddItemSuccessModal({ contentRef }: { contentRef: RefObject<HTMLDivElem
       </svg>
       <div className="modal__buttons">
         <button
-          onClick={() => setAddItemSuccessDisplay(false)}
+          onClick={handleContinueClick}
           className="btn btn--transparent modal__btn"
         >
           Продолжить
