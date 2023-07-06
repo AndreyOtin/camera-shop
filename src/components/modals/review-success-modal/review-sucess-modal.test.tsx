@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
-import { createMockStoreWithAPI, ProviderWrapper, RoutesWrapper } from '../../utiils/jest';
+import { createMockStoreWithAPI, ProviderWrapper, RoutesWrapper } from '../../../utiils/jest';
 import ReviewSuccessModal from './review-success-modal';
-import { createMockStore } from '../../utiils/mock';
+import { createMockStore } from '../../../utiils/mock';
 
 const store = createMockStore();
 const { fakeStore } = createMockStoreWithAPI(store);

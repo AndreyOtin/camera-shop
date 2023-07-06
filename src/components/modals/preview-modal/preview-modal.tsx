@@ -1,10 +1,10 @@
 import { useOutletContext } from 'react-router-dom';
-import { OutletContext } from '../../types/app';
-import Modal from '../modal/modal';
+import { OutletContext } from '../../../types/app';
+import Modal from '../../modal/modal';
 import { RefObject } from 'react';
-import { useAppDispatch } from '../../hooks/store-hooks';
-import { addCameraToBasket } from '../../store/basket-slice/basket-slice';
-import BasketPreview from '../basket-preview/basket-preview';
+import { useAppDispatch } from '../../../hooks/store-hooks';
+import { addCameraToBasket } from '../../../store/basket-slice/basket-slice';
+import BasketPreview from '../../basket-preview/basket-preview';
 
 function PreviewModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> }) {
   const dispatch = useAppDispatch();
@@ -40,16 +40,6 @@ function PreviewModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> })
           Добавить в корзину
         </button>
       </div>
-      <button
-        onClick={() => setPreviewDisplay({ isModalOpened: false, camera: preview.camera })}
-        className="cross-btn"
-        type="button"
-        aria-label="Закрыть попап"
-      >
-        <svg width="10" height="10" aria-hidden="true">
-          <use xlinkHref="#icon-close"></use>
-        </svg>
-      </button>
     </Modal>
   );
 }

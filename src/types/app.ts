@@ -14,6 +14,10 @@ export type OutletContext = {
   setReviewDisplay: Dispatch<SetStateAction<boolean>>;
   isAddItemSuccessOpened: boolean;
   setAddItemSuccessDisplay: Dispatch<SetStateAction<boolean>>;
+  isBuySuccessOpened: boolean;
+  setBuySuccessDisplay: Dispatch<SetStateAction<boolean>>;
+  isBuyErrorOpened: boolean;
+  setBuyErrorDisplay: Dispatch<SetStateAction<boolean>>;
 }
 
 export type EvtChange = ChangeEvent<HTMLInputElement>

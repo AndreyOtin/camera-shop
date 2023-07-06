@@ -1,8 +1,8 @@
 import React, { RefObject } from 'react';
-import Modal from '../modal/modal';
+import Modal from '../../modal/modal';
 import { Link, useOutletContext } from 'react-router-dom';
-import { OutletContext } from '../../types/app';
-import { AppRoute } from '../../consts/enums';
+import { OutletContext } from '../../../types/app';
+import { AppRoute } from '../../../consts/enums';
 
 function AddItemSuccessModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> }) {
   const { setAddItemSuccessDisplay, isAddItemSuccessOpened } = useOutletContext<OutletContext>();
@@ -21,14 +21,13 @@ function AddItemSuccessModal({ contentRef }: { contentRef: RefObject<HTMLDivElem
         <use xlinkHref="#icon-success"></use>
       </svg>
       <div className="modal__buttons">
-        <Link
-          to={AppRoute.Catalog}
+        <button
           onClick={() => setAddItemSuccessDisplay(false)}
           className="btn btn--transparent modal__btn"
         >
           Продолжить
           покупки
-        </Link>
+        </button>
         <Link
           onClick={() => setAddItemSuccessDisplay(false)}
           to={AppRoute.Basket}

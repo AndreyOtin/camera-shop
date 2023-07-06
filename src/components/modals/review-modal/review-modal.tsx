@@ -1,7 +1,7 @@
-import Modal from '../modal/modal';
+import Modal from '../../modal/modal';
 import { useOutletContext } from 'react-router-dom';
-import { OutletContext } from '../../types/app';
-import ReviewForm from '../review-form/review-form';
+import { OutletContext } from '../../../types/app';
+import ReviewForm from '../../review-form/review-form';
 import { RefObject } from 'react';
 
 function ReviewModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> }) {

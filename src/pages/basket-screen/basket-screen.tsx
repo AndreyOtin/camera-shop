@@ -4,8 +4,10 @@ import { useAppSelector } from '../../hooks/store-hooks';
 import { selectAllBasketProducts } from '../../store/basket-slice/basket-slice';
 import BasketPreview from '../../components/basket-preview/basket-preview';
 import ScrollToTop from '../../components/scroll-to-top/scroll-to-top';
-import BasketRemoveModal from '../../components/basket-remove-modal/basket-remove-modal';
+import BasketRemoveModal from '../../components/modals/basket-remove-modal/basket-remove-modal';
 import BasketSummary from '../../components/basket-summary/basket-summary';
+import BuySuccessModal from '../../components/modals/buy-success-modal/buy-success-modal';
+import BuyErrorModal from '../../components/modals/buy-error-modal/buy-error-modal';
 
 function BasketScreen() {
   const products = useAppSelector(selectAllBasketProducts);
@@ -22,13 +24,15 @@ function BasketScreen() {
             <ul className="basket__list">
               {products.map((item) => (
                 <BasketPreview key={item.id} preview={item}/>))}
-              {!products.length && <li style={{ fontSize: '25px', height: '200px' }}>Пусто</li>}
+              {!products.length && <li style={{ fontSize: '25px' }}>Пусто</li>}
             </ul>
             <BasketSummary/>
           </div>
         </section>
       </div>
       <BasketRemoveModal contentRef={ref}/>
+      <BuySuccessModal contentRef={ref}/>
+      <BuyErrorModal contentRef={ref}/>
     </main>
   );
 }

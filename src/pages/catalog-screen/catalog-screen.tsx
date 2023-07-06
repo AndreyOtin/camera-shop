@@ -5,7 +5,7 @@ import { useAppSelector } from '../../hooks/store-hooks';
 import { useEffect, useRef, useState } from 'react';
 import Spinner from '../../components/spinner/spinner';
 import ErrorScreen from '../error-screen/error-screen';
-import PreviewModal from '../../components/preview-modal/preview-modal';
+import PreviewModal from '../../components/modals/preview-modal/preview-modal';
 import { checkStatus } from '../../utiils/common';
 import CatalogContent from '../../components/catalog-content/catalog-content';
 import {
@@ -14,7 +14,7 @@ import {
   selectPromo,
   selectPromoStatus
 } from '../../store/catalog-slice/catalog-slice';
-import AddItemSuccessModal from '../../components/add-item-success-modal/add-item-success-modal';
+import AddItemSuccessModal from '../../components/modals/add-item-success-modal/add-item-success-modal';
 
 function CatalogScreen() {
   const camerasStatus = useAppSelector(selectCamerasStatus);

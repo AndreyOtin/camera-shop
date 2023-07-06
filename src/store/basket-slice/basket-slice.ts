@@ -4,6 +4,8 @@ import { SliceNameSpace, Status } from '../../consts/enums';
 import { RootState, ThunkConfig } from '../../types/store';
 import { LOCAL_STORAGE_BASKET } from '../../consts/app';
 import { calculateTotalWithCoupon, getInitialEntityAdapterState, saveToLocalStorage } from '../../utiils/store';
+import { Coupon } from '../../types/coupon';
+import { NewOrder } from '../../types/order';
 
 type InitialState = {
   totalCount: number;
@@ -12,6 +14,7 @@ type InitialState = {
   totalWithCoupon: number;
   couponStatus: Status;
   couponPercent: number;
+  couponName: string;
 }
 
 const initialState: InitialState = {
@@ -20,15 +23,26 @@ const initialState: InitialState = {
   coupon: 0,
   totalWithCoupon: 0,
   couponStatus: Status.Idle,
-  couponPercent: 0
+  couponPercent: 0,
+  couponName: ''
 };
 
-const checkCoupon = createAsyncThunk<string, string, ThunkConfig>(
+const checkCoupon = createAsyncThunk<Coupon, string, ThunkConfig>(
   `${SliceNameSpace.Basket}/checkCoupon`,
   async (coupon, { extra: api }) => {
-    const { data } = await api.checkCoupon({ coupon });
+    const { data } = await api.checkCoupon(coupon);
 
-    return data;
+    return {
+      couponPercent: data,
+      coupon
+    };
+  }
+);
+
+const postOrder = createAsyncThunk<void, NewOrder, ThunkConfig>(
+  `${SliceNameSpace.Basket}/postOrder`,
+  async (order, { extra: api }) => {
+    await api.postOrder(order);
   }
 );
 
@@ -118,14 +132,19 @@ const basketSlice = createSlice({
     },
     changePromoStatus(state) {
       state.couponStatus = Status.Idle;
-    }
+    },
+    resetBasket() {
+      localStorage.removeItem(LOCAL_STORAGE_BASKET);
+      return productsAdapter.getInitialState(initialState);
+    },
   },
   extraReducers(builder) {
     builder
       .addCase(checkCoupon.fulfilled, (state, action) => {
-        state.couponPercent = +action.payload;
-        calculateTotalWithCoupon(state, state.couponPercent);
+        state.couponPercent = +action.payload.couponPercent;
+        state.couponName = action.payload.coupon;
         state.couponStatus = Status.Success;
+        calculateTotalWithCoupon(state, state.couponPercent);
       })
       .addCase(checkCoupon.rejected, (state) => {
         state.couponStatus = Status.Error;
@@ -135,6 +154,7 @@ const basketSlice = createSlice({
 
 
 export const {
+  selectIds,
   selectById: selectProductById,
   selectAll: selectAllBasketProducts,
 } = productsAdapter.getSelectors<RootState>((state) => state[SliceNameSpace.Basket]);
@@ -142,6 +162,7 @@ const selectBasketProductsCount = (state: RootState) => state[SliceNameSpace.Bas
 const selectBasketProductsTotal = (state: RootState) => state[SliceNameSpace.Basket].total;
 const selectCouponStatus = (state: RootState) => state[SliceNameSpace.Basket].couponStatus;
 const selectCoupon = (state: RootState) => state[SliceNameSpace.Basket].coupon;
+const selectCouponName = (state: RootState) => state[SliceNameSpace.Basket].couponName;
 const selectTotalWithCoupon = (state: RootState) => state[SliceNameSpace.Basket].totalWithCoupon;
 
 export default basketSlice.reducer;
@@ -151,9 +172,12 @@ export const {
   removeCameraFromBasket,
   increaseCount,
   decreaseCount,
-  changeCount
+  changeCount,
+  resetBasket
 } = basketSlice.actions;
 export {
+  postOrder,
+  selectCouponName,
   selectBasketProductsCount,
   selectBasketProductsTotal,
   checkCoupon,

@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { Camera, Promo } from '../types/camera';
 import { NewReview, Review } from '../types/review';
-import { Coupon } from '../types/coupon';
 import { NewOrder } from '../types/order';
 import { ApiRoute } from '../consts/enums';
 
@@ -30,8 +29,8 @@ const client = {
     api.get<Review[]>(`${ApiRoute.Cameras}/${cameraId}/reviews`),
   postReview: (body: NewReview) =>
     api.post<Review>(ApiRoute.Reviews, body),
-  checkCoupon: (body: Coupon) =>
-    api.post<string>(ApiRoute.Coupons, body),
+  checkCoupon: (coupon: string) =>
+    api.post<string>(ApiRoute.Coupons, { coupon }),
   postOrder: (body: NewOrder) =>
     api.post(ApiRoute.Orders, body),
 };

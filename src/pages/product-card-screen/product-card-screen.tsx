@@ -10,7 +10,7 @@ import ScrollToTop from '../../components/scroll-to-top/scroll-to-top';
 import { fetchComments, selectCommentsStatus } from '../../store/comments-slice/comments-slice';
 import Reviews from '../../components/reviews/reviews';
 import SimilarProductsSlider from '../../components/similar-products-slider/similar-products-slider';
-import PreviewModal from '../../components/preview-modal/preview-modal';
+import PreviewModal from '../../components/modals/preview-modal/preview-modal';
 import {
   fetchProduct,
   fetchSimilarProducts,
@@ -19,12 +19,12 @@ import {
   selectSimilarProducts,
   selectSimilarProductStatus
 } from '../../store/product-slice/product-slice';
-import ReviewModal from '../../components/review-modal/review-modal';
-import ReviewSuccessModal from '../../components/review-success-modal/review-success-modal';
+import ReviewModal from '../../components/modals/review-modal/review-modal';
+import ReviewSuccessModal from '../../components/modals/review-success-modal/review-success-modal';
 import { checkStatus } from '../../utiils/common';
 import Stars from '../../components/stars/stars';
 import { selectCameras } from '../../store/catalog-slice/catalog-slice';
-import AddItemSuccessModal from '../../components/add-item-success-modal/add-item-success-modal';
+import AddItemSuccessModal from '../../components/modals/add-item-success-modal/add-item-success-modal';
 import AddItemButton from '../../components/add-item-button/add-item-button';
 
 function ProductCardScreen() {

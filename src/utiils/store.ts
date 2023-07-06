@@ -25,7 +25,7 @@ const calculateTotalWithCoupon = (state: RootState['basket'], bonus: number) => 
 };
 
 const saveToLocalStorage = (state: RootState['basket']) => {
-  const data = { ...state, totalWithCoupon: 0, coupon: 0, couponPercent: 0 } as RootState['basket'];
+  const data = { ...state, totalWithCoupon: 0, coupon: 0, couponPercent: 0, couponName: '' } as RootState['basket'];
   localStorage.setItem(LOCAL_STORAGE_BASKET, JSON.stringify(data));
 };
 

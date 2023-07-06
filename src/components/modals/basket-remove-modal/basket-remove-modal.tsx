@@ -1,10 +1,10 @@
 import React, { RefObject } from 'react';
-import Modal from '../modal/modal';
+import Modal from '../../modal/modal';
 import { Link, useOutletContext } from 'react-router-dom';
-import { OutletContext } from '../../types/app';
-import BasketPreview from '../basket-preview/basket-preview';
-import { removeCameraFromBasket } from '../../store/basket-slice/basket-slice';
-import { useAppDispatch } from '../../hooks/store-hooks';
+import { OutletContext } from '../../../types/app';
+import BasketPreview from '../../basket-preview/basket-preview';
+import { removeCameraFromBasket } from '../../../store/basket-slice/basket-slice';
+import { useAppDispatch } from '../../../hooks/store-hooks';
 
 function BasketRemoveModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> }) {
   const { preview, setPreviewDisplay } = useOutletContext<OutletContext>();

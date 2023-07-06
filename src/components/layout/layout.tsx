@@ -8,6 +8,8 @@ const Layout = () => {
   const [preview, setPreviewDisplay] = useState<PreviewModal>({ isModalOpened: false });
   const [isReviewOpened, setReviewDisplay] = useState(false);
   const [isAddItemSuccessOpened, setAddItemSuccessDisplay] = useState(false);
+  const [isBuySuccessOpened, setBuySuccessDisplay] = useState(false);
+  const [isBuyErrorOpened, setBuyErrorDisplay] = useState(false);
 
   const context = {
     preview,
@@ -15,7 +17,11 @@ const Layout = () => {
     isReviewOpened,
     setReviewDisplay,
     isAddItemSuccessOpened,
-    setAddItemSuccessDisplay
+    setAddItemSuccessDisplay,
+    isBuySuccessOpened,
+    setBuySuccessDisplay,
+    isBuyErrorOpened,
+    setBuyErrorDisplay
   };
 
   return (

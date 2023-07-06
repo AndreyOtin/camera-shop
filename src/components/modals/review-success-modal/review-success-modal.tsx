@@ -1,7 +1,7 @@
-import Modal from '../modal/modal';
-import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
-import { changePostStatus, selectPostStatus } from '../../store/comments-slice/comments-slice';
-import { Status } from '../../consts/enums';
+import Modal from '../../modal/modal';
+import { useAppDispatch, useAppSelector } from '../../../hooks/store-hooks';
+import { changePostStatus, selectPostStatus } from '../../../store/comments-slice/comments-slice';
+import { Status } from '../../../consts/enums';
 import { RefObject } from 'react';
 
 function ReviewSuccessModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> }) {

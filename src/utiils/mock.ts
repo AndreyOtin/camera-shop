@@ -93,7 +93,8 @@ const createMockStore = (): RootState => ({
     totalWithCoupon: 0,
     couponStatus: Status.Success,
     coupon: 0,
-    couponPercent: 0
+    couponPercent: 0,
+    couponName: ''
   }
 });
 

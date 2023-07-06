@@ -3,14 +3,20 @@ import { useAppDispatch, useAppSelector } from '../../hooks/store-hooks';
 import {
   changePromoStatus,
   checkCoupon,
+  postOrder,
+  resetBasket,
   selectBasketProductsTotal,
   selectCoupon,
+  selectCouponName,
   selectCouponStatus,
+  selectIds,
   selectTotalWithCoupon
 } from '../../store/basket-slice/basket-slice';
 import { formatPrice } from '../../utiils/formaters';
 import clsx from 'clsx';
 import { Status } from '../../consts/enums';
+import { useOutletContext } from 'react-router-dom';
+import { OutletContext } from '../../types/app';
 
 function BasketSummary() {
   const total = useAppSelector(selectBasketProductsTotal);
@@ -19,6 +25,9 @@ function BasketSummary() {
   const coupon = useAppSelector(selectCoupon);
   const dispatch = useAppDispatch();
   const [userPromo, setUserPromo] = useState('');
+  const { setBuySuccessDisplay, setBuyErrorDisplay } = useOutletContext<OutletContext>();
+  const couponName = useAppSelector(selectCouponName);
+  const ids = useAppSelector(selectIds);
 
   useEffect(() => () => {
     dispatch(changePromoStatus());
@@ -34,6 +43,21 @@ function BasketSummary() {
     }
 
     setUserPromo(evt.target.value.trim());
+  };
+
+  const HandleOrder = async () => {
+    const action = await dispatch(postOrder({
+      camerasIds: ids as number[],
+      coupon: couponName
+    }));
+
+    if (postOrder.rejected.match(action)) {
+      setBuyErrorDisplay(true);
+      return;
+    }
+
+    dispatch(resetBasket());
+    setBuySuccessDisplay(true);
   };
 
   return (
@@ -95,7 +119,10 @@ function BasketSummary() {
             {coupon ? formatPrice(totalWithCoupon) : formatPrice(total)} ₽
           </span>
         </p>
-        <button className="btn btn--purple" type="submit">
+        <button
+          onClick={() => void HandleOrder()}
+          className="btn btn--purple" type="submit"
+        >
           Оформить заказ
         </button>
       </div>
