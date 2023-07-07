@@ -6,7 +6,6 @@ import { Camera } from '../../types/camera';
 function AddItemButton({ camera }: { camera: Camera }) {
   const { setPreviewDisplay } = useOutletContext<OutletContext>();
 
-
   return (
     <button
       onClick={() => setPreviewDisplay({ camera, isModalOpened: true })}

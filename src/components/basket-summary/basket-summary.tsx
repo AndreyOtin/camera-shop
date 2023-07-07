@@ -104,7 +104,7 @@ function BasketSummary() {
         </p>
         <p className="basket__summary-item"><span className="basket__summary-text">Скидка:</span>
           <span
-            className="basket__summary-value basket__summary-value--bonus"
+            className={clsx('basket__summary-value', coupon && 'basket__summary-value--bonus')}
           >
             {formatPrice(coupon)} ₽
           </span>

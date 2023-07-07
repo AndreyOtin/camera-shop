@@ -16,7 +16,6 @@ type BasketPreviewProps = {
   variant?: 'short' | 'primary' | 'basketModal';
 }
 
-
 function Div({ children, ...rest }: { children: ReactNode; className: string }) {
   return (
     <div {...rest}>{children}</div>
@@ -34,11 +33,9 @@ function BasketPreview({ preview, variant = 'primary' }: BasketPreviewProps) {
   const dispatch = useAppDispatch();
   const { setPreviewDisplay } = useOutletContext<OutletContext>();
 
-
   const typeName = preview?.category === categoryFilter.video.ruName
     ? preview?.type
     : typeNameToFormattedName[preview?.type as keyof typeof typeNameToFormattedName];
-
 
   useEffect(() => {
     if (!ref.current || !preview?.count) {
@@ -100,6 +97,7 @@ function BasketPreview({ preview, variant = 'primary' }: BasketPreviewProps) {
     number = number >= MAX_BASKET_PRODUCTS ? MAX_BASKET_PRODUCTS : ++number;
     ref.current.value = number.toString();
   };
+
   const Element = variant === 'primary' ? Li : Div;
 
   return (
