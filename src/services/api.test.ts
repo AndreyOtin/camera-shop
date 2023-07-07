@@ -3,7 +3,8 @@ import { createMockStoreWithAPI } from '../utiils/jest';
 import { ApiRoute } from '../consts/enums';
 import { getCameras, getCamerasFull, getPromo, initPage } from '../store/catalog-slice/catalog-slice';
 import { fetchComments, postComment } from '../store/comments-slice/comments-slice';
-import { fetchProduct, fetchSimilarProducts } from '../store/product-slice/product-slice';
+import { fetchProduct } from '../store/product-slice/product-slice';
+import { checkCoupon, postOrder } from '../store/basket-slice/basket-slice';
 
 const { fakeStore: store, mockAPI } = createMockStoreWithAPI({});
 
@@ -114,7 +115,7 @@ describe('Async actions', () => {
     const fakeId = '1';
 
     mockAPI
-      .onAny()
+      .onGet(`${ApiRoute.Cameras}/${fakeId}`)
       .reply(200, fakeCamera);
 
     store.clearActions();
@@ -129,23 +130,40 @@ describe('Async actions', () => {
     ]);
   });
 
-  it('should dispatch fetchSimilarProducts when GET /cameras/id/similar', async () => {
-    const similarProducts = [createFakeCamera()];
-    const fakeId = '2';
-
+  it('should dispatch postOrder when post /order', async () => {
     mockAPI
-      .onGet(`${ApiRoute.Cameras}/${fakeId}/similar`)
-      .reply(200, similarProducts);
+      .onPost(ApiRoute.Orders)
+      .reply(200);
 
     store.clearActions();
 
-    await store.dispatch(fetchSimilarProducts(fakeId));
+    await store.dispatch(postOrder({
+      camerasIds: [1],
+      coupon: 'test'
+    }));
 
     const actions = store.getActions().map(({ type }) => type);
 
     expect(actions).toEqual([
-      fetchSimilarProducts.pending.type,
-      fetchSimilarProducts.fulfilled.type
+      postOrder.pending.type,
+      postOrder.fulfilled.type
+    ]);
+  });
+
+  it('should dispatch checkCoupon when post /coupon', async () => {
+    mockAPI
+      .onPost(ApiRoute.Coupons)
+      .reply(200);
+
+    store.clearActions();
+
+    await store.dispatch(checkCoupon('test'));
+
+    const actions = store.getActions().map(({ type }) => type);
+
+    expect(actions).toEqual([
+      checkCoupon.pending.type,
+      checkCoupon.fulfilled.type
     ]);
   });
 });

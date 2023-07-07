@@ -2,7 +2,7 @@ import catalogSlice, { getCameras, getPromo, initialState } from './catalog-slic
 import { createFakeCamera, createFakePromo } from '../../utiils/mock';
 import { Status } from '../../consts/enums';
 
-describe('Slice: catalog.tsx', () => {
+describe('Slice: catalog', () => {
   it('without additional parameters should return initial state', () => {
     expect(catalogSlice(initialState, { type: 'UNKNOWN_ACTION' }))
       .toEqual(initialState);

@@ -17,7 +17,7 @@ type InitialState = {
   couponName: string;
 }
 
-const initialState: InitialState = {
+export const initialState: InitialState = {
   totalCount: 0,
   total: 0,
   coupon: 0,
@@ -46,7 +46,7 @@ const postOrder = createAsyncThunk<void, NewOrder, ThunkConfig>(
   }
 );
 
-const productsAdapter = createEntityAdapter<BasketCamera>();
+export const productsAdapter = createEntityAdapter<BasketCamera>();
 
 const localStorageResult = localStorage.getItem(LOCAL_STORAGE_BASKET);
 

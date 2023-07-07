@@ -19,8 +19,8 @@ const createFakeCamera = (): Camera => ({
   previewImgWebp: faker.lorem.word(1),
   level: faker.lorem.word(1),
   description: faker.lorem.word(1),
-  price: faker.datatype.number(3),
-  id: faker.datatype.number(3),
+  price: 1,
+  id:1,
   reviewCount: faker.datatype.number(3),
   rating: 3
 });

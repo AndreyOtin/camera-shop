@@ -23,11 +23,12 @@ function BasketSummary() {
   const totalWithCoupon = useAppSelector(selectTotalWithCoupon);
   const couponStatus = useAppSelector(selectCouponStatus);
   const coupon = useAppSelector(selectCoupon);
+  const couponName = useAppSelector(selectCouponName);
+  const ids = useAppSelector(selectIds);
   const dispatch = useAppDispatch();
   const [userPromo, setUserPromo] = useState('');
   const { setBuySuccessDisplay, setBuyErrorDisplay } = useOutletContext<OutletContext>();
-  const couponName = useAppSelector(selectCouponName);
-  const ids = useAppSelector(selectIds);
+
 
   useEffect(() => () => {
     dispatch(changePromoStatus());

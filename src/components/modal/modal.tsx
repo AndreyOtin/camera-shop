@@ -23,13 +23,15 @@ function Modal({ children, onClose, isOpened, contentRef, variant = 'primary' }:
       return;
     }
 
+    const element = contentRef.current;
+
     contentRef.current?.setAttribute('inert', '');
     document.body.style.overflow = 'hidden';
     document.documentElement.style.paddingRight = 'calc(17px - (100vw - 100%)';
     document.addEventListener('keydown', onEcsKeyDown);
 
     return () => {
-      contentRef.current?.removeAttribute('inert');
+      element?.removeAttribute('inert');
       document.body.style.overflow = '';
       document.documentElement.style.paddingRight = '';
       document.removeEventListener('keydown', onEcsKeyDown);
