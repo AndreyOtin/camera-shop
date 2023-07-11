@@ -5,6 +5,7 @@ import { OutletContext } from '../../../types/app';
 import BasketPreview from '../../basket-preview/basket-preview';
 import { removeCameraFromBasket } from '../../../store/basket-slice/basket-slice';
 import { useAppDispatch } from '../../../hooks/store-hooks';
+import { BasketPreviewVariant } from '../../../consts/enums';
 
 function BasketRemoveModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> }) {
   const { preview, setPreviewDisplay } = useOutletContext<OutletContext>();
@@ -26,7 +27,7 @@ function BasketRemoveModal({ contentRef }: { contentRef: RefObject<HTMLDivElemen
       onClose={() => setPreviewDisplay({ isModalOpened: false, camera: preview.camera })}
     >
       <p className="title title--h4">Удалить этот товар?</p>
-      <BasketPreview preview={preview.camera} variant='basketModal'/>
+      <BasketPreview preview={preview.camera} variant={BasketPreviewVariant.BasketModal}/>
       <div className="modal__buttons">
         <button
           onClick={handleRemoveFromBasketClick}

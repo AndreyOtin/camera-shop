@@ -5,6 +5,7 @@ import { RefObject } from 'react';
 import { useAppDispatch } from '../../../hooks/store-hooks';
 import { addCameraToBasket } from '../../../store/basket-slice/basket-slice';
 import BasketPreview from '../../basket-preview/basket-preview';
+import { BasketPreviewVariant } from '../../../consts/enums';
 
 function PreviewModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> }) {
   const dispatch = useAppDispatch();
@@ -27,7 +28,7 @@ function PreviewModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> })
       onClose={() => setPreviewDisplay({ isModalOpened: false, camera: preview.camera })}
     >
       <p className="title title--h4">Добавить товар в корзину</p>
-      <BasketPreview preview={preview.camera} variant='short'/>
+      <BasketPreview preview={preview.camera} variant={BasketPreviewVariant.Short}/>
       <div className="modal__buttons">
         <button
           onClick={handleAddTOBasketClick}

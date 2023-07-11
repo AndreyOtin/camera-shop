@@ -72,3 +72,9 @@ export enum Code {
   ArrowDown = 'ArrowDown',
   Esc = 'Escape'
 }
+
+export enum BasketPreviewVariant {
+  Short = 'short',
+  Primary = 'primary',
+  BasketModal = 'basketModal'
+}

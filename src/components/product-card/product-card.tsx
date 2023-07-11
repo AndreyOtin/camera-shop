@@ -60,8 +60,7 @@ function ProductCard({ camera, style }: ProductCardProps) {
         {
           isInBasket
             ?
-            <button
-              onClick={() => setPreviewDisplay({ isModalOpened: true, camera })}
+            <Link to={AppRoute.Basket}
               className="btn btn--purple-border product-card__btn"
               type="button"
             >
@@ -69,7 +68,7 @@ function ProductCard({ camera, style }: ProductCardProps) {
                 <use xlinkHref="#icon-basket"></use>
               </svg>
               В корозине
-            </button>
+            </Link>
             :
             <button
               onClick={() => setPreviewDisplay({ isModalOpened: true, camera })}
