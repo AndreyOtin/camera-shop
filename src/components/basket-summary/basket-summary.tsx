@@ -49,7 +49,7 @@ function BasketSummary() {
   const HandleOrder = async () => {
     const action = await dispatch(postOrder({
       camerasIds: ids as number[],
-      coupon: couponName
+      coupon: couponName || null
     }));
 
     if (postOrder.rejected.match(action)) {
@@ -58,6 +58,7 @@ function BasketSummary() {
     }
 
     dispatch(resetBasket());
+    setUserPromo('');
     setBuySuccessDisplay(true);
   };
 
@@ -80,6 +81,7 @@ function BasketSummary() {
                   type="text"
                   name="promo"
                   placeholder="Введите промокод"
+                  value={userPromo}
                 />
               </label>
               <p className="custom-input__error">Промокод неверный</p>

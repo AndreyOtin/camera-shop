@@ -16,21 +16,35 @@ function Breadcrumbs({ productName }: BreadCrumbsProps) {
     currentPath += `/${name}`;
 
     return (
-      <li key={name} className="breadcrumbs__item">
-        <NavLink
-          className={({ isActive }) => clsx('breadcrumbs__link', isActive && 'breadcrumbs__link--active')}
-          to={currentPath}
-          end
-        >
-          <>
+      elements.length !== index + 1 ?
+        <li key={name} className="breadcrumbs__item">
+          <NavLink
+            className={({ isActive }) => clsx('breadcrumbs__link', isActive && 'breadcrumbs__link--active')}
+            to={currentPath}
+            end
+          >
+            <>
+              {menuNameToRuName[name] || productName}
+              {elements.length !== index + 1 &&
+                <svg width="5" height="8" aria-hidden="true">
+                  <use xlinkHref="#icon-arrow-mini"></use>
+                </svg>}
+            </>
+          </NavLink>
+        </li>
+        :
+        <li key={name} className="breadcrumbs__item">
+          <span
+            className='breadcrumbs__link breadcrumbs__link--active'
+          >
             {menuNameToRuName[name] || productName}
             {elements.length !== index + 1 &&
               <svg width="5" height="8" aria-hidden="true">
                 <use xlinkHref="#icon-arrow-mini"></use>
               </svg>}
-          </>
-        </NavLink>
-      </li>
+
+          </span>
+        </li>
     );
   });
 

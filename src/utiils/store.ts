@@ -19,7 +19,6 @@ const getInitialEntityAdapterState = <T, S extends object>(
   return adapter.getInitialState<S>(initialState);
 };
 
-
 const calculateTotalWithCoupon = (state: RootState['basket'], bonus: number) => {
   state.coupon = Math.round((bonus / 100) * state.total);
   state.totalWithCoupon = state.total - state.coupon;

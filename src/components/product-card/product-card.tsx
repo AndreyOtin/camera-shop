@@ -61,13 +61,13 @@ function ProductCard({ camera, style }: ProductCardProps) {
           isInBasket
             ?
             <Link to={AppRoute.Basket}
-              className="btn btn--purple-border product-card__btn"
+              className="btn btn--purple-border product-card__btn product-card__btn--in-cart"
               type="button"
             >
               <svg width="16" height="16" aria-hidden="true">
                 <use xlinkHref="#icon-basket"></use>
               </svg>
-              В корозине
+              В корзине
             </Link>
             :
             <button

@@ -1,4 +1,4 @@
 export interface NewOrder {
   camerasIds: number[];
-  coupon: string;
+  coupon: string | null;
 }

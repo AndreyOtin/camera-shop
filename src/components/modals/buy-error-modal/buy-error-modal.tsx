@@ -16,7 +16,6 @@ function BuyErrorModal({ contentRef }: { contentRef: RefObject<HTMLDivElement> }
       contentRef={contentRef}
     >
       <p className="title title--h4">Не удалось осуществить покупку</p>
-      <p className="title title--h4">Попробуйте ввести купон: camera-333 или camera-444.</p>
       <svg
         style={{ transform: 'rotate(180deg)' }}
         className="modal__icon"
