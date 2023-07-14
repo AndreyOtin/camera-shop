@@ -1,4 +1,5 @@
 import { Status, StatusCode } from '../consts/enums';
+import { useEffect, useRef } from 'react';
 
 type StatusData = {
   status: {
@@ -16,5 +17,25 @@ const checkStatus = ({ status, code = {} }: StatusData) => {
 
   return { isLoading, isError, isNotFound };
 };
+
+export const useDebounce = (cb: (...args: unknown[]) => void, delay: number) => {
+  const timeoutId = useRef<NodeJS.Timeout | null>(null);
+  const func = useRef(cb);
+
+  useEffect(() => {
+    func.current = cb;
+  }, [cb]);
+
+  return (...args: unknown[]) => {
+    if (timeoutId.current) {
+      clearTimeout(timeoutId.current);
+    }
+
+    timeoutId.current = setTimeout(() => {
+      func.current(...args);
+    }, delay);
+  };
+};
+
 
 export { checkStatus } ;

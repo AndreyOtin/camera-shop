@@ -1,11 +1,11 @@
 import { useSearchParams } from 'react-router-dom';
 import { KeyboardEvent, useState } from 'react';
-import { DEBOUNCE_TIMEOUT } from '../../../consts/app';
 import { EvtChange } from '../../../types/app';
 import queryString from 'query-string';
-import { useDebouncedCallback } from 'use-debounce';
 import { priceFilter } from '../../../consts/filter';
 import { Code } from '../../../consts/enums';
+import { useDebounce } from '../../../utiils/common';
+import { DEBOUNCE_TIMEOUT } from '../../../consts/app';
 
 type CatalogFilterProps = {
   max: string;
@@ -17,11 +17,10 @@ function PriceFilter({ min, max }: CatalogFilterProps) {
   const [minPrice, SetMinPrice] = useState(searchParams.get(priceFilter.min.enName) || '');
   const [maxPrice, SetMaxPrice] = useState(searchParams.get(priceFilter.max.enName) || '');
 
-  const debounced = useDebouncedCallback(
+  const debounced = useDebounce(
     () => {
       setSearchParams((prev) => {
         const prevQuery = queryString.parse(prev.toString());
-
         return queryString.stringify({
           ...prevQuery,
           [priceFilter.min.enName]: minPrice || [],
@@ -38,53 +37,48 @@ function PriceFilter({ min, max }: CatalogFilterProps) {
     if (maxPrice && +evt.target.value > +maxPrice) {
       SetMaxPrice(evt.target.value);
       SetMinPrice(evt.target.value);
-      debounced();
     } else {
       SetMinPrice(price);
-      debounced();
     }
+
+    debounced();
   };
 
   const handleMaxPriceChange = (evt: EvtChange) => {
     const price = +evt.target.value < 0 || evt.target.value === '-0' ? '' : evt.target.value;
 
     if (price && +price > +max) {
-      debounced();
       SetMaxPrice(max);
     } else {
       SetMaxPrice(price);
     }
+
+    debounced();
   };
 
   const checkMinPrice = () => {
     if (minPrice && +minPrice < +min) {
-      debounced();
       SetMinPrice(min);
     }
 
     if (minPrice && +minPrice > +max) {
-      debounced();
       SetMinPrice(max);
     }
+
+    debounced();
   };
 
   const checkMaxPrice = () => {
     if (maxPrice && +maxPrice < +minPrice) {
-      debounced();
       SetMaxPrice(minPrice);
-      return;
-    }
-
-    if (maxPrice && +maxPrice < +min) {
-      debounced();
+    } else if (maxPrice && +maxPrice < +min) {
       SetMaxPrice(min);
-      return;
+    } else {
+      SetMaxPrice(maxPrice);
     }
 
     debounced();
-    SetMaxPrice(maxPrice);
   };
-
 
   const handleMinPriceKeyDown = (evt: KeyboardEvent<HTMLInputElement>) => {
     if (evt.code === Code.Enter) {

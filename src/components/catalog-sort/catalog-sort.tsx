@@ -3,9 +3,9 @@ import { useAppSelector } from '../../hooks/store-hooks';
 import { selectCamerasFullLoadStatus } from '../../store/catalog-slice/catalog-slice';
 import { SearchParam, SortType, Status } from '../../consts/enums';
 import { useSearchParams } from 'react-router-dom';
-import { useDebouncedCallback } from 'use-debounce';
 import { DEBOUNCE_TIMEOUT } from '../../consts/app';
 import queryString from 'query-string';
+import { useDebounce } from '../../utiils/common';
 
 function CatalogSort() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,7 +13,7 @@ function CatalogSort() {
   const [sortDirection, setSortDirection] = useState(searchParams.get(SearchParam.SortDirection));
   const status = useAppSelector(selectCamerasFullLoadStatus);
 
-  const debounced = useDebouncedCallback(() => {
+  const debounced = useDebounce(() => {
     const prevParams = queryString.parse(searchParams.toString());
     const newParams = queryString.stringify({
       ...prevParams,

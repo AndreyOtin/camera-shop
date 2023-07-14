@@ -29,7 +29,6 @@ function BasketSummary() {
   const [userPromo, setUserPromo] = useState('');
   const { setBuySuccessDisplay, setBuyErrorDisplay } = useOutletContext<OutletContext>();
 
-
   useEffect(() => () => {
     dispatch(changePromoStatus());
   }, [dispatch]);
@@ -80,7 +79,7 @@ function BasketSummary() {
                   onChange={handleCouponInputChange}
                   type="text"
                   name="promo"
-                  placeholder="Введите промокод"
+                  placeholder="Введите промокод camera-333"
                   value={userPromo}
                 />
               </label>
