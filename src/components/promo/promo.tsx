@@ -1,5 +1,5 @@
 import { Promo as PromoType } from '../../types/camera';
-import { useEffect, useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { generatePath, Link } from 'react-router-dom';
 import { AppRoute } from '../../consts/enums';
 
@@ -12,7 +12,7 @@ type PromoProps = {
 function Promo({ promo, description, setBannerPosition }: PromoProps) {
   const promoRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (promoRef.current) {
       const { bottom } = promoRef.current.getBoundingClientRect();
 

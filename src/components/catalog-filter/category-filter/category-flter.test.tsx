@@ -10,7 +10,7 @@ describe('Component: CategoryFilter', () => {
   it('should render correctly', () => {
     render(
       <ProviderWrapper fakeStore={fakeStore}>
-        <CategoryFilter key={1} onChange={jest.fn}/>
+        <CategoryFilter key={1}/>
       </ProviderWrapper>
     );
 

@@ -1,24 +1,13 @@
 import { getObjectKeys } from '../../../utiils/types';
 import useCheckboxFilter from '../../../hooks/use-checkbox-filter';
 import { SearchParam } from '../../../consts/enums';
-import { categoryFilter, typeFilter } from '../../../consts/filter';
-import { ChangeEvent } from 'react';
+import { categoryFilter } from '../../../consts/filter';
+import { useSearchParams } from 'react-router-dom';
 
-type CategoryFilterProps = {
-  onChange: <T extends keyof typeof typeFilter>(isChecked: boolean, key: T) => void;
-}
 
-function CategoryFilter({ onChange }: CategoryFilterProps) {
+function CategoryFilter() {
   const { filter, handleFilterChange } = useCheckboxFilter(categoryFilter, SearchParam.Category);
-
-  const onFilterChange = (key: string | 'video', evt: ChangeEvent<HTMLInputElement>) => {
-    if (key === 'video' && evt.target.checked) {
-      onChange(false, 'snapshot');
-      onChange(false, 'film');
-    }
-
-    handleFilterChange(evt.target.checked, key);
-  };
+  const [params] = useSearchParams();
 
   return (
     <fieldset className="catalog-filter__block">
@@ -29,11 +18,11 @@ function CategoryFilter({ onChange }: CategoryFilterProps) {
         >
           <label>
             <input
-              onChange={(evt) => onFilterChange(key, evt)}
+              onChange={(evt) => handleFilterChange(evt.target.checked, key, SearchParam.Category)}
               type="checkbox"
               name={filter[key].enName}
               checked={filter[key].checked}
-              disabled={filter[filter[key].disabled].checked}
+              disabled={!!filter[key].disabledOnParams.length && new RegExp(filter[key].disabledOnParams.join('|')).test(decodeURI(params.toString()))}
             />
             <span className="custom-checkbox__icon"></span>
             <span className="custom-checkbox__label">

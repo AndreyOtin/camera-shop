@@ -1,65 +1,63 @@
-import { CheckBoxFilter } from '../types/app';
-
-const typeFilter:CheckBoxFilter = {
+const typeFilter = {
   digital: {
     enName: 'digital',
     ruName: 'Цифровая',
     checked: false,
-    disabled: ''
+    disabledOnParams: []
   },
   snapshot: {
     enName: 'snapshot',
     ruName: 'Плёночная',
     checked: false,
-    disabled: 'Видеокамера'
+    disabledOnParams:['Видеокамера']
   },
   film: {
     enName: 'film',
     ruName: 'Моментальная',
     checked: false,
-    disabled: 'Видеокамера'
+    disabledOnParams: ['Видеокамера']
   },
   collection: {
     enName: 'collection',
     ruName: 'Коллекционная',
     checked: false,
-    disabled: ''
+    disabledOnParams: []
   },
 };
 
-const categoryFilter:CheckBoxFilter = {
+const categoryFilter = {
   photo: {
     enName: 'photo-camera',
     ruName: 'Фотоаппарат',
     checked: false,
-    disabled: 'video'
+    disabledOnParams: ['Видеокамера']
   },
   video: {
     enName: 'video-camera',
     ruName: 'Видеокамера',
     checked: false,
-    disabled: 'photo'
+    disabledOnParams:['Фотоаппарат']
   }
 };
 
-const levelFilter:CheckBoxFilter = {
+const levelFilter = {
   zero: {
     enName: 'zero',
     ruName: 'Нулевой',
     checked: false,
-    disabled: ''
+    disabledOnParams: []
   },
   nonProfessional: {
     enName: 'non-professional',
     ruName: 'Любительский',
     checked: false,
-    disabled: ''
+    disabledOnParams: []
   },
   professional: {
     enName: 'professional',
     ruName: 'Профессиональный',
     checked: false,
-    disabled: ''
+    disabledOnParams: []
   }
 };
 

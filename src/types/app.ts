@@ -1,6 +1,7 @@
 import { Camera } from './camera';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { SearchParam } from '../consts/enums';
+import { categoryFilter, levelFilter, typeFilter } from '../consts/filter';
 
 export type PreviewModal = {
   camera?: Camera;
@@ -34,9 +35,9 @@ export type ParsedQueryString = {
   [SearchParam.Tab]?: string;
 }
 
-export type CheckBoxFilter = Record<string, {
+export type CheckBoxFilter = Record< keyof typeof levelFilter | keyof typeof typeFilter | keyof typeof categoryFilter, {
   enName: string;
   ruName: string;
   checked: boolean;
-  disabled: string;
+  disabledOnParams: string[];
 }>

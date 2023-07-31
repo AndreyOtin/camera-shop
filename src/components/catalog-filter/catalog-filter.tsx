@@ -4,12 +4,11 @@ import TypeFilter from './type-filter/type-filter';
 import LevelFilter from './level-filter/level-filter';
 import { useAppSelector } from '../../hooks/store-hooks';
 import { selectCamerasFullLoadStatus } from '../../store/catalog-slice/catalog-slice';
-import { SearchParam, Status } from '../../consts/enums';
+import { Status } from '../../consts/enums';
 import Spinner from '../spinner/spinner';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import useCheckboxFilter from '../../hooks/use-checkbox-filter';
-import { typeFilter } from '../../consts/filter';
+
 
 type CatalogFilterProps = {
   maxPrice: string;
@@ -19,7 +18,6 @@ type CatalogFilterProps = {
 function CatalogFilter({ maxPrice, minPrice }: CatalogFilterProps) {
   const status = useAppSelector(selectCamerasFullLoadStatus);
   const [, setSearchParams] = useSearchParams();
-  const { filter, handleFilterChange, resetState} = useCheckboxFilter(typeFilter, SearchParam.Type);
   const [reset, setReset] = useState({
     price: 1,
     category: 2,
@@ -35,7 +33,6 @@ function CatalogFilter({ maxPrice, minPrice }: CatalogFilterProps) {
       type: ++reset.price
     });
     setSearchParams();
-    resetState();
   };
 
   return (
@@ -58,8 +55,8 @@ function CatalogFilter({ maxPrice, minPrice }: CatalogFilterProps) {
             />}
           <h2 className="visually-hidden">Фильтр</h2>
           <PriceFilter key={reset.price} min={minPrice} max={maxPrice}/>
-          <CategoryFilter onChange={handleFilterChange} key={reset.category}/>
-          <TypeFilter filter={filter} onChange={handleFilterChange} key={reset.type}/>
+          <CategoryFilter key={reset.category}/>
+          <TypeFilter key={reset.type}/>
           <LevelFilter key={reset.level}/>
           <button
             onClick={handleAllReset}

@@ -1,45 +1,10 @@
 import { useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
 import { getObjectKeys } from '../utiils/types';
-import queryString from 'query-string';
+import { CheckBoxFilter } from '../types/app';
 import { SearchParam } from '../consts/enums';
-import { CheckBoxFilter, ParsedQueryString } from '../types/app';
-import { typeFilter } from '../consts/filter';
 
-const deleteParamValueFromParam = (parsedQuery: ParsedQueryString, searchParam: SearchParam, paramValues: string[]) => {
-  let paramValue = parsedQuery[searchParam];
-
-  if (paramValue) {
-    if (Array.isArray(paramValue)) {
-      paramValue = paramValue.filter((item) => !paramValues.includes(item));
-    } else {
-      paramValue = paramValues.includes(paramValue) ? [] : paramValue;
-    }
-  }
-
-  return paramValue;
-};
-
-const createCheckBoxQuery = (checkedState: boolean, activeBoxKey: string, state: CheckBoxFilter, paramName: string) =>
-  getObjectKeys(state)
-    .reduce<{ [paramName: string]: string[] }>((obj, key) => {
-      if (key === activeBoxKey && checkedState) {
-        return { [paramName]: [...obj[paramName], state[key].ruName] };
-      }
-
-      if (key === activeBoxKey && !checkedState) {
-        return obj;
-      }
-
-      if (state[key].checked) {
-        return { [paramName]: [...obj[paramName], state[key].ruName] };
-      }
-
-      return obj;
-    }, { [paramName]: [] });
-
-
-function UseCheckboxFilter(initialState: CheckBoxFilter, paramName: string) {
+function UseCheckboxFilter(initialState: Partial<CheckBoxFilter>, paramName: string) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [filter, setFilter] = useState(() => {
@@ -56,33 +21,37 @@ function UseCheckboxFilter(initialState: CheckBoxFilter, paramName: string) {
     return state;
   });
 
-  const changeParams = (field: string, isChecked: boolean, activeBoxKey: string) => {
+  const changeParams = (param: string, paramValue:string, isChecked:boolean) => {
     setSearchParams((prev) => {
-      const prevQuery = queryString.parse(prev.toString()) as ParsedQueryString;
+      let values = prev.getAll(param);
 
-      if (field === typeFilter.film.disabled) {
-        prevQuery[SearchParam.Type] =
-          deleteParamValueFromParam(prevQuery, SearchParam.Type, [typeFilter.film.ruName, typeFilter.snapshot.ruName]);
+      if(isChecked){
+        values.push(paramValue);
+      }else{
+        values = values.filter((el)=>el !== paramValue);
       }
 
-      const checkBoxQuery = createCheckBoxQuery(isChecked, activeBoxKey, filter, paramName);
+      prev.delete(param);
+      prev.set(SearchParam.Page, '1');
 
-      return queryString.stringify({
-        ...prevQuery, ...checkBoxQuery, [SearchParam.Page]: '1'
+      values.forEach((value)=>{
+        prev.append(param, value);
       });
+
+      return prev;
     });
   };
 
-  const handleFilterChange = (isChecked: boolean, key: string) => {
+  const handleFilterChange = (isChecked: boolean, key: keyof CheckBoxFilter, param:string) => {
     setFilter((prevState) => {
-      const currentCategory = JSON.parse(JSON.stringify(prevState)) as typeof prevState;
+      const currentFilter = JSON.parse(JSON.stringify(prevState)) as typeof prevState;
 
-      currentCategory[key].checked = isChecked;
+      currentFilter[key].checked = isChecked;
 
-      return currentCategory;
+      return currentFilter;
     });
 
-    changeParams(filter[key].ruName, isChecked, key);
+    changeParams(param, filter[key].ruName, isChecked);
   };
 
   const resetState = () => {

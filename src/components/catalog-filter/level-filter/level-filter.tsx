@@ -13,7 +13,7 @@ function LevelFilter() {
         <div key={filter[key].enName} className="custom-checkbox catalog-filter__item">
           <label>
             <input
-              onChange={(evt) => handleFilterChange(evt.target.checked, key)}
+              onChange={(evt) => handleFilterChange(evt.target.checked, key, SearchParam.Level)}
               checked={filter[key].checked}
               type="checkbox"
               name={filter[key].enName}

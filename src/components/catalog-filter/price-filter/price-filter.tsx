@@ -1,7 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import { KeyboardEvent, useState } from 'react';
 import { EvtChange } from '../../../types/app';
-import queryString from 'query-string';
 import { priceFilter } from '../../../consts/filter';
 import { Code } from '../../../consts/enums';
 import { useDebounce } from '../../../utiils/common';
@@ -20,12 +19,19 @@ function PriceFilter({ min, max }: CatalogFilterProps) {
   const debounced = useDebounce(
     () => {
       setSearchParams((prev) => {
-        const prevQuery = queryString.parse(prev.toString());
-        return queryString.stringify({
-          ...prevQuery,
-          [priceFilter.min.enName]: minPrice || [],
-          [priceFilter.max.enName]: maxPrice || [],
-        });
+        if(minPrice){
+          prev.set(priceFilter.min.enName, minPrice);
+        } else {
+          prev.delete(priceFilter.min.enName);
+        }
+
+        if(maxPrice){
+          prev.set(priceFilter.max.enName, maxPrice);
+        } else {
+          prev.delete(priceFilter.max.enName);
+        }
+
+        return prev;
       });
     },
     DEBOUNCE_TIMEOUT
