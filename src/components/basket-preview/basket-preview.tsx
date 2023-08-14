@@ -3,7 +3,7 @@ import { formatPrice } from '../../utiils/formaters';
 import { categoryFilter } from '../../consts/filter';
 import { typeNameToFormattedName } from '../../consts/format';
 import clsx from 'clsx';
-import React, { KeyboardEventHandler, ReactNode, useEffect, useRef, useState } from 'react';
+import React, { KeyboardEventHandler, useState } from 'react';
 import { BasketPreviewVariant, Code } from '../../consts/enums';
 import { useAppDispatch } from '../../hooks/store-hooks';
 import { changeCount, decreaseCount, increaseCount } from '../../store/basket-slice/basket-slice';
@@ -16,52 +16,25 @@ type BasketPreviewProps = {
   variant?: BasketPreviewVariant;
 }
 
-function SingleItem({ children, ...rest }: { children: ReactNode; className: string }) {
-  return (
-    <div {...rest}>{children}</div>
-  );
-}
-
-function ListItem({ children, ...rest }: { children: ReactNode; className: string }) {
-  return (
-    <li {...rest}> {children}</li>
-  );
-}
-
 function BasketPreview({ preview, variant = BasketPreviewVariant.Primary }: BasketPreviewProps) {
-  const ref = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
   const { setPreviewDisplay } = useOutletContext<OutletContext>();
-  const [, setInit] = useState(false);
   const typeName = preview?.category === categoryFilter.video.ruName
     ? preview?.type
     : typeNameToFormattedName[preview?.type as keyof typeof typeNameToFormattedName];
-
-  useEffect(() => {
-    if (!ref.current || !preview?.count) {
-      return;
-    }
-
-    ref.current.value = preview.count.toString();
-  }, [preview?.count]);
-
-
-  useEffect(() => {
-    setInit(true);
-  }, []);
+  const [count, setCount] = useState(preview?.count?.toString());
 
   const checkCount = () => {
-    if (!ref.current || !preview) {
+    if (!preview) {
       return;
     }
 
-    let value = Math.floor(Number(ref.current.value));
-
+    let value = Math.floor(Number(count));
 
     value = value > MAX_BASKET_PRODUCTS ? MAX_BASKET_PRODUCTS : value;
     value = value < MIN_BASKET_PRODUCTS ? MIN_BASKET_PRODUCTS : value;
 
-    ref.current.value = value.toString();
+    setCount(value.toString());
     dispatch(changeCount({ count: value, id: preview.id }));
   };
 
@@ -76,36 +49,35 @@ function BasketPreview({ preview, variant = BasketPreviewVariant.Primary }: Bask
   };
 
   const handleDecrease = () => {
-    if (!ref.current || !preview) {
+    if (!preview) {
       return;
     }
-
-    let number = Number(ref.current.value);
+    let number = Number(count);
 
     if (number > MIN_BASKET_PRODUCTS) {
       dispatch(decreaseCount(preview));
     }
 
     number = number - 1 === 0 ? MIN_BASKET_PRODUCTS : --number;
-    ref.current.value = number.toString();
+    setCount(number.toString());
   };
 
   const handleIncrease = () => {
-    if (!ref.current || !preview) {
+    if (!preview) {
       return;
     }
 
-    let number = Number(ref.current.value);
+    let number = Number(count);
 
     if (number < MAX_BASKET_PRODUCTS) {
       dispatch(increaseCount(preview));
     }
 
     number = number >= MAX_BASKET_PRODUCTS ? MAX_BASKET_PRODUCTS : ++number;
-    ref.current.value = number.toString();
+    setCount(number.toString());
   };
 
-  const Item = variant === BasketPreviewVariant.Primary ? ListItem : SingleItem;
+  const Item = variant === BasketPreviewVariant.Primary ? 'li' : 'div';
 
   return (
     <Item className={clsx('basket-item', {
@@ -164,7 +136,7 @@ function BasketPreview({ preview, variant = BasketPreviewVariant.Primary }: Bask
               onClick={handleDecrease}
               className="btn-icon btn-icon--prev"
               aria-label="уменьшить количество товара"
-              disabled={ref.current ? +ref.current.value === MIN_BASKET_PRODUCTS : undefined}
+              disabled={count ? +count === MIN_BASKET_PRODUCTS : undefined}
             >
               <svg width="7" height="12" aria-hidden="true">
                 <use xlinkHref="#icon-arrow"></use>
@@ -172,7 +144,8 @@ function BasketPreview({ preview, variant = BasketPreviewVariant.Primary }: Bask
             </button>
             <label className="visually-hidden" htmlFor="counter1"></label>
             <input
-              ref={ref}
+              value={count}
+              onChange={(evt) => setCount(evt.target.value)}
               type="number"
               id="counter1"
               min="1"
@@ -182,7 +155,7 @@ function BasketPreview({ preview, variant = BasketPreviewVariant.Primary }: Bask
               onKeyDown={handleInputKeyDown}
             />
             <button
-              disabled={ref.current ? +ref.current.value === MAX_BASKET_PRODUCTS : undefined}
+              disabled={count ? +count === MAX_BASKET_PRODUCTS : undefined}
               onClick={handleIncrease}
               className="btn-icon btn-icon--next"
               aria-label="увеличить количество товара"
