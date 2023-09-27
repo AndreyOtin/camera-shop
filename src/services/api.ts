@@ -24,7 +24,7 @@ const client = {
   fetchSimilarCameras: (cameraId: string) =>
     api.get<Camera[]>(`${ApiRoute.Cameras}/${cameraId}/similar`),
   getPromo: () =>
-    api.get<Promo>(`${ApiRoute.Promo}`),
+    api.get<Promo[]>(`${ApiRoute.Promo}`),
   getReviews: (cameraId: string) =>
     api.get<Review[]>(`${ApiRoute.Cameras}/${cameraId}/reviews`),
   postReview: (body: NewReview) =>

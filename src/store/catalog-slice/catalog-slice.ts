@@ -74,8 +74,9 @@ const getPromo = createAsyncThunk<Promo, undefined, ThunkConfig>(
   `${SliceNameSpace.Catalog}/getPromo`,
   async (_, { extra: api }) => {
     const { data } = await api.getPromo();
+    const randomPromo = data[Math.floor(Math.random() * data.length)];
 
-    return data;
+    return randomPromo;
   }
 );
 
